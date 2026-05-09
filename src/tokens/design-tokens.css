@@ -1,0 +1,586 @@
+/* =============================================================================
+   DESIGN TOKENS — Generated from Figma Variables
+   File: -shadcn_ui-components-not-token--Fluke---Copy-
+   Theme: Shadcn/ui "neutral"
+   Source collections: Shadcn/ui, font, border-radius, space, border-width,
+                       gap, opacity, stroke-width, height, max-height, max-width
+   Last synced: 2026-05-09
+   ============================================================================= */
+
+/* ---------------------------------------------------------------------------
+   LIGHT MODE (default)
+   Source: Figma → Shadcn/ui collection, mode: Value
+   --------------------------------------------------------------------------- */
+:root,
+:root[data-theme="light"],
+:root.light {
+
+  /* -------------------------------------------------------------------------
+     COLOR — Background & Foreground
+     @figmaVariable Shadcn/ui/background → white → #ffffff
+     @figmaVariable Shadcn/ui/foreground → neutral/950 → #0a0a0a
+     @wcag contrast 18.7:1 (AAA)
+     ------------------------------------------------------------------------- */
+  --background: 0 0% 100%;
+  --foreground: 0 0% 3.9%;
+
+  /* -------------------------------------------------------------------------
+     COLOR — Card
+     @figmaVariable Shadcn/ui/card → white → #ffffff
+     @figmaVariable Shadcn/ui/card-foreground → neutral/950 → #0a0a0a
+     ------------------------------------------------------------------------- */
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 3.9%;
+
+  /* -------------------------------------------------------------------------
+     COLOR — Popover
+     @figmaVariable Shadcn/ui/popover → white → #ffffff
+     @figmaVariable Shadcn/ui/popover-foreground → neutral/950 → #0a0a0a
+     ------------------------------------------------------------------------- */
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 3.9%;
+
+  /* -------------------------------------------------------------------------
+     COLOR — Primary
+     @figmaVariable Shadcn/ui/primary → neutral/900 → #171717
+     @figmaVariable Shadcn/ui/primary-foreground → neutral/50 → #fafafa
+     @wcag contrast 14.7:1 (AAA)
+     ------------------------------------------------------------------------- */
+  --primary: 0 0% 9%;
+  --primary-foreground: 0 0% 98%;
+  --primary-hover: 0 0% 15%;
+  --primary-active: 0 0% 20%;
+  --primary-disabled: 0 0% 55%;
+
+  /* -------------------------------------------------------------------------
+     COLOR — Secondary
+     @figmaVariable Shadcn/ui/secondary → neutral/100 → #f5f5f5
+     @figmaVariable Shadcn/ui/secondary-foreground → neutral/950 → #0a0a0a
+     ------------------------------------------------------------------------- */
+  --secondary: 0 0% 96.1%;
+  --secondary-foreground: 0 0% 3.9%;
+  --secondary-hover: 0 0% 90%;
+  --secondary-active: 0 0% 84%;
+  --secondary-disabled: 0 0% 96.1%;
+
+  /* -------------------------------------------------------------------------
+     COLOR — Muted
+     @figmaVariable Shadcn/ui/muted → neutral/100 → #f5f5f5
+     @figmaVariable Shadcn/ui/muted-foreground → neutral/500 → #737373
+     ------------------------------------------------------------------------- */
+  --muted: 0 0% 96.1%;
+  --muted-foreground: 0 0% 45.1%;
+
+  /* -------------------------------------------------------------------------
+     COLOR — Accent
+     @figmaVariable Shadcn/ui/accent → neutral/100 → #f5f5f5
+     @figmaVariable Shadcn/ui/accent-foreground → neutral/900 → #171717
+     ------------------------------------------------------------------------- */
+  --accent: 0 0% 96.1%;
+  --accent-foreground: 0 0% 9%;
+  --accent-hover: 0 0% 89%;
+  --accent-active: 0 0% 82%;
+
+  /* -------------------------------------------------------------------------
+     COLOR — Destructive
+     @figmaVariable Shadcn/ui/destructive → red/600 → #dc2626
+     @wcag contrast 4.58:1 on white (AA)
+     ------------------------------------------------------------------------- */
+  --destructive: 0 72.2% 50.6%;
+  --destructive-foreground: 0 0% 98%;
+  --destructive-hover: 0 72.2% 43%;
+  --destructive-active: 0 72.2% 36%;
+  --destructive-disabled: 0 72.2% 75%;
+
+  /* -------------------------------------------------------------------------
+     COLOR — Border, Input, Ring
+     @figmaVariable Shadcn/ui/border → neutral/200 → #e5e5e5
+     @figmaVariable Shadcn/ui/input → neutral/200 → #e5e5e5
+     @figmaVariable Shadcn/ui/ring → neutral/500 → #737373
+     ------------------------------------------------------------------------- */
+  --border: 0 0% 89.8%;
+  --input: 0 0% 89.8%;
+  --ring: 0 0% 45.1%;
+
+  /* -------------------------------------------------------------------------
+     COLOR — Sidebar
+     @figmaVariable Shadcn/ui/sidebar → neutral/50 → #fafafa
+     @figmaVariable Shadcn/ui/sidebar-foreground → neutral/950 → #0a0a0a
+     @figmaVariable Shadcn/ui/sidebar-primary → neutral/900 → #171717
+     @figmaVariable Shadcn/ui/sidebar-primary-foreground → neutral/50 → #fafafa
+     @figmaVariable Shadcn/ui/sidebar-accent → neutral/100 → #f5f5f5
+     @figmaVariable Shadcn/ui/sidebar-accent-foreground → neutral/900 → #171717
+     @figmaVariable Shadcn/ui/sidebar-border → neutral/200 → #e5e5e5
+     @figmaVariable Shadcn/ui/sidebar-ring → neutral/500 → #737373
+     ------------------------------------------------------------------------- */
+  --sidebar: 0 0% 98%;
+  --sidebar-foreground: 0 0% 3.9%;
+  --sidebar-primary: 0 0% 9%;
+  --sidebar-primary-foreground: 0 0% 98%;
+  --sidebar-accent: 0 0% 96.1%;
+  --sidebar-accent-foreground: 0 0% 9%;
+  --sidebar-border: 0 0% 89.8%;
+  --sidebar-ring: 0 0% 45.1%;
+
+  /* -------------------------------------------------------------------------
+     COLOR — Semantic (custom)
+     @figmaVariable Shadcn/ui/semantic-background → #696867
+     @figmaVariable Shadcn/ui/semantic-border → #898887
+     @figmaVariable Shadcn/ui/semantic-foreground → white → #ffffff
+     ------------------------------------------------------------------------- */
+  --semantic-background: 30 1% 40.8%;
+  --semantic-border: 30 0.9% 53.3%;
+  --semantic-foreground: 0 0% 100%;
+
+  /* -------------------------------------------------------------------------
+     COLOR — Overlay
+     @figmaVariable Shadcn/ui/background-color → black/5 → #0000004d (30% opacity)
+     ------------------------------------------------------------------------- */
+  --overlay: 0 0% 0%;
+  --overlay-opacity: 0.3;
+
+  /* -------------------------------------------------------------------------
+     COLOR — Chart (Radix blue scale)
+     @figmaVariable Shadcn/ui/chart-1 → blue/8 → #5eb1ef
+     @figmaVariable Shadcn/ui/chart-2 → blue/9 → #0090ff
+     @figmaVariable Shadcn/ui/chart-3 → blue/10 → #0588f0
+     @figmaVariable Shadcn/ui/chart-4 → blue/11 → #0d74ce
+     @figmaVariable Shadcn/ui/chart-5 → blue/12 → #113264
+     ------------------------------------------------------------------------- */
+  --chart-1: 206 82% 65%;
+  --chart-2: 206 100% 50%;
+  --chart-3: 207 96% 48%;
+  --chart-4: 208 88% 43%;
+  --chart-5: 216 71% 23%;
+
+  /* -------------------------------------------------------------------------
+     COLOR — Neutral palette (raw Tailwind tw/colors scale)
+     @figmaVariable tw/colors/neutral/*
+     ------------------------------------------------------------------------- */
+  --neutral-50: 0 0% 98%;
+  --neutral-100: 0 0% 96.1%;
+  --neutral-200: 0 0% 89.8%;
+  --neutral-300: 0 0% 83.1%;
+  --neutral-400: 0 0% 63.9%;
+  --neutral-500: 0 0% 45.1%;
+  --neutral-600: 0 0% 32.2%;
+  --neutral-700: 0 0% 25.1%;
+  --neutral-800: 0 0% 14.9%;
+  --neutral-900: 0 0% 9%;
+  --neutral-950: 0 0% 3.9%;
+
+  /* -------------------------------------------------------------------------
+     TYPOGRAPHY — Font Family
+     @figmaVariable font/family/sans → Inter
+     @figmaVariable font/family/mono → Geist Mono
+     ------------------------------------------------------------------------- */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+
+  /* -------------------------------------------------------------------------
+     TYPOGRAPHY — Font Size (px → rem)
+     @figmaVariable font/size/xs → 12px
+     @figmaVariable font/size/sm → 14px
+     @figmaVariable font/size/base → 16px
+     @figmaVariable font/size/lg → 18px
+     @figmaVariable font/size/xl → 20px
+     @figmaVariable font/size/2xl → 24px
+     @figmaVariable font/size/3xl → 30px
+     @figmaVariable font/size/4xl → 36px
+     @figmaVariable font/size/5xl → 48px
+     @figmaVariable font/size/6xl → 60px
+     @figmaVariable font/size/7xl → 72px
+     @figmaVariable font/size/8xl → 96px
+     @figmaVariable font/size/9xl → 128px
+     ------------------------------------------------------------------------- */
+  --text-xs: 0.75rem;       /* 12px */
+  --text-sm: 0.875rem;      /* 14px */
+  --text-base: 1rem;        /* 16px */
+  --text-lg: 1.125rem;      /* 18px */
+  --text-xl: 1.25rem;       /* 20px */
+  --text-2xl: 1.5rem;       /* 24px */
+  --text-3xl: 1.875rem;     /* 30px */
+  --text-4xl: 2.25rem;      /* 36px */
+  --text-5xl: 3rem;         /* 48px */
+  --text-6xl: 3.75rem;      /* 60px */
+  --text-7xl: 4.5rem;       /* 72px */
+  --text-8xl: 6rem;         /* 96px */
+  --text-9xl: 8rem;         /* 128px */
+
+  /* -------------------------------------------------------------------------
+     TYPOGRAPHY — Font Weight
+     @figmaVariable font/weight/*
+     ------------------------------------------------------------------------- */
+  --font-thin: 100;
+  --font-extralight: 200;
+  --font-light: 300;
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-extrabold: 800;
+  --font-black: 900;
+
+  /* -------------------------------------------------------------------------
+     TYPOGRAPHY — Line Height (px → rem)
+     @figmaVariable font/leading/3 → 12px
+     @figmaVariable font/leading/4 → 16px
+     @figmaVariable font/leading/5 → 20px
+     @figmaVariable font/leading/6 → 24px
+     @figmaVariable font/leading/7 → 28px
+     @figmaVariable font/leading/8 → 32px
+     @figmaVariable font/leading/9 → 36px
+     @figmaVariable font/leading/10 → 40px
+     ------------------------------------------------------------------------- */
+  --leading-3: 0.75rem;     /* 12px */
+  --leading-4: 1rem;        /* 16px */
+  --leading-5: 1.25rem;     /* 20px */
+  --leading-6: 1.5rem;      /* 24px */
+  --leading-7: 1.75rem;     /* 28px */
+  --leading-8: 2rem;        /* 32px */
+  --leading-9: 2.25rem;     /* 36px */
+  --leading-10: 2.5rem;     /* 40px */
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 2;
+
+  /* -------------------------------------------------------------------------
+     TYPOGRAPHY — Letter Spacing (px → em)
+     @figmaVariable font/tracking/tighter → -0.8px
+     @figmaVariable font/tracking/tight → -0.4px
+     @figmaVariable font/tracking/normal → 0px
+     @figmaVariable font/tracking/wide → 0.4px
+     @figmaVariable font/tracking/wider → 0.8px
+     @figmaVariable font/tracking/widest → 1.6px
+     (converted from px to em based on 16px base)
+     ------------------------------------------------------------------------- */
+  --tracking-tighter: -0.05em;
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  --tracking-widest: 0.1em;
+
+  /* -------------------------------------------------------------------------
+     BORDER — Radius
+     @figmaVariable border-radius/rounded-none → 0px
+     @figmaVariable border-radius/rounded-xs → 2px
+     @figmaVariable border-radius/rounded-sm → 4px
+     @figmaVariable border-radius/rounded-md → 6px
+     @figmaVariable border-radius/rounded-lg → 8px
+     @figmaVariable border-radius/rounded-xl → 12px
+     @figmaVariable border-radius/rounded-2xl → 16px
+     @figmaVariable border-radius/rounded-3xl → 24px
+     @figmaVariable border-radius/rounded-4xl → 32px
+     @figmaVariable border-radius/rounded-full → 9999px
+     ------------------------------------------------------------------------- */
+  --radius: 0.5rem;             /* 8px — default (rounded-lg) */
+  --radius-none: 0px;
+  --radius-xs: 0.125rem;        /* 2px */
+  --radius-sm: 0.25rem;         /* 4px */
+  --radius-md: 0.375rem;        /* 6px */
+  --radius-lg: 0.5rem;          /* 8px */
+  --radius-xl: 0.75rem;         /* 12px */
+  --radius-2xl: 1rem;           /* 16px */
+  --radius-3xl: 1.5rem;         /* 24px */
+  --radius-4xl: 2rem;           /* 32px */
+  --radius-full: 9999px;
+
+  /* -------------------------------------------------------------------------
+     SPACING (4px base unit → rem)
+     @figmaVariable space/* — 35 values (px, 0–96)
+     Also consumed by: padding/*, margin/*, gap/*, gap-x/*, gap-y/* collections
+     (all alias the space collection in Figma)
+     ------------------------------------------------------------------------- */
+  --space-px: 1px;
+  --space-0: 0px;
+  --space-0-5: 0.125rem;   /* 2px */
+  --space-1: 0.25rem;      /* 4px */
+  --space-1-5: 0.375rem;   /* 6px */
+  --space-2: 0.5rem;       /* 8px */
+  --space-2-5: 0.625rem;   /* 10px */
+  --space-3: 0.75rem;      /* 12px */
+  --space-3-5: 0.875rem;   /* 14px */
+  --space-4: 1rem;         /* 16px */
+  --space-5: 1.25rem;      /* 20px */
+  --space-6: 1.5rem;       /* 24px */
+  --space-7: 1.75rem;      /* 28px */
+  --space-8: 2rem;         /* 32px */
+  --space-9: 2.25rem;      /* 36px */
+  --space-10: 2.5rem;      /* 40px */
+  --space-11: 2.75rem;     /* 44px */
+  --space-12: 3rem;        /* 48px */
+  --space-14: 3.5rem;      /* 56px */
+  --space-16: 4rem;        /* 64px */
+  --space-20: 5rem;        /* 80px */
+  --space-24: 6rem;        /* 96px */
+  --space-28: 7rem;        /* 112px */
+  --space-32: 8rem;        /* 128px */
+  --space-36: 9rem;        /* 144px */
+  --space-40: 10rem;       /* 160px */
+  --space-44: 11rem;       /* 176px */
+  --space-48: 12rem;       /* 192px */
+  --space-52: 13rem;       /* 208px */
+  --space-56: 14rem;       /* 224px */
+  --space-60: 15rem;       /* 240px */
+  --space-64: 16rem;       /* 256px */
+  --space-72: 18rem;       /* 288px */
+  --space-80: 20rem;       /* 320px */
+  --space-96: 24rem;       /* 384px */
+
+  /* -------------------------------------------------------------------------
+     BORDER — Width
+     ------------------------------------------------------------------------- */
+  --border-width-0: 0px;
+  --border-width-1: 1px;
+  --border-width-2: 2px;
+  --border-width-4: 4px;
+  --border-width-8: 8px;
+
+  /* -------------------------------------------------------------------------
+     BORDER — Directional Width
+     @figmaVariable border-width/border-x-*, border-y-*, border-s/e/t/r/b/l-*
+     ------------------------------------------------------------------------- */
+  --border-x-0: 0px;  --border-x-1: 1px;  --border-x-2: 2px;  --border-x-4: 4px;  --border-x-8: 8px;
+  --border-y-0: 0px;  --border-y-1: 1px;  --border-y-2: 2px;  --border-y-4: 4px;  --border-y-8: 8px;
+  --border-s-0: 0px;  --border-s-1: 1px;  --border-s-2: 2px;  --border-s-4: 4px;  --border-s-8: 8px;
+  --border-e-0: 0px;  --border-e-1: 1px;  --border-e-2: 2px;  --border-e-4: 4px;  --border-e-8: 8px;
+  --border-t-0: 0px;  --border-t-1: 1px;  --border-t-2: 2px;  --border-t-4: 4px;  --border-t-8: 8px;
+  --border-r-0: 0px;  --border-r-1: 1px;  --border-r-2: 2px;  --border-r-4: 4px;  --border-r-8: 8px;
+  --border-b-0: 0px;  --border-b-1: 1px;  --border-b-2: 2px;  --border-b-4: 4px;  --border-b-8: 8px;
+  --border-l-0: 0px;  --border-l-1: 1px;  --border-l-2: 2px;  --border-l-4: 4px;  --border-l-8: 8px;
+
+  /* -------------------------------------------------------------------------
+     OPACITY
+     @figmaVariable opacity/opacity-* (0–100 in steps of 5)
+     ------------------------------------------------------------------------- */
+  --opacity-0: 0; --opacity-5: 0.05; --opacity-10: 0.1; --opacity-15: 0.15; --opacity-20: 0.2;
+  --opacity-25: 0.25; --opacity-30: 0.3; --opacity-35: 0.35; --opacity-40: 0.4; --opacity-45: 0.45;
+  --opacity-50: 0.5; --opacity-55: 0.55; --opacity-60: 0.6; --opacity-65: 0.65; --opacity-70: 0.7;
+  --opacity-75: 0.75; --opacity-80: 0.8; --opacity-85: 0.85; --opacity-90: 0.9; --opacity-95: 0.95;
+  --opacity-100: 1;
+
+  /* -------------------------------------------------------------------------
+     STROKE WIDTH
+     @figmaVariable stroke-width/stroke-* (0.5px → 3px, steps 0.25px)
+     ------------------------------------------------------------------------- */
+  --stroke-0_5: 0.5px;  --stroke-0_75: 0.75px; --stroke-1: 1px;    --stroke-1_25: 1.25px;
+  --stroke-1_5: 1.5px;  --stroke-1_75: 1.75px; --stroke-2: 2px;    --stroke-2_25: 2.25px;
+  --stroke-2_5: 2.5px;  --stroke-2_75: 2.75px; --stroke-3: 3px;
+
+  /* -------------------------------------------------------------------------
+     SIZING — Height
+     @figmaVariable height/h-*
+     ------------------------------------------------------------------------- */
+  --h-0: 0px; --h-px: 1px; --h-0_5: 0.125rem; --h-1: 0.25rem; --h-2: 0.5rem;
+  --h-2_5: 0.625rem; --h-3: 0.75rem; --h-3_5: 0.875rem; --h-4: 1rem; --h-5: 1.25rem;
+  --h-6: 1.5rem; --h-7: 1.75rem; --h-8: 2rem; --h-9: 2.25rem; --h-10: 2.5rem;
+  --h-12: 3rem; --h-14: 3.5rem; --h-16: 4rem; --h-18: 4.5rem; --h-20: 5rem;
+  --h-24: 6rem; --h-48: 12rem; --h-72: 18rem; --h-96: 24rem;
+  --h-auto: auto; --h-full: 100%; --h-screen: 100vh; --h-svh: 100svh; --h-lvh: 100lvh;
+  --h-dvh: 100dvh; --h-min: min-content; --h-max: max-content; --h-fit: fit-content;
+
+  /* -------------------------------------------------------------------------
+     SIZING — Max Height
+     @figmaVariable max-height/max-h-*
+     ------------------------------------------------------------------------- */
+  --max-h-0: 0px; --max-h-px: 1px; --max-h-0_5: 0.125rem; --max-h-1: 0.25rem;
+  --max-h-1_5: 0.375rem; --max-h-2: 0.5rem; --max-h-2_5: 0.625rem; --max-h-3: 0.75rem;
+  --max-h-3_5: 0.875rem; --max-h-4: 1rem; --max-h-5: 1.25rem; --max-h-6: 1.5rem;
+  --max-h-7: 1.75rem; --max-h-8: 2rem; --max-h-9: 2.25rem; --max-h-10: 2.5rem;
+  --max-h-11: 2.75rem; --max-h-12: 3rem; --max-h-14: 3.5rem; --max-h-16: 4rem;
+  --max-h-20: 5rem; --max-h-24: 6rem; --max-h-28: 7rem; --max-h-32: 8rem;
+  --max-h-36: 9rem; --max-h-40: 10rem; --max-h-44: 11rem; --max-h-48: 12rem;
+  --max-h-52: 13rem; --max-h-56: 14rem; --max-h-60: 15rem; --max-h-64: 16rem;
+  --max-h-72: 18rem; --max-h-80: 20rem; --max-h-96: 24rem;
+  --max-h-none: none; --max-h-full: 100%; --max-h-screen: 100vh; --max-h-svh: 100svh;
+  --max-h-lvh: 100lvh; --max-h-dvh: 100dvh; --max-h-min: min-content;
+  --max-h-max: max-content; --max-h-fit: fit-content;
+
+  /* -------------------------------------------------------------------------
+     SIZING — Max Width
+     @figmaVariable max-width/max-w-*
+     ------------------------------------------------------------------------- */
+  --max-w-0: 0px; --max-w-px: 1px; --max-w-0_5: 0.125rem; --max-w-1: 0.25rem;
+  --max-w-1_5: 0.375rem; --max-w-2: 0.5rem; --max-w-2_5: 0.625rem; --max-w-3: 0.75rem;
+  --max-w-3_5: 0.875rem; --max-w-4: 1rem; --max-w-5: 1.25rem; --max-w-6: 1.5rem;
+  --max-w-7: 1.75rem; --max-w-8: 2rem; --max-w-9: 2.25rem; --max-w-10: 2.5rem;
+  --max-w-11: 2.75rem; --max-w-12: 3rem; --max-w-14: 3.5rem; --max-w-16: 4rem;
+  --max-w-20: 5rem; --max-w-24: 6rem; --max-w-28: 7rem; --max-w-32: 8rem;
+  --max-w-36: 9rem; --max-w-40: 10rem; --max-w-44: 11rem; --max-w-48: 12rem;
+  --max-w-52: 13rem; --max-w-56: 14rem; --max-w-60: 15rem; --max-w-64: 16rem;
+  --max-w-72: 18rem; --max-w-80: 20rem; --max-w-96: 24rem;
+  --max-w-none: none; --max-w-full: 100%; --max-w-min: min-content;
+  --max-w-max: max-content; --max-w-fit: fit-content;
+  --max-w-prose: 65ch;
+  --max-w-screen-sm: 640px; --max-w-screen-md: 768px; --max-w-screen-lg: 1024px;
+  --max-w-screen-xl: 1280px; --max-w-screen-2xl: 1536px;
+
+  /* -------------------------------------------------------------------------
+     SHADOW / ELEVATION
+     ------------------------------------------------------------------------- */
+  --shadow-none: none;
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+
+  /* -------------------------------------------------------------------------
+     ANIMATION — Duration
+     ------------------------------------------------------------------------- */
+  --duration-75: 75ms;
+  --duration-100: 100ms;
+  --duration-150: 150ms;
+  --duration-200: 200ms;
+  --duration-300: 300ms;
+  --duration-500: 500ms;
+  --duration-700: 700ms;
+  --duration-1000: 1000ms;
+
+  /* -------------------------------------------------------------------------
+     ANIMATION — Easing
+     ------------------------------------------------------------------------- */
+  --easing-linear: linear;
+  --easing-in: cubic-bezier(0.4, 0, 1, 1);
+  --easing-out: cubic-bezier(0, 0, 0.2, 1);
+  --easing-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --easing-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* -------------------------------------------------------------------------
+     Z-INDEX
+     ------------------------------------------------------------------------- */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-popover: 500;
+  --z-toast: 600;
+  --z-tooltip: 700;
+
+  /* -------------------------------------------------------------------------
+     COMPONENT — Button
+     ------------------------------------------------------------------------- */
+  --button-height-sm: 2rem;
+  --button-height-md: 2.5rem;
+  --button-height-lg: 2.75rem;
+  --button-height-icon: 2.5rem;
+  --button-padding-x-sm: 0.75rem;
+  --button-padding-x-md: 1rem;
+  --button-padding-x-lg: 1.5rem;
+  --button-font-size-sm: var(--text-sm);
+  --button-font-size-md: var(--text-sm);
+  --button-font-size-lg: var(--text-base);
+  --button-font-weight: var(--font-medium);
+  --button-radius: var(--radius-md);
+  --button-transition: var(--duration-150) var(--easing-in-out);
+
+  /* -------------------------------------------------------------------------
+     COMPONENT — Input
+     ------------------------------------------------------------------------- */
+  --input-height-sm: 2rem;
+  --input-height-md: 2.5rem;
+  --input-height-lg: 3rem;
+  --input-padding-x: 0.75rem;
+  --input-padding-y: 0.5rem;
+  --input-font-size: var(--text-sm);
+  --input-radius: var(--radius-md);
+  --input-border-color: hsl(var(--border));
+  --input-border-color-focus: hsl(var(--ring));
+  --input-border-color-error: hsl(var(--destructive));
+  --input-bg: hsl(var(--background));
+  --input-bg-disabled: hsl(var(--muted));
+  --input-text-placeholder: hsl(var(--muted-foreground));
+
+  /* -------------------------------------------------------------------------
+     COMPONENT — Card
+     ------------------------------------------------------------------------- */
+  --card-padding: var(--space-6);
+  --card-radius: var(--radius-lg);
+  --card-shadow: var(--shadow-sm);
+  --card-border-color: hsl(var(--border));
+
+  /* -------------------------------------------------------------------------
+     COMPONENT — Sidebar
+     ------------------------------------------------------------------------- */
+  --sidebar-width: 16rem;
+  --sidebar-width-collapsed: 4rem;
+  --sidebar-item-height: 2.5rem;
+  --sidebar-item-padding-x: var(--space-3);
+  --sidebar-item-radius: var(--radius-md);
+}
+
+/* ---------------------------------------------------------------------------
+   DARK MODE
+   (Generated from neutral scale — no dark mode defined in Figma source)
+   --------------------------------------------------------------------------- */
+:root[data-theme="dark"],
+:root.dark {
+
+  --background: 0 0% 3.9%;
+  --foreground: 0 0% 98%;
+
+  --card: 0 0% 3.9%;
+  --card-foreground: 0 0% 98%;
+
+  --popover: 0 0% 3.9%;
+  --popover-foreground: 0 0% 98%;
+
+  --primary: 0 0% 98%;
+  --primary-foreground: 0 0% 9%;
+  --primary-hover: 0 0% 90%;
+  --primary-active: 0 0% 83%;
+  --primary-disabled: 0 0% 50%;
+
+  --secondary: 0 0% 14.9%;
+  --secondary-foreground: 0 0% 98%;
+  --secondary-hover: 0 0% 20%;
+  --secondary-active: 0 0% 25%;
+  --secondary-disabled: 0 0% 12%;
+
+  --muted: 0 0% 14.9%;
+  --muted-foreground: 0 0% 63.9%;
+
+  --accent: 0 0% 14.9%;
+  --accent-foreground: 0 0% 98%;
+  --accent-hover: 0 0% 20%;
+  --accent-active: 0 0% 25%;
+
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --destructive-hover: 0 62.8% 38%;
+  --destructive-active: 0 62.8% 44%;
+  --destructive-disabled: 0 62.8% 20%;
+
+  --border: 0 0% 14.9%;
+  --input: 0 0% 14.9%;
+  --ring: 0 0% 83.1%;
+
+  --sidebar: 0 0% 9%;
+  --sidebar-foreground: 0 0% 98%;
+  --sidebar-primary: 0 0% 98%;
+  --sidebar-primary-foreground: 0 0% 9%;
+  --sidebar-accent: 0 0% 14.9%;
+  --sidebar-accent-foreground: 0 0% 98%;
+  --sidebar-border: 0 0% 14.9%;
+  --sidebar-ring: 0 0% 83.1%;
+
+  --chart-1: 206 82% 65%;
+  --chart-2: 206 100% 60%;
+  --chart-3: 207 96% 56%;
+  --chart-4: 208 88% 52%;
+  --chart-5: 216 71% 42%;
+
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.4);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.6);
+}

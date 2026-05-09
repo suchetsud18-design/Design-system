@@ -1,0 +1,56 @@
+/**
+ * Aggregate token export — all design tokens in a single object.
+ * Useful for Tailwind config, Storybook, or programmatic access.
+ */
+
+import { colors } from "./colors";
+import { typography, textStyles } from "./typography";
+import { spacing, spacingAlias, padding, p, px, py, pt, pr, pb, pl, m, mx, my, mt, mr, mb, ml, gap, gapX, gapY } from "./spacing";
+import {
+  shadows, borderRadius, borderWidth,
+  borderWidthX, borderWidthY, borderWidthS, borderWidthE,
+  borderWidthT, borderWidthR, borderWidthB, borderWidthL,
+  duration, easing, zIndex, transitions,
+  strokeWidth, opacity,
+} from "./effects";
+import { button, input, badge, card, dialog, toast, nav, sidebar } from "./components";
+import { height, maxHeight, maxWidth } from "./sizing";
+import { twColors, rdxColors } from "./palette";
+
+export const tokens = {
+  colors,
+  typography,
+  textStyles,
+  spacing,
+  spacingAlias,
+  componentPadding: padding,
+  padding: { p, px, py, pt, pr, pb, pl },
+  margin:  { m, mx, my, mt, mr, mb, ml },
+  gap,
+  gapX,
+  gapY,
+  shadows,
+  borderRadius,
+  borderWidth,
+  borderWidthDirectional: { x: borderWidthX, y: borderWidthY, s: borderWidthS, e: borderWidthE, t: borderWidthT, r: borderWidthR, b: borderWidthB, l: borderWidthL },
+  duration,
+  easing,
+  zIndex,
+  transitions,
+  strokeWidth,
+  opacity,
+  sizing: { height, maxHeight, maxWidth },
+  palette: { tw: twColors, rdx: rdxColors },
+  components: {
+    button,
+    input,
+    badge,
+    card,
+    dialog,
+    toast,
+    nav,
+    sidebar,
+  },
+} as const;
+
+export type Tokens = typeof tokens;
