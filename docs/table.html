@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Table — Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../src/tokens/design-tokens.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: var(--font-sans);
+      background: hsl(var(--background));
+      color: hsl(var(--foreground));
+      font-size: var(--text-base);
+      line-height: var(--leading-6);
+      display: flex; min-height: 100vh;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       SIDEBAR
+    ═══════════════════════════════════════════════════════════ */
+    .sidebar { width: 16rem; flex-shrink: 0; background: hsl(var(--sidebar)); border-right: 1px solid hsl(var(--sidebar-border)); display: flex; flex-direction: column; height: 100vh; position: sticky; top: 0; overflow-y: auto; }
+    .sidebar-header { display: flex; align-items: center; gap: 0.625rem; padding: 1rem; border-bottom: 1px solid hsl(var(--sidebar-border)); flex-shrink: 0; }
+    .sidebar-logo { width: 28px; height: 28px; background: hsl(var(--sidebar-primary)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sidebar-logo svg { color: hsl(var(--sidebar-primary-foreground)); }
+    .sidebar-brand { display: flex; flex-direction: column; }
+    .sidebar-brand-name { font-size: var(--text-sm); font-weight: var(--font-semibold); color: hsl(var(--sidebar-foreground)); line-height: var(--leading-5); }
+    .sidebar-brand-sub { font-size: var(--text-xs); color: hsl(var(--sidebar-accent-foreground)); line-height: var(--leading-4); }
+    .sidebar-nav { flex: 1; padding: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem; }
+    .sidebar-group { display: flex; flex-direction: column; gap: 0.125rem; }
+    .sidebar-group-label { font-size: var(--text-xs); font-weight: var(--font-medium); color: hsl(var(--sidebar-accent-foreground)); letter-spacing: var(--tracking-wide); text-transform: uppercase; padding: 0.75rem 0.75rem 0.25rem; }
+    .sidebar-item { display: flex; align-items: center; gap: 0.625rem; padding: 0.375rem 0.75rem; border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: var(--font-medium); color: hsl(var(--sidebar-foreground)); text-decoration: none; cursor: pointer; border: none; background: none; width: 100%; text-align: left; transition: background var(--duration-150) var(--easing-out); }
+    .sidebar-item:hover { background: hsl(var(--sidebar-accent)); color: hsl(var(--sidebar-accent-foreground)); }
+    .sidebar-item.active { background: hsl(var(--sidebar-primary)); color: hsl(var(--sidebar-primary-foreground)); }
+    .sidebar-item svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.8; }
+    .sidebar-item.active svg { opacity: 1; }
+    .sidebar-item-badge { margin-left: auto; font-size: var(--text-xs); font-weight: var(--font-medium); background: hsl(var(--sidebar-accent)); color: hsl(var(--sidebar-accent-foreground)); padding: 0.1rem 0.4rem; border-radius: var(--radius-full); line-height: var(--leading-5); }
+    .sidebar-item.active .sidebar-item-badge { background: hsl(var(--sidebar-primary-foreground) / 0.2); color: hsl(var(--sidebar-primary-foreground)); }
+    .sidebar-separator { height: 1px; background: hsl(var(--sidebar-border)); margin: 0.25rem 0.75rem; }
+    .sidebar-footer { padding: 0.75rem; border-top: 1px solid hsl(var(--sidebar-border)); flex-shrink: 0; }
+    .sidebar-footer-item { display: flex; align-items: center; gap: 0.625rem; padding: 0.375rem 0.75rem; border-radius: var(--radius-md); font-size: var(--text-sm); color: hsl(var(--sidebar-foreground)); text-decoration: none; }
+    .sidebar-footer-item:hover { background: hsl(var(--sidebar-accent)); }
+    .sidebar-footer-item svg { width: 16px; height: 16px; opacity: 0.7; }
+    .sidebar-toggle { display: none; position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 50; width: 44px; height: 44px; background: hsl(var(--foreground)); color: hsl(var(--background)); border: none; border-radius: var(--radius-full); cursor: pointer; align-items: center; justify-content: center; box-shadow: var(--shadow-lg); }
+    @media (max-width: 768px) {
+      .sidebar { position: fixed; top: 0; left: 0; z-index: 40; transform: translateX(-100%); transition: transform var(--duration-300) var(--easing-out); box-shadow: var(--shadow-xl); }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-toggle { display: flex; }
+      .sidebar-overlay { display: none; position: fixed; inset: 0; z-index: 30; background: rgba(0,0,0,0.5); }
+      .sidebar-overlay.open { display: block; }
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       MAIN
+    ═══════════════════════════════════════════════════════════ */
+    .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .topbar { height: 56px; flex-shrink: 0; border-bottom: 1px solid hsl(var(--border)); display: flex; align-items: center; padding: 0 2rem; gap: 1rem; position: sticky; top: 0; background: hsl(var(--background) / 0.9); backdrop-filter: blur(8px); z-index: 20; }
+    .topbar-breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: var(--text-sm); color: hsl(var(--muted-foreground)); }
+    .topbar-breadcrumb span { color: hsl(var(--foreground)); font-weight: var(--font-medium); }
+    .topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; }
+    .topbar-btn { display: inline-flex; align-items: center; gap: 0.375rem; font-size: var(--text-sm); padding: 0.375rem 0.75rem; border: 1px solid hsl(var(--border)); border-radius: var(--radius-md); background: none; cursor: pointer; color: hsl(var(--foreground)); font-family: var(--font-sans); text-decoration: none; transition: background var(--duration-150) var(--easing-out); }
+    .topbar-btn:hover { background: hsl(var(--muted)); }
+    .topbar-btn svg { width: 14px; height: 14px; }
+
+    .content { flex: 1; padding: 3rem 2rem; max-width: 860px; }
+
+    .page-header { margin-bottom: 3rem; border-bottom: 1px solid hsl(var(--border)); padding-bottom: 2rem; }
+    .page-header .lbl { display: inline-flex; font-size: var(--text-xs); font-weight: var(--font-medium); color: hsl(var(--muted-foreground)); letter-spacing: var(--tracking-wide); text-transform: uppercase; margin-bottom: 0.5rem; }
+    .page-header h1 { font-size: var(--text-4xl); font-weight: var(--font-bold); line-height: var(--leading-10); letter-spacing: var(--tracking-tight); margin-bottom: 0.5rem; }
+    .page-header p { color: hsl(var(--muted-foreground)); max-width: 48rem; }
+
+    .section { margin-bottom: 3rem; }
+    .section-title { font-size: var(--text-xl); font-weight: var(--font-semibold); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid hsl(var(--border)); }
+    .section-sub { font-size: var(--text-sm); color: hsl(var(--muted-foreground)); margin-bottom: 1.5rem; }
+
+    .preview-card { border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.5rem; }
+    .preview-label { font-size: var(--text-xs); font-weight: var(--font-medium); color: hsl(var(--muted-foreground)); letter-spacing: var(--tracking-wide); text-transform: uppercase; padding: 0.75rem 1rem; background: hsl(var(--muted)); border-bottom: 1px solid hsl(var(--border)); }
+    .preview-body { padding: 0; background: hsl(var(--background)); overflow-x: auto; }
+
+    /* ═══════════════════════════════════════════════════════════
+       TABLE COMPONENT
+    ═══════════════════════════════════════════════════════════ */
+    .tbl-wrap { width: 100%; overflow-x: auto; }
+    table.tbl { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+
+    /* Caption */
+    table.tbl caption {
+      caption-side: bottom;
+      font-size: var(--text-xs);
+      color: hsl(var(--muted-foreground));
+      padding: 0.75rem 0;
+      text-align: center;
+    }
+
+    /* Header */
+    table.tbl thead tr { border-bottom: 1px solid hsl(var(--border)); }
+    table.tbl thead th {
+      height: 3rem;
+      padding: 0 1rem;
+      text-align: left;
+      vertical-align: middle;
+      font-size: var(--text-xs);
+      font-weight: var(--font-medium);
+      color: hsl(var(--muted-foreground));
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* Body */
+    table.tbl tbody tr {
+      border-bottom: 1px solid hsl(var(--border));
+      transition: background var(--duration-100) var(--easing-out);
+    }
+    table.tbl tbody tr:last-child { border-bottom: none; }
+    table.tbl tbody tr:hover { background: hsl(var(--muted) / 0.5); }
+    table.tbl tbody tr.selected { background: hsl(var(--muted)); }
+    table.tbl tbody td {
+      height: 3.25rem;
+      padding: 0 1rem;
+      vertical-align: middle;
+    }
+
+    /* Footer */
+    table.tbl tfoot tr { border-top: 1px solid hsl(var(--border)); background: hsl(var(--muted) / 0.4); }
+    table.tbl tfoot td { height: 3rem; padding: 0 1rem; vertical-align: middle; font-weight: var(--font-medium); font-size: var(--text-xs); color: hsl(var(--muted-foreground)); text-transform: uppercase; letter-spacing: var(--tracking-wide); }
+
+    /* Sortable column header */
+    .th-sort {
+      display: inline-flex; align-items: center; gap: 0.375rem;
+      cursor: pointer; user-select: none;
+      background: none; border: none; padding: 0;
+      font-size: var(--text-xs); font-weight: var(--font-medium);
+      color: hsl(var(--muted-foreground));
+      letter-spacing: var(--tracking-wide); text-transform: uppercase;
+      font-family: var(--font-sans);
+      transition: color var(--duration-150) var(--easing-out);
+    }
+    .th-sort:hover { color: hsl(var(--foreground)); }
+    .th-sort.asc .sort-icon-up,
+    .th-sort.desc .sort-icon-down { color: hsl(var(--foreground)); }
+    .sort-icons { display: flex; flex-direction: column; gap: 1px; color: hsl(var(--muted-foreground) / 0.4); }
+    .sort-icons svg { display: block; }
+
+    /* Checkbox */
+    .tbl-checkbox { width: 1rem; height: 1rem; accent-color: hsl(var(--primary)); cursor: pointer; }
+
+    /* Status badges inside cells */
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 0.375rem;
+      padding: 0.125rem 0.5rem;
+      border-radius: var(--radius-full);
+      font-size: var(--text-xs); font-weight: var(--font-medium);
+      border: 1px solid transparent;
+    }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .status-paid    { background: #dcfce7; color: #15803d; border-color: #bbf7d0; }
+    .status-paid .status-dot { background: #16a34a; }
+    .status-pending { background: #fef9c3; color: #a16207; border-color: #fde68a; }
+    .status-pending .status-dot { background: #ca8a04; }
+    .status-failed  { background: hsl(var(--destructive) / 0.08); color: hsl(var(--destructive)); border-color: hsl(var(--destructive) / 0.2); }
+    .status-failed .status-dot  { background: hsl(var(--destructive)); }
+    .status-draft   { background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-color: hsl(var(--border)); }
+    .status-draft .status-dot   { background: hsl(var(--muted-foreground)); }
+
+    /* Row action buttons */
+    .row-actions { display: flex; align-items: center; gap: 0.25rem; justify-content: flex-end; }
+    .icon-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; border-radius: var(--radius-sm);
+      border: none; background: none; cursor: pointer;
+      color: hsl(var(--muted-foreground));
+      transition: background var(--duration-100) var(--easing-out), color var(--duration-100) var(--easing-out);
+    }
+    .icon-btn:hover { background: hsl(var(--muted)); color: hsl(var(--foreground)); }
+    .icon-btn.danger:hover { background: hsl(var(--destructive) / 0.1); color: hsl(var(--destructive)); }
+
+    /* Empty state */
+    .tbl-empty { padding: 3rem 1rem; text-align: center; color: hsl(var(--muted-foreground)); font-size: var(--text-sm); }
+    .tbl-empty-icon { margin: 0 auto 0.75rem; color: hsl(var(--muted-foreground) / 0.5); }
+
+    /* Toolbar above table */
+    .tbl-toolbar { display: flex; align-items: center; gap: 0.75rem; padding: 0.875rem 1rem; border-bottom: 1px solid hsl(var(--border)); }
+    .tbl-toolbar-count { font-size: var(--text-xs); color: hsl(var(--muted-foreground)); margin-left: auto; }
+
+    /* Pagination */
+    .tbl-pagination { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-top: 1px solid hsl(var(--border)); font-size: var(--text-xs); color: hsl(var(--muted-foreground)); }
+    .pg-btns { display: flex; gap: 0.25rem; }
+    .pg-btn { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border: 1px solid hsl(var(--border)); border-radius: var(--radius-sm); background: none; cursor: pointer; color: hsl(var(--foreground)); font-size: var(--text-xs); font-family: var(--font-sans); transition: background var(--duration-100) var(--easing-out); }
+    .pg-btn:hover { background: hsl(var(--muted)); }
+    .pg-btn.active { background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); border-color: hsl(var(--primary)); }
+    .pg-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Buttons */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem; font-family: var(--font-sans); font-size: var(--text-sm); font-weight: var(--font-medium); line-height: var(--leading-5); white-space: nowrap; border-radius: var(--radius-md); border: 1px solid transparent; cursor: pointer; text-decoration: none; transition: background var(--duration-150) var(--easing-out); outline: none; padding: 0 0.875rem; height: 2rem; }
+    .btn:focus-visible { box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring)); }
+    .btn-outline { background: hsl(var(--background)); color: hsl(var(--foreground)); border-color: hsl(var(--border)); }
+    .btn-outline:hover { background: hsl(var(--muted)); }
+    .btn-ghost { background: transparent; color: hsl(var(--muted-foreground)); border-color: transparent; }
+    .btn-ghost:hover { background: hsl(var(--muted)); color: hsl(var(--foreground)); }
+
+    /* Input */
+    .input { display: block; height: 2rem; padding: 0 0.75rem; font-family: var(--font-sans); font-size: var(--text-sm); color: hsl(var(--foreground)); background: hsl(var(--background)); border: 1px solid hsl(var(--border)); border-radius: var(--radius-md); outline: none; transition: box-shadow var(--duration-150) var(--easing-out); }
+    .input:focus { box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring)); }
+    .input::placeholder { color: hsl(var(--muted-foreground)); }
+    .input-wrap-sm { position: relative; display: flex; align-items: center; }
+    .input-wrap-sm .input { padding-left: 2rem; }
+    .input-icon { position: absolute; left: 0; top: 50%; transform: translateY(-50%); display: flex; align-items: center; justify-content: center; width: 2rem; color: hsl(var(--muted-foreground)); pointer-events: none; }
+
+    /* ── Code block ───────────────────────────────────────────── */
+    .code-block { background: hsl(var(--muted)); border: 1px solid hsl(var(--border)); border-radius: var(--radius-md); padding: 1rem 1.25rem; overflow-x: auto; margin-bottom: 1.5rem; }
+    .code-block pre { font-family: var(--font-mono); font-size: var(--text-sm); line-height: var(--leading-6); white-space: pre; color: hsl(var(--foreground)); }
+    .code-kw { color: #7c3aed; } .code-str { color: #059669; }
+    .code-cmt { color: hsl(var(--muted-foreground)); font-style: italic; }
+    .code-tag { color: #0284c7; } .code-attr { color: #b45309; }
+
+    /* ── Meta tables ──────────────────────────────────────────── */
+    .data-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); margin-bottom: 1.5rem; }
+    .data-table th { text-align: left; font-weight: var(--font-semibold); padding: 0.5rem 0.75rem; border-bottom: 2px solid hsl(var(--border)); }
+    .data-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid hsl(var(--border)); vertical-align: top; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table code { font-family: var(--font-mono); font-size: var(--text-xs); background: hsl(var(--muted)); padding: 0.1rem 0.4rem; border-radius: var(--radius-sm); }
+    .swatch { display: inline-flex; align-items: center; gap: 0.5rem; }
+    .swatch-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid hsl(var(--border)); flex-shrink: 0; }
+    .type-badge { color: #7c3aed; font-family: var(--font-mono); font-size: var(--text-xs); }
+    .muted-text { color: hsl(var(--muted-foreground)); }
+    kbd { font-family: var(--font-mono); font-size: var(--text-xs); background: hsl(var(--muted)); border: 1px solid hsl(var(--border)); border-radius: var(--radius-sm); padding: 0.1rem 0.35rem; }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SIDEBAR
+  ══════════════════════════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="sidebar-brand">
+        <span class="sidebar-brand-name">Design System</span>
+        <span class="sidebar-brand-sub">v1.0.0</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-group">
+        <div class="sidebar-group-label">Getting Started</div>
+        <a class="sidebar-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Introduction</a>
+        <a class="sidebar-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/></svg>Installation</a>
+        <a class="sidebar-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 1 0 4.93 19.07"/></svg>Theming</a>
+      </div>
+      <div class="sidebar-separator"></div>
+      <div class="sidebar-group">
+        <div class="sidebar-group-label">Tokens</div>
+        <a class="sidebar-item" href="colors.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>Colors</a>
+        <a class="sidebar-item" href="typography.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>Typography</a>
+        <a class="sidebar-item" href="spacing.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Spacing</a>
+        <a class="sidebar-item" href="effects.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Effects</a>
+      </div>
+      <div class="sidebar-separator"></div>
+      <div class="sidebar-group">
+        <div class="sidebar-group-label">Components</div>
+        <a class="sidebar-item" href="accordion.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>Accordion</a>
+        <a class="sidebar-item" href="alert.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Alert</a>
+        <a class="sidebar-item" href="alert-dialog.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Alert Dialog</a>
+        <a class="sidebar-item" href="badge.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="2" y1="9" x2="22" y2="9"/><path d="M8 3v6M16 3v6"/></svg>Badge</a>
+        <a class="sidebar-item" href="button.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="16 2 12 7 8 2"/></svg>Button</a>
+        <a class="sidebar-item" href="card.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Card</a>
+        <a class="sidebar-item" href="dialog.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15h0M2 9h20"/></svg>Dialog</a>
+        <a class="sidebar-item" href="input.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Input</a>
+        <a class="sidebar-item" href="select.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Select</a>
+        <a class="sidebar-item active" href="table.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 3H3v7h18V3zM21 14H3v7h18v-7z"/></svg>Table<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Toast</a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <a class="sidebar-footer-item" href="https://www.figma.com/design/NN6Wp4Hgsug3OKhiQdL27d/" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 38 57" fill="none"><path d="M19 28.5A9.5 9.5 0 0 1 28.5 19H19V9.5A9.5 9.5 0 1 0 9.5 19H19v9.5A9.5 9.5 0 1 0 28.5 38H19v-9.5Z" fill="#1ABCFE"/><path d="M28.5 28.5a9.5 9.5 0 1 1 0-19 9.5 9.5 0 0 1 0 19Z" fill="#FF7262"/></svg>
+        Figma Source
+      </a>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       MAIN
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-breadcrumb">
+        Components
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span>Table</span>
+      </div>
+      <div class="topbar-actions">
+        <a class="topbar-btn" href="https://www.figma.com/design/NN6Wp4Hgsug3OKhiQdL27d/" target="_blank">
+          <svg viewBox="0 0 38 57" fill="none"><path d="M19 28.5A9.5 9.5 0 0 1 28.5 19H19V9.5A9.5 9.5 0 1 0 9.5 19H19v9.5A9.5 9.5 0 1 0 28.5 38H19v-9.5Z" fill="#1ABCFE"/><path d="M28.5 28.5a9.5 9.5 0 1 1 0-19 9.5 9.5 0 0 1 0 19Z" fill="#FF7262"/></svg>
+          Figma
+        </a>
+        <a class="topbar-btn" href="https://ui.shadcn.com/docs/components/table" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          shadcn/ui
+        </a>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <header class="page-header">
+        <span class="lbl">Components</span>
+        <h1>Table</h1>
+        <p>A responsive HTML table with semantic sub-components for header, body, footer, rows, cells, and caption. Pair with sorting, selection, row actions, and pagination patterns for full data-table functionality.</p>
+      </header>
+
+      <!-- ── Basic table ──────────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Basic table</h2>
+        <p class="section-sub">The minimal structure: <code>TableHeader</code>, <code>TableBody</code>, and an optional <code>TableCaption</code>.</p>
+
+        <div class="preview-card">
+          <div class="preview-label">Invoices</div>
+          <div class="preview-body">
+            <div class="tbl-wrap">
+              <table class="tbl" aria-label="Recent invoices">
+                <caption>A list of your recent invoices.</caption>
+                <thead>
+                  <tr>
+                    <th>Invoice</th>
+                    <th>Status</th>
+                    <th>Method</th>
+                    <th style="text-align:right;">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="font-family:var(--font-mono);font-size:var(--text-xs);">INV-001</td>
+                    <td><span class="status-badge status-paid"><span class="status-dot"></span>Paid</span></td>
+                    <td>Credit card</td>
+                    <td style="text-align:right;font-weight:var(--font-medium);">$250.00</td>
+                  </tr>
+                  <tr>
+                    <td style="font-family:var(--font-mono);font-size:var(--text-xs);">INV-002</td>
+                    <td><span class="status-badge status-pending"><span class="status-dot"></span>Pending</span></td>
+                    <td>Bank transfer</td>
+                    <td style="text-align:right;font-weight:var(--font-medium);">$1,200.00</td>
+                  </tr>
+                  <tr>
+                    <td style="font-family:var(--font-mono);font-size:var(--text-xs);">INV-003</td>
+                    <td><span class="status-badge status-failed"><span class="status-dot"></span>Failed</span></td>
+                    <td>PayPal</td>
+                    <td style="text-align:right;font-weight:var(--font-medium);">$80.00</td>
+                  </tr>
+                  <tr>
+                    <td style="font-family:var(--font-mono);font-size:var(--text-xs);">INV-004</td>
+                    <td><span class="status-badge status-draft"><span class="status-dot"></span>Draft</span></td>
+                    <td>—</td>
+                    <td style="text-align:right;font-weight:var(--font-medium);">$540.00</td>
+                  </tr>
+                  <tr>
+                    <td style="font-family:var(--font-mono);font-size:var(--text-xs);">INV-005</td>
+                    <td><span class="status-badge status-paid"><span class="status-dot"></span>Paid</span></td>
+                    <td>Credit card</td>
+                    <td style="text-align:right;font-weight:var(--font-medium);">$320.00</td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="3">Total</td>
+                    <td style="text-align:right;">$2,390.00</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Sortable columns ────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Sortable columns</h2>
+        <p class="section-sub">Click any column header to sort. A second click reverses direction. Implemented client-side — production apps typically pass sort state to the server.</p>
+
+        <div class="preview-card">
+          <div class="preview-label">Team members — click headers to sort</div>
+          <div class="preview-body">
+            <div class="tbl-wrap">
+              <table class="tbl" id="sort-table" aria-label="Team members">
+                <thead>
+                  <tr>
+                    <th>
+                      <button class="th-sort" onclick="sortTable('name')" id="sort-name" aria-sort="none">
+                        Name
+                        <span class="sort-icons">
+                          <svg width="8" height="5" viewBox="0 0 8 5" class="sort-icon-up"><path d="M4 0L8 5H0L4 0Z" fill="currentColor"/></svg>
+                          <svg width="8" height="5" viewBox="0 0 8 5" class="sort-icon-down"><path d="M4 5L0 0H8L4 5Z" fill="currentColor"/></svg>
+                        </span>
+                      </button>
+                    </th>
+                    <th>
+                      <button class="th-sort" onclick="sortTable('role')" id="sort-role" aria-sort="none">
+                        Role
+                        <span class="sort-icons">
+                          <svg width="8" height="5" viewBox="0 0 8 5" class="sort-icon-up"><path d="M4 0L8 5H0L4 0Z" fill="currentColor"/></svg>
+                          <svg width="8" height="5" viewBox="0 0 8 5" class="sort-icon-down"><path d="M4 5L0 0H8L4 5Z" fill="currentColor"/></svg>
+                        </span>
+                      </button>
+                    </th>
+                    <th>Email</th>
+                    <th>
+                      <button class="th-sort" onclick="sortTable('joined')" id="sort-joined" aria-sort="none">
+                        Joined
+                        <span class="sort-icons">
+                          <svg width="8" height="5" viewBox="0 0 8 5" class="sort-icon-up"><path d="M4 0L8 5H0L4 0Z" fill="currentColor"/></svg>
+                          <svg width="8" height="5" viewBox="0 0 8 5" class="sort-icon-down"><path d="M4 5L0 0H8L4 5Z" fill="currentColor"/></svg>
+                        </span>
+                      </button>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="sort-tbody">
+                  <tr data-name="Alice Chen" data-role="Admin" data-joined="2022-03-15">
+                    <td><span style="font-weight:var(--font-medium);">Alice Chen</span></td>
+                    <td>Admin</td>
+                    <td style="color:hsl(var(--muted-foreground));">alice@example.com</td>
+                    <td>Mar 15, 2022</td>
+                  </tr>
+                  <tr data-name="Bob Santos" data-role="Member" data-joined="2023-07-02">
+                    <td><span style="font-weight:var(--font-medium);">Bob Santos</span></td>
+                    <td>Member</td>
+                    <td style="color:hsl(var(--muted-foreground));">bob@example.com</td>
+                    <td>Jul 2, 2023</td>
+                  </tr>
+                  <tr data-name="Cleo Park" data-role="Viewer" data-joined="2024-01-18">
+                    <td><span style="font-weight:var(--font-medium);">Cleo Park</span></td>
+                    <td>Viewer</td>
+                    <td style="color:hsl(var(--muted-foreground));">cleo@example.com</td>
+                    <td>Jan 18, 2024</td>
+                  </tr>
+                  <tr data-name="David Kim" data-role="Admin" data-joined="2021-11-30">
+                    <td><span style="font-weight:var(--font-medium);">David Kim</span></td>
+                    <td>Admin</td>
+                    <td style="color:hsl(var(--muted-foreground));">david@example.com</td>
+                    <td>Nov 30, 2021</td>
+                  </tr>
+                  <tr data-name="Eva Müller" data-role="Member" data-joined="2023-04-09">
+                    <td><span style="font-weight:var(--font-medium);">Eva Müller</span></td>
+                    <td>Member</td>
+                    <td style="color:hsl(var(--muted-foreground));">eva@example.com</td>
+                    <td>Apr 9, 2023</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Row selection + actions ─────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Row selection &amp; actions</h2>
+        <p class="section-sub">Checkbox column for bulk selection. Select-all in the header selects or clears all rows. Per-row action buttons appear on hover.</p>
+
+        <div class="preview-card">
+          <div class="preview-label">Products — select rows then act on selection</div>
+          <div class="preview-body" style="flex-direction:column;">
+            <div class="tbl-toolbar">
+              <div class="input-wrap-sm">
+                <span class="input-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+                <input class="input" type="search" placeholder="Filter products…" style="width:200px;" />
+              </div>
+              <span class="tbl-toolbar-count" id="sel-count">0 of 5 selected</span>
+              <button class="btn btn-outline" id="delete-btn" onclick="deleteSelected()" style="display:none;color:hsl(var(--destructive));border-color:hsl(var(--destructive)/0.4);">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                Delete selected
+              </button>
+            </div>
+            <div class="tbl-wrap">
+              <table class="tbl" id="sel-table" aria-label="Products">
+                <thead>
+                  <tr>
+                    <th style="width:3rem;padding-left:1rem;">
+                      <input class="tbl-checkbox" type="checkbox" id="select-all" onchange="toggleAll(this)" aria-label="Select all rows" />
+                    </th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th style="text-align:right;">Price</th>
+                    <th style="text-align:right;">Stock</th>
+                    <th style="width:5rem;"></th>
+                  </tr>
+                </thead>
+                <tbody id="sel-tbody">
+                  <tr>
+                    <td style="padding-left:1rem;"><input class="tbl-checkbox row-cb" type="checkbox" onchange="updateSelection()" aria-label="Select row" /></td>
+                    <td style="font-weight:var(--font-medium);">Wireless Headphones</td>
+                    <td style="color:hsl(var(--muted-foreground));">Audio</td>
+                    <td style="text-align:right;">$79.99</td>
+                    <td style="text-align:right;">142</td>
+                    <td><div class="row-actions"><button class="icon-btn" title="Edit"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="icon-btn danger" title="Delete"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button></div></td>
+                  </tr>
+                  <tr>
+                    <td style="padding-left:1rem;"><input class="tbl-checkbox row-cb" type="checkbox" onchange="updateSelection()" aria-label="Select row" /></td>
+                    <td style="font-weight:var(--font-medium);">USB-C Hub</td>
+                    <td style="color:hsl(var(--muted-foreground));">Accessories</td>
+                    <td style="text-align:right;">$49.99</td>
+                    <td style="text-align:right;">88</td>
+                    <td><div class="row-actions"><button class="icon-btn" title="Edit"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="icon-btn danger" title="Delete"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button></div></td>
+                  </tr>
+                  <tr>
+                    <td style="padding-left:1rem;"><input class="tbl-checkbox row-cb" type="checkbox" onchange="updateSelection()" aria-label="Select row" /></td>
+                    <td style="font-weight:var(--font-medium);">Mechanical Keyboard</td>
+                    <td style="color:hsl(var(--muted-foreground));">Peripherals</td>
+                    <td style="text-align:right;">$129.00</td>
+                    <td style="text-align:right;">34</td>
+                    <td><div class="row-actions"><button class="icon-btn" title="Edit"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="icon-btn danger" title="Delete"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button></div></td>
+                  </tr>
+                  <tr>
+                    <td style="padding-left:1rem;"><input class="tbl-checkbox row-cb" type="checkbox" onchange="updateSelection()" aria-label="Select row" /></td>
+                    <td style="font-weight:var(--font-medium);">Webcam 4K</td>
+                    <td style="color:hsl(var(--muted-foreground));">Video</td>
+                    <td style="text-align:right;">$199.00</td>
+                    <td style="text-align:right;">17</td>
+                    <td><div class="row-actions"><button class="icon-btn" title="Edit"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="icon-btn danger" title="Delete"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button></div></td>
+                  </tr>
+                  <tr>
+                    <td style="padding-left:1rem;"><input class="tbl-checkbox row-cb" type="checkbox" onchange="updateSelection()" aria-label="Select row" /></td>
+                    <td style="font-weight:var(--font-medium);">Desk Mat XL</td>
+                    <td style="color:hsl(var(--muted-foreground));">Accessories</td>
+                    <td style="text-align:right;">$39.99</td>
+                    <td style="text-align:right;">260</td>
+                    <td><div class="row-actions"><button class="icon-btn" title="Edit"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="icon-btn danger" title="Delete"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="tbl-pagination">
+              <span>Showing 1–5 of 5 results</span>
+              <div class="pg-btns">
+                <button class="pg-btn" disabled aria-label="Previous page">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <button class="pg-btn active">1</button>
+                <button class="pg-btn" disabled aria-label="Next page">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Empty state ──────────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Empty state</h2>
+        <p class="section-sub">Show a helpful message when there are no rows — never render an empty <code>&lt;tbody&gt;</code> without context.</p>
+
+        <div class="preview-card">
+          <div class="preview-label">No results found</div>
+          <div class="preview-body" style="padding:0;">
+            <div class="tbl-wrap">
+              <table class="tbl" aria-label="No results">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th style="text-align:right;">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="4">
+                      <div class="tbl-empty">
+                        <div class="tbl-empty-icon">
+                          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 3H3v7h18V3zM21 14H3v7h18v-7z"/></svg>
+                        </div>
+                        <p style="font-weight:var(--font-medium);margin-bottom:0.25rem;">No results found</p>
+                        <p style="color:hsl(var(--muted-foreground));font-size:var(--text-xs);">Try adjusting your search or filters.</p>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Usage ──────────────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Usage — shadcn/ui</h2>
+        <div class="code-block"><pre><span class="code-cmt"># Install via shadcn/ui CLI</span>
+npx shadcn@latest add table</pre></div>
+        <div class="code-block"><pre><span class="code-kw">import</span> {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} <span class="code-kw">from</span> <span class="code-str">"@/components/ui/table"</span>
+
+<span class="code-tag">&lt;Table&gt;</span>
+  <span class="code-tag">&lt;TableCaption&gt;</span>A list of your recent invoices.<span class="code-tag">&lt;/TableCaption&gt;</span>
+  <span class="code-tag">&lt;TableHeader&gt;</span>
+    <span class="code-tag">&lt;TableRow&gt;</span>
+      <span class="code-tag">&lt;TableHead&gt;</span>Invoice<span class="code-tag">&lt;/TableHead&gt;</span>
+      <span class="code-tag">&lt;TableHead&gt;</span>Status<span class="code-tag">&lt;/TableHead&gt;</span>
+      <span class="code-tag">&lt;TableHead</span> <span class="code-attr">className</span>=<span class="code-str">"text-right"</span><span class="code-tag">&gt;</span>Amount<span class="code-tag">&lt;/TableHead&gt;</span>
+    <span class="code-tag">&lt;/TableRow&gt;</span>
+  <span class="code-tag">&lt;/TableHeader&gt;</span>
+  <span class="code-tag">&lt;TableBody&gt;</span>
+    {invoices.map((inv) =&gt; (
+      <span class="code-tag">&lt;TableRow</span> <span class="code-attr">key</span>={inv.id}<span class="code-tag">&gt;</span>
+        <span class="code-tag">&lt;TableCell</span> <span class="code-attr">className</span>=<span class="code-str">"font-medium"</span><span class="code-tag">&gt;</span>{inv.id}<span class="code-tag">&lt;/TableCell&gt;</span>
+        <span class="code-tag">&lt;TableCell&gt;</span>{inv.status}<span class="code-tag">&lt;/TableCell&gt;</span>
+        <span class="code-tag">&lt;TableCell</span> <span class="code-attr">className</span>=<span class="code-str">"text-right"</span><span class="code-tag">&gt;</span>{inv.amount}<span class="code-tag">&lt;/TableCell&gt;</span>
+      <span class="code-tag">&lt;/TableRow&gt;</span>
+    ))}
+  <span class="code-tag">&lt;/TableBody&gt;</span>
+  <span class="code-tag">&lt;TableFooter&gt;</span>
+    <span class="code-tag">&lt;TableRow&gt;</span>
+      <span class="code-tag">&lt;TableCell</span> <span class="code-attr">colSpan</span>={2}<span class="code-tag">&gt;</span>Total<span class="code-tag">&lt;/TableCell&gt;</span>
+      <span class="code-tag">&lt;TableCell</span> <span class="code-attr">className</span>=<span class="code-str">"text-right"</span><span class="code-tag">&gt;</span>$2,390.00<span class="code-tag">&lt;/TableCell&gt;</span>
+    <span class="code-tag">&lt;/TableRow&gt;</span>
+  <span class="code-tag">&lt;/TableFooter&gt;</span>
+<span class="code-tag">&lt;/Table&gt;</span>
+
+<span class="code-cmt">// Responsive — wrap in a scrollable container</span>
+<span class="code-tag">&lt;div</span> <span class="code-attr">className</span>=<span class="code-str">"relative w-full overflow-auto"</span><span class="code-tag">&gt;</span>
+  <span class="code-tag">&lt;Table&gt;</span><span class="code-cmt">{/* ... */}</span><span class="code-tag">&lt;/Table&gt;</span>
+<span class="code-tag">&lt;/div&gt;</span></pre></div>
+      </section>
+
+      <!-- ── Props ──────────────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Props</h2>
+        <p class="section-sub">All sub-components accept standard HTML element attributes in addition to <code>className</code> for Tailwind overrides.</p>
+        <table class="data-table">
+          <thead><tr><th>Component</th><th>HTML element</th><th>Key attributes</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code>Table</code></td><td><code>&lt;table&gt;</code></td><td><code>aria-label</code></td><td>Always provide an accessible label when there is no visible caption.</td></tr>
+            <tr><td><code>TableHeader</code></td><td><code>&lt;thead&gt;</code></td><td>—</td><td>Sticky positioning via <code>sticky top-0</code> Tailwind class when needed.</td></tr>
+            <tr><td><code>TableBody</code></td><td><code>&lt;tbody&gt;</code></td><td>—</td><td>Renders row hover and selection styles via <code>TableRow</code>.</td></tr>
+            <tr><td><code>TableFooter</code></td><td><code>&lt;tfoot&gt;</code></td><td>—</td><td>Muted background; use for totals or summary rows.</td></tr>
+            <tr><td><code>TableRow</code></td><td><code>&lt;tr&gt;</code></td><td><code>data-state="selected"</code></td><td>Adds a selected background when <code>data-state</code> is <code>"selected"</code>.</td></tr>
+            <tr><td><code>TableHead</code></td><td><code>&lt;th&gt;</code></td><td><code>scope</code>, <code>aria-sort</code></td><td>Set <code>aria-sort="ascending"</code> / <code>"descending"</code> / <code>"none"</code> on sortable columns.</td></tr>
+            <tr><td><code>TableCell</code></td><td><code>&lt;td&gt;</code></td><td><code>colSpan</code>, <code>rowSpan</code></td><td>Use <code>className="text-right font-medium"</code> for numeric/currency cells.</td></tr>
+            <tr><td><code>TableCaption</code></td><td><code>&lt;caption&gt;</code></td><td>—</td><td>Renders below the table by default (<code>caption-side: bottom</code>).</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ── Design Tokens ──────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Design Tokens</h2>
+        <p class="section-sub">CSS custom properties sourced from Figma Variables → <code>design-tokens.css</code>.</p>
+        <table class="data-table">
+          <thead><tr><th>Token</th><th>Value</th><th>Usage</th></tr></thead>
+          <tbody>
+            <tr><td><code>--background</code></td><td><span class="swatch"><span class="swatch-dot" style="background:hsl(var(--background));"></span>hsl(0 0% 100%)</span></td><td>Table and cell background</td></tr>
+            <tr><td><code>--foreground</code></td><td><span class="swatch"><span class="swatch-dot" style="background:hsl(var(--foreground));border-color:hsl(var(--foreground));"></span>hsl(0 0% 3.9%)</span></td><td>Cell text color</td></tr>
+            <tr><td><code>--border</code></td><td><span class="swatch"><span class="swatch-dot" style="background:hsl(var(--border));"></span>hsl(0 0% 89.8%)</span></td><td>Row dividers; header bottom border</td></tr>
+            <tr><td><code>--muted</code></td><td><span class="swatch"><span class="swatch-dot" style="background:hsl(var(--muted));border-color:hsl(var(--border));"></span>hsl(0 0% 96.1%)</span></td><td>TableFooter background; row hover (50% opacity); selected row</td></tr>
+            <tr><td><code>--muted-foreground</code></td><td><span class="swatch"><span class="swatch-dot" style="background:hsl(var(--muted-foreground));"></span>hsl(0 0% 45.1%)</span></td><td>TableHead text; caption; secondary cell text</td></tr>
+            <tr><td><code>--accent</code></td><td><span class="swatch"><span class="swatch-dot" style="background:hsl(var(--accent));"></span>hsl(0 0% 96.1%)</span></td><td>Keyboard-focused row highlight</td></tr>
+            <tr><td><code>--primary</code></td><td><span class="swatch"><span class="swatch-dot" style="background:hsl(var(--primary));border-color:hsl(var(--primary));"></span>hsl(221.2 83.2% 53.3%)</span></td><td>Checkbox accent color; active pagination button</td></tr>
+            <tr><td><code>--destructive</code></td><td><span class="swatch"><span class="swatch-dot" style="background:hsl(var(--destructive));"></span>hsl(0 84.2% 60.2%)</span></td><td>Delete action icon hover; failed status badge</td></tr>
+            <tr><td><code>--text-xs</code></td><td>0.75rem (12px)</td><td>TableHead label size; caption; status badge text</td></tr>
+            <tr><td><code>--text-sm</code></td><td>0.875rem (14px)</td><td>TableCell default font size</td></tr>
+            <tr><td><code>--font-medium</code></td><td>500</td><td>Primary cell values; footer totals</td></tr>
+            <tr><td><code>--tracking-wide</code></td><td>0.05em</td><td>TableHead letter-spacing</td></tr>
+            <tr><td><code>--duration-100</code></td><td>100ms</td><td>Row hover transition; icon button color transition</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ── Accessibility ──────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Accessibility</h2>
+        <table class="data-table">
+          <thead><tr><th>Feature</th><th>Behavior</th></tr></thead>
+          <tbody>
+            <tr><td><code>aria-label</code> on table</td><td>Required when no <code>TableCaption</code> is visible. Screen readers announce it before reading the table structure.</td></tr>
+            <tr><td><code>scope="col"</code></td><td>shadcn/ui adds this automatically to <code>&lt;th&gt;</code> elements to associate each header with its column.</td></tr>
+            <tr><td><code>aria-sort</code></td><td>Set to <code>"ascending"</code>, <code>"descending"</code>, or <code>"none"</code> on sortable <code>TableHead</code> buttons. Update it on click.</td></tr>
+            <tr><td>Sort button</td><td>Use a native <code>&lt;button&gt;</code> inside <code>TableHead</code> — not a <code>&lt;div&gt;</code> with onclick — so keyboard users can activate it with <kbd>Enter</kbd> / <kbd>Space</kbd>.</td></tr>
+            <tr><td>Checkbox select-all</td><td>Use <code>aria-label="Select all rows"</code> on the header checkbox and <code>aria-label="Select row"</code> on each row checkbox. Set <code>indeterminate</code> state when some (not all) rows are selected.</td></tr>
+            <tr><td><code>data-state="selected"</code></td><td>Add to <code>TableRow</code> when a row is selected; this applies the selected background and is announced by AT as a state change.</td></tr>
+            <tr><td>Row actions</td><td>Icon-only action buttons must have <code>aria-label</code> or a visually-hidden text label — icon alone is not accessible.</td></tr>
+            <tr><td>Keyboard navigation</td><td>Standard <kbd>Tab</kbd> order across interactive elements (checkboxes, sort buttons, action buttons). For full grid keyboard navigation, use <code>role="grid"</code> with <kbd>→</kbd> / <kbd>←</kbd> cell navigation.</td></tr>
+            <tr><td>Empty state</td><td>Use a single row with <code>colSpan</code> equal to the total column count so the table structure remains valid and screen readers don't skip the empty message.</td></tr>
+            <tr><td>Responsive scroll</td><td>Wrap in <code>overflow-x: auto</code>. Do not truncate or hide columns — horizontal scroll is preferable to data loss.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+    </main>
+  </div>
+
+  <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('overlay').classList.toggle('open');
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('overlay').classList.remove('open');
+    }
+
+    /* ── Sortable table ────────────────────────────────────────── */
+    let sortState = { col: null, dir: 'asc' };
+
+    function sortTable(col) {
+      const tbody = document.getElementById('sort-tbody');
+      const rows  = Array.from(tbody.querySelectorAll('tr'));
+
+      // Toggle direction if same column
+      if (sortState.col === col) {
+        sortState.dir = sortState.dir === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortState.col = col;
+        sortState.dir = 'asc';
+      }
+
+      // Update button states
+      ['name','role','joined'].forEach(c => {
+        const btn = document.getElementById('sort-' + c);
+        btn.classList.remove('asc', 'desc');
+        btn.setAttribute('aria-sort', 'none');
+      });
+      const activeBtn = document.getElementById('sort-' + col);
+      activeBtn.classList.add(sortState.dir);
+      activeBtn.setAttribute('aria-sort', sortState.dir === 'asc' ? 'ascending' : 'descending');
+
+      // Sort rows
+      rows.sort((a, b) => {
+        const av = a.dataset[col] || '';
+        const bv = b.dataset[col] || '';
+        return sortState.dir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+      });
+      rows.forEach(r => tbody.appendChild(r));
+    }
+
+    /* ── Row selection ─────────────────────────────────────────── */
+    function updateSelection() {
+      const all  = document.querySelectorAll('.row-cb');
+      const checked = document.querySelectorAll('.row-cb:checked');
+      const count   = checked.length;
+      const total   = all.length;
+
+      document.getElementById('sel-count').textContent = count + ' of ' + total + ' selected';
+
+      const selectAll = document.getElementById('select-all');
+      selectAll.checked       = count === total;
+      selectAll.indeterminate = count > 0 && count < total;
+
+      const deleteBtn = document.getElementById('delete-btn');
+      deleteBtn.style.display = count > 0 ? '' : 'none';
+
+      // Highlight selected rows
+      all.forEach(cb => {
+        cb.closest('tr').classList.toggle('selected', cb.checked);
+      });
+    }
+
+    function toggleAll(master) {
+      document.querySelectorAll('.row-cb').forEach(cb => { cb.checked = master.checked; });
+      updateSelection();
+    }
+
+    function deleteSelected() {
+      const checked = document.querySelectorAll('.row-cb:checked');
+      checked.forEach(cb => cb.closest('tr').remove());
+      // Reset select-all
+      const selectAll = document.getElementById('select-all');
+      selectAll.checked       = false;
+      selectAll.indeterminate = false;
+      updateSelection();
+    }
+  </script>
+</body>
+</html>
