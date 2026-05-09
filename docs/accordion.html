@@ -6,10 +6,13 @@
   <title>Accordion — Design System</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../src/tokens/design-tokens.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Root layout ──────────────────────────────────────────── */
+    html, body { height: 100%; }
 
     body {
       font-family: var(--font-sans);
@@ -17,344 +20,544 @@
       color: hsl(var(--foreground));
       font-size: var(--text-base);
       line-height: var(--leading-6);
-      padding: 3rem 2rem;
-      max-width: 900px;
-      margin: 0 auto;
+      display: flex;
+      min-height: 100vh;
     }
 
-    /* ── Page header ───────────────────────────────────────────── */
+    /* ═══════════════════════════════════════════════════════════
+       SIDEBAR
+    ═══════════════════════════════════════════════════════════ */
+    .sidebar {
+      width: 16rem;
+      flex-shrink: 0;
+      background: hsl(var(--sidebar));
+      border-right: 1px solid hsl(var(--sidebar-border));
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      overflow-y: auto;
+    }
+
+    /* Sidebar header */
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 1rem;
+      border-bottom: 1px solid hsl(var(--sidebar-border));
+      flex-shrink: 0;
+    }
+    .sidebar-logo {
+      width: 28px; height: 28px;
+      background: hsl(var(--sidebar-primary));
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .sidebar-logo svg { color: hsl(var(--sidebar-primary-foreground)); }
+    .sidebar-brand {
+      display: flex; flex-direction: column;
+    }
+    .sidebar-brand-name {
+      font-size: var(--text-sm); font-weight: var(--font-semibold);
+      color: hsl(var(--sidebar-foreground));
+      line-height: var(--leading-5);
+    }
+    .sidebar-brand-sub {
+      font-size: var(--text-xs);
+      color: hsl(var(--sidebar-accent-foreground));
+      line-height: var(--leading-4);
+    }
+
+    /* Sidebar nav */
+    .sidebar-nav { flex: 1; padding: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem; }
+
+    .sidebar-group { display: flex; flex-direction: column; gap: 0.125rem; }
+    .sidebar-group-label {
+      font-size: var(--text-xs); font-weight: var(--font-medium);
+      color: hsl(var(--sidebar-accent-foreground));
+      letter-spacing: var(--tracking-wide); text-transform: uppercase;
+      padding: 0.75rem 0.75rem 0.25rem;
+    }
+
+    .sidebar-item {
+      display: flex; align-items: center; gap: 0.625rem;
+      padding: 0.375rem 0.75rem;
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm); font-weight: var(--font-medium);
+      color: hsl(var(--sidebar-foreground));
+      text-decoration: none;
+      cursor: pointer; border: none; background: none; width: 100%;
+      text-align: left; transition: background var(--duration-150) var(--easing-out);
+    }
+    .sidebar-item:hover {
+      background: hsl(var(--sidebar-accent));
+      color: hsl(var(--sidebar-accent-foreground));
+    }
+    .sidebar-item.active {
+      background: hsl(var(--sidebar-primary));
+      color: hsl(var(--sidebar-primary-foreground));
+    }
+    .sidebar-item svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.8; }
+    .sidebar-item.active svg { opacity: 1; }
+
+    .sidebar-item-badge {
+      margin-left: auto;
+      font-size: var(--text-xs); font-weight: var(--font-medium);
+      background: hsl(var(--sidebar-accent));
+      color: hsl(var(--sidebar-accent-foreground));
+      padding: 0.1rem 0.4rem;
+      border-radius: var(--radius-full);
+      line-height: var(--leading-5);
+    }
+    .sidebar-item.active .sidebar-item-badge {
+      background: hsl(var(--sidebar-primary-foreground) / 0.2);
+      color: hsl(var(--sidebar-primary-foreground));
+    }
+
+    .sidebar-separator {
+      height: 1px; background: hsl(var(--sidebar-border));
+      margin: 0.25rem 0.75rem;
+    }
+
+    /* Sidebar footer */
+    .sidebar-footer {
+      padding: 0.75rem;
+      border-top: 1px solid hsl(var(--sidebar-border));
+      flex-shrink: 0;
+    }
+    .sidebar-footer-item {
+      display: flex; align-items: center; gap: 0.625rem;
+      padding: 0.375rem 0.75rem;
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      color: hsl(var(--sidebar-foreground));
+      text-decoration: none;
+    }
+    .sidebar-footer-item:hover { background: hsl(var(--sidebar-accent)); }
+    .sidebar-footer-item svg { width: 16px; height: 16px; opacity: 0.7; }
+
+    /* Mobile toggle */
+    .sidebar-toggle {
+      display: none;
+      position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 50;
+      width: 44px; height: 44px;
+      background: hsl(var(--foreground));
+      color: hsl(var(--background));
+      border: none; border-radius: var(--radius-full);
+      cursor: pointer; align-items: center; justify-content: center;
+      box-shadow: var(--shadow-lg);
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed; top: 0; left: 0; z-index: 40;
+        transform: translateX(-100%);
+        transition: transform var(--duration-300) var(--easing-out);
+        box-shadow: var(--shadow-xl);
+      }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-toggle { display: flex; }
+      .sidebar-overlay {
+        display: none; position: fixed; inset: 0; z-index: 30;
+        background: rgba(0,0,0,0.5);
+      }
+      .sidebar-overlay.open { display: block; }
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       MAIN
+    ═══════════════════════════════════════════════════════════ */
+    .main {
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column;
+    }
+
+    /* Top bar */
+    .topbar {
+      height: 56px; flex-shrink: 0;
+      border-bottom: 1px solid hsl(var(--border));
+      display: flex; align-items: center;
+      padding: 0 2rem; gap: 1rem;
+      position: sticky; top: 0;
+      background: hsl(var(--background) / 0.9);
+      backdrop-filter: blur(8px);
+      z-index: 20;
+    }
+    .topbar-breadcrumb {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: var(--text-sm); color: hsl(var(--muted-foreground));
+    }
+    .topbar-breadcrumb span { color: hsl(var(--foreground)); font-weight: var(--font-medium); }
+    .topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; }
+    .topbar-btn {
+      display: inline-flex; align-items: center; gap: 0.375rem;
+      font-size: var(--text-sm); padding: 0.375rem 0.75rem;
+      border: 1px solid hsl(var(--border)); border-radius: var(--radius-md);
+      background: none; cursor: pointer; color: hsl(var(--foreground));
+      font-family: var(--font-sans); text-decoration: none;
+      transition: background var(--duration-150) var(--easing-out);
+    }
+    .topbar-btn:hover { background: hsl(var(--muted)); }
+    .topbar-btn svg { width: 14px; height: 14px; }
+
+    /* Content */
+    .content {
+      flex: 1; padding: 3rem 2rem;
+      max-width: 800px;
+    }
+
+    /* ── Page header ──────────────────────────────────────────── */
     .page-header { margin-bottom: 3rem; border-bottom: 1px solid hsl(var(--border)); padding-bottom: 2rem; }
     .page-header .badge {
       display: inline-flex; align-items: center;
       font-size: var(--text-xs); font-weight: var(--font-medium);
       color: hsl(var(--muted-foreground));
-      letter-spacing: var(--tracking-wide);
-      text-transform: uppercase; margin-bottom: 0.5rem;
+      letter-spacing: var(--tracking-wide); text-transform: uppercase; margin-bottom: 0.5rem;
     }
     .page-header h1 {
       font-size: var(--text-4xl); font-weight: var(--font-bold);
-      line-height: var(--leading-10); letter-spacing: var(--tracking-tight);
-      margin-bottom: 0.5rem;
+      line-height: var(--leading-10); letter-spacing: var(--tracking-tight); margin-bottom: 0.5rem;
     }
     .page-header p { color: hsl(var(--muted-foreground)); max-width: 48rem; }
 
-    /* ── Section headings ──────────────────────────────────────── */
+    /* ── Sections ─────────────────────────────────────────────── */
     .section { margin-bottom: 3rem; }
     .section-title {
       font-size: var(--text-xl); font-weight: var(--font-semibold);
       margin-bottom: 1rem; padding-bottom: 0.5rem;
       border-bottom: 1px solid hsl(var(--border));
     }
-    .section-sub {
-      font-size: var(--text-sm); color: hsl(var(--muted-foreground));
-      margin-bottom: 1.5rem;
-    }
+    .section-sub { font-size: var(--text-sm); color: hsl(var(--muted-foreground)); margin-bottom: 1.5rem; }
 
-    /* ── Preview card ──────────────────────────────────────────── */
-    .preview-card {
-      border: 1px solid hsl(var(--border));
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      margin-bottom: 1.5rem;
-    }
+    /* ── Preview card ─────────────────────────────────────────── */
+    .preview-card { border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.5rem; }
     .preview-label {
       font-size: var(--text-xs); font-weight: var(--font-medium);
       color: hsl(var(--muted-foreground));
       letter-spacing: var(--tracking-wide); text-transform: uppercase;
-      padding: 0.75rem 1rem;
-      background: hsl(var(--muted));
-      border-bottom: 1px solid hsl(var(--border));
+      padding: 0.75rem 1rem; background: hsl(var(--muted)); border-bottom: 1px solid hsl(var(--border));
     }
-    .preview-body {
-      padding: 2rem;
-      background: hsl(var(--background));
-      display: flex; justify-content: center;
-    }
+    .preview-body { padding: 2rem; background: hsl(var(--background)); display: flex; justify-content: center; }
 
-    /* ── Accordion component ───────────────────────────────────── */
+    /* ── Accordion component ──────────────────────────────────── */
     .accordion { width: 100%; max-width: 503px; }
-
-    .accordion-item {
-      border-bottom: 1px solid hsl(var(--border));
-    }
+    .accordion-item { border-bottom: 1px solid hsl(var(--border)); }
     .accordion-item:last-child { border-bottom: none; }
-
     .accordion-trigger {
-      display: flex; align-items: center;
-      width: 100%; height: 52px;
-      padding: var(--space-4) 0;
-      background: none; border: none; cursor: pointer;
-      text-align: left; color: hsl(var(--foreground));
-      font-family: var(--font-sans);
-      font-size: var(--text-sm); font-weight: var(--font-medium);
-      line-height: var(--leading-5);
+      display: flex; align-items: center; width: 100%; height: 52px;
+      padding: var(--space-4) 0; background: none; border: none; cursor: pointer;
+      text-align: left; color: hsl(var(--foreground)); font-family: var(--font-sans);
+      font-size: var(--text-sm); font-weight: var(--font-medium); line-height: var(--leading-5);
     }
-    .accordion-trigger:hover .accordion-trigger-text {
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
+    .accordion-trigger:hover .accordion-trigger-text { text-decoration: underline; text-underline-offset: 2px; }
     .accordion-trigger-text { flex: 1; min-width: 0; padding-right: var(--space-2-5); }
-
     .accordion-icon {
       width: 16px; height: 16px; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
       transition: transform var(--duration-200) var(--easing-out);
     }
     .accordion-icon svg { width: 12px; height: 12px; }
-
-    .accordion-item[data-open] .accordion-icon {
-      transform: rotate(180deg);
-    }
-
-    .accordion-content {
-      overflow: hidden;
-      max-height: 0;
-      transition: max-height var(--duration-200) var(--easing-out),
-                  padding var(--duration-200) var(--easing-out);
-    }
-    .accordion-item[data-open] .accordion-content {
-      max-height: 300px;
-    }
+    .accordion-item[data-open] .accordion-icon { transform: rotate(180deg); }
+    .accordion-content { overflow: hidden; max-height: 0; transition: max-height var(--duration-200) var(--easing-out); }
+    .accordion-item[data-open] .accordion-content { max-height: 300px; }
     .accordion-content-inner {
-      padding-bottom: var(--space-4);
-      font-size: var(--text-sm); font-weight: var(--font-normal);
+      padding-bottom: var(--space-4); font-size: var(--text-sm); font-weight: var(--font-normal);
       line-height: var(--leading-5); color: hsl(var(--foreground));
       display: flex; flex-direction: column; gap: var(--space-4);
     }
     .accordion-content-inner p { max-width: 411px; }
 
-    /* ── States grid ───────────────────────────────────────────── */
-    .states-grid {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 1rem; margin-bottom: 1.5rem;
-    }
+    /* ── States grid ──────────────────────────────────────────── */
+    .states-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
     @media (max-width: 640px) { .states-grid { grid-template-columns: 1fr; } }
-
-    .state-card {
-      border: 1px solid hsl(var(--border));
-      border-radius: var(--radius-lg); overflow: hidden;
-    }
+    .state-card { border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg); overflow: hidden; }
     .state-card-label {
-      font-size: var(--text-xs); font-weight: var(--font-medium);
-      color: hsl(var(--muted-foreground));
-      padding: 0.5rem 0.75rem;
-      background: hsl(var(--muted));
-      border-bottom: 1px solid hsl(var(--border));
+      font-size: var(--text-xs); font-weight: var(--font-medium); color: hsl(var(--muted-foreground));
+      padding: 0.5rem 0.75rem; background: hsl(var(--muted)); border-bottom: 1px solid hsl(var(--border));
       letter-spacing: var(--tracking-wide); text-transform: uppercase;
     }
     .state-card-body { padding: 1rem; }
     .state-card-body .accordion { max-width: 100%; }
 
-    /* ── Code block ────────────────────────────────────────────── */
+    /* ── Code block ───────────────────────────────────────────── */
     .code-block {
       background: hsl(var(--muted)); border: 1px solid hsl(var(--border));
-      border-radius: var(--radius-md); padding: 1rem 1.25rem;
-      overflow-x: auto; margin-bottom: 1.5rem;
+      border-radius: var(--radius-md); padding: 1rem 1.25rem; overflow-x: auto; margin-bottom: 1.5rem;
     }
     .code-block pre {
       font-family: var(--font-mono); font-size: var(--text-sm);
       line-height: var(--leading-6); white-space: pre; color: hsl(var(--foreground));
     }
-    .code-kw  { color: #7c3aed; }
-    .code-str { color: #059669; }
+    .code-kw { color: #7c3aed; } .code-str { color: #059669; }
     .code-cmt { color: hsl(var(--muted-foreground)); font-style: italic; }
-    .code-tag { color: #0284c7; }
-    .code-attr { color: #b45309; }
+    .code-tag { color: #0284c7; } .code-attr { color: #b45309; }
 
-    /* ── Token table ───────────────────────────────────────────── */
-    .token-table {
-      width: 100%; border-collapse: collapse; font-size: var(--text-sm);
-      margin-bottom: 1.5rem;
+    /* ── Tables ───────────────────────────────────────────────── */
+    .data-table {
+      width: 100%; border-collapse: collapse; font-size: var(--text-sm); margin-bottom: 1.5rem;
     }
-    .token-table th {
-      text-align: left; font-weight: var(--font-semibold);
-      padding: 0.5rem 0.75rem;
+    .data-table th {
+      text-align: left; font-weight: var(--font-semibold); padding: 0.5rem 0.75rem;
       border-bottom: 2px solid hsl(var(--border));
-      color: hsl(var(--foreground));
     }
-    .token-table td {
-      padding: 0.5rem 0.75rem; border-bottom: 1px solid hsl(var(--border));
-      vertical-align: top;
-    }
-    .token-table tr:last-child td { border-bottom: none; }
-    .token-table code {
+    .data-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid hsl(var(--border)); vertical-align: top; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table code {
       font-family: var(--font-mono); font-size: var(--text-xs);
-      background: hsl(var(--muted)); padding: 0.1rem 0.4rem;
-      border-radius: var(--radius-sm); color: hsl(var(--foreground));
+      background: hsl(var(--muted)); padding: 0.1rem 0.4rem; border-radius: var(--radius-sm);
     }
-    .token-table .swatch {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-    }
-    .swatch-dot {
-      width: 14px; height: 14px; border-radius: 50%;
-      border: 1px solid hsl(var(--border)); flex-shrink: 0;
-    }
-    .color-muted-foreground { background: hsl(var(--muted-foreground)); }
+    .swatch { display: inline-flex; align-items: center; gap: 0.5rem; }
+    .swatch-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid hsl(var(--border)); flex-shrink: 0; }
+    .color-muted-fg   { background: hsl(var(--muted-foreground)); }
     .color-foreground { background: hsl(var(--foreground)); }
-    .color-border { background: hsl(var(--border)); }
+    .color-border     { background: hsl(var(--border)); }
     .color-background { background: hsl(var(--background)); border: 1px solid hsl(var(--border)); }
-
-    /* ── Props table ───────────────────────────────────────────── */
-    .props-table {
-      width: 100%; border-collapse: collapse; font-size: var(--text-sm);
-      margin-bottom: 1.5rem;
-    }
-    .props-table th {
-      text-align: left; font-weight: var(--font-semibold);
-      padding: 0.5rem 0.75rem;
-      border-bottom: 2px solid hsl(var(--border));
-    }
-    .props-table td {
-      padding: 0.5rem 0.75rem; border-bottom: 1px solid hsl(var(--border));
-      vertical-align: top;
-    }
-    .props-table tr:last-child td { border-bottom: none; }
-    .props-table code {
-      font-family: var(--font-mono); font-size: var(--text-xs);
-      background: hsl(var(--muted)); padding: 0.1rem 0.4rem;
-      border-radius: var(--radius-sm);
-    }
-    .props-table .type { color: #7c3aed; font-family: var(--font-mono); font-size: var(--text-xs); }
-    .props-table .default { color: hsl(var(--muted-foreground)); }
-
-    /* ── Figma link ────────────────────────────────────────────── */
-    .figma-link {
-      display: inline-flex; align-items: center; gap: 0.375rem;
-      font-size: var(--text-sm); color: hsl(var(--muted-foreground));
-      text-decoration: none; padding: 0.375rem 0.75rem;
-      border: 1px solid hsl(var(--border)); border-radius: var(--radius-md);
-      margin-bottom: 2rem;
-    }
-    .figma-link:hover { background: hsl(var(--muted)); color: hsl(var(--foreground)); }
+    .type-badge { color: #7c3aed; font-family: var(--font-mono); font-size: var(--text-xs); }
+    .muted-text { color: hsl(var(--muted-foreground)); }
   </style>
 </head>
 <body>
 
-  <!-- ── Page header ──────────────────────────────────────────── -->
-  <header class="page-header">
-    <span class="badge">Components</span>
-    <h1>Accordion</h1>
-    <p>A vertically stacked set of interactive headings that each reveal a section of content. Built on Radix UI Accordion with shadcn/ui styling.</p>
-    <br>
-    <a class="figma-link" href="https://www.figma.com/design/NN6Wp4Hgsug3OKhiQdL27d/-shadcn_ui-components-not-token--Fluke---Copy-?node-id=308-14" target="_blank">
-      <svg width="12" height="12" viewBox="0 0 38 57" fill="none"><path d="M19 28.5A9.5 9.5 0 0 1 28.5 19H19V9.5A9.5 9.5 0 1 0 9.5 19H19v9.5A9.5 9.5 0 1 0 28.5 38H19v-9.5Z" fill="#1ABCFE"/><path d="M28.5 28.5a9.5 9.5 0 1 1 0-19 9.5 9.5 0 0 1 0 19Z" fill="#FF7262"/></svg>
-      View in Figma
-    </a>
-  </header>
+  <!-- ═══════════════════════════════════════════════════════════
+       SIDEBAR
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
 
-  <!-- ── Live preview ─────────────────────────────────────────── -->
-  <section class="section">
-    <h2 class="section-title">Preview</h2>
-    <p class="section-sub">Interactive accordion — click any item to expand it.</p>
-
-    <div class="preview-card">
-      <div class="preview-label">Default</div>
-      <div class="preview-body">
-        <div class="accordion" id="demo-accordion">
-          <div class="accordion-item">
-            <button class="accordion-trigger" onclick="toggleAccordion(this)">
-              <span class="accordion-trigger-text">Product Information</span>
-              <span class="accordion-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-              </span>
-            </button>
-            <div class="accordion-content">
-              <div class="accordion-content-inner">
-                <p>Our flagship product combines cutting-edge technology with sleek design. Built with premium materials, it offers unparalleled performance and reliability.</p>
-                <p>Key features include advanced processing capabilities, and an intuitive user interface designed for both beginners and experts.</p>
-              </div>
-            </div>
-          </div>
-          <div class="accordion-item">
-            <button class="accordion-trigger" onclick="toggleAccordion(this)">
-              <span class="accordion-trigger-text">Shipping Details</span>
-              <span class="accordion-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-              </span>
-            </button>
-            <div class="accordion-content">
-              <div class="accordion-content-inner">
-                <p>We offer worldwide shipping through trusted courier partners. Standard delivery takes 3–5 business days, while express shipping ensures delivery within 1–2 business days.</p>
-                <p>All orders are carefully packaged and fully insured. Track your shipment in real-time through our dedicated tracking portal.</p>
-              </div>
-            </div>
-          </div>
-          <div class="accordion-item">
-            <button class="accordion-trigger" onclick="toggleAccordion(this)">
-              <span class="accordion-trigger-text">Return Policy</span>
-              <span class="accordion-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-              </span>
-            </button>
-            <div class="accordion-content">
-              <div class="accordion-content-inner">
-                <p>We stand behind our products with a comprehensive 30-day return policy. If you're not completely satisfied, simply return the item in its original condition.</p>
-                <p>Our hassle-free return process includes free return shipping and full refunds processed within 48 hours of receiving the returned item.</p>
-              </div>
-            </div>
-          </div>
-        </div>
+  <aside class="sidebar" id="sidebar">
+    <!-- Header -->
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <div class="sidebar-brand">
+        <span class="sidebar-brand-name">Design System</span>
+        <span class="sidebar-brand-sub">v1.0.0</span>
       </div>
     </div>
-  </section>
 
-  <!-- ── States ───────────────────────────────────────────────── -->
-  <section class="section">
-    <h2 class="section-title">States</h2>
-    <p class="section-sub">The accordion supports single or multiple item expansion. Each item has collapsed and expanded states with chevron rotation.</p>
+    <!-- Nav -->
+    <nav class="sidebar-nav">
 
-    <div class="states-grid">
-      <div class="state-card">
-        <div class="state-card-label">Collapsed (Default)</div>
-        <div class="state-card-body">
-          <div class="accordion">
-            <div class="accordion-item">
-              <button class="accordion-trigger" style="cursor:default" tabindex="-1">
-                <span class="accordion-trigger-text">Product Information</span>
-                <span class="accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
-              </button>
+      <!-- Getting Started -->
+      <div class="sidebar-group">
+        <div class="sidebar-group-label">Getting Started</div>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          Introduction
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/></svg>
+          Installation
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 1 0 4.93 19.07"/></svg>
+          Theming
+        </a>
+      </div>
+
+      <div class="sidebar-separator"></div>
+
+      <!-- Tokens -->
+      <div class="sidebar-group">
+        <div class="sidebar-group-label">Tokens</div>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          Colors
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          Typography
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          Spacing
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Effects
+        </a>
+      </div>
+
+      <div class="sidebar-separator"></div>
+
+      <!-- Components -->
+      <div class="sidebar-group">
+        <div class="sidebar-group-label">Components</div>
+        <a class="sidebar-item active" href="accordion.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          Accordion
+          <span class="sidebar-item-badge">New</span>
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Alert Dialog
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="2" y1="9" x2="22" y2="9"/><path d="M8 3v6M16 3v6"/></svg>
+          Badge
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="16 2 12 7 8 2"/></svg>
+          Button
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+          Card
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15h0M2 9h20"/></svg>
+          Dialog
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Input
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          Select
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 3H3v7h18V3zM21 14H3v7h18v-7z"/></svg>
+          Table
+        </a>
+        <a class="sidebar-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Toast
+        </a>
+      </div>
+    </nav>
+
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      <a class="sidebar-footer-item" href="https://www.figma.com/design/NN6Wp4Hgsug3OKhiQdL27d/" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 38 57" fill="none"><path d="M19 28.5A9.5 9.5 0 0 1 28.5 19H19V9.5A9.5 9.5 0 1 0 9.5 19H19v9.5A9.5 9.5 0 1 0 28.5 38H19v-9.5Z" fill="#1ABCFE"/><path d="M28.5 28.5a9.5 9.5 0 1 1 0-19 9.5 9.5 0 0 1 0 19Z" fill="#FF7262"/></svg>
+        Figma Source
+      </a>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       MAIN
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="main">
+
+    <!-- Top bar -->
+    <header class="topbar">
+      <div class="topbar-breadcrumb">
+        Components
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span>Accordion</span>
+      </div>
+      <div class="topbar-actions">
+        <a class="topbar-btn" href="https://www.figma.com/design/NN6Wp4Hgsug3OKhiQdL27d/-shadcn_ui-components-not-token--Fluke---Copy-?node-id=308-14" target="_blank">
+          <svg viewBox="0 0 38 57" fill="none"><path d="M19 28.5A9.5 9.5 0 0 1 28.5 19H19V9.5A9.5 9.5 0 1 0 9.5 19H19v9.5A9.5 9.5 0 1 0 28.5 38H19v-9.5Z" fill="#1ABCFE"/><path d="M28.5 28.5a9.5 9.5 0 1 1 0-19 9.5 9.5 0 0 1 0 19Z" fill="#FF7262"/></svg>
+          Figma
+        </a>
+        <a class="topbar-btn" href="https://ui.shadcn.com/docs/components/accordion" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          shadcn/ui
+        </a>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="content">
+
+      <header class="page-header">
+        <span class="badge">Components</span>
+        <h1>Accordion</h1>
+        <p>A vertically stacked set of interactive headings that each reveal a section of content. Built on Radix UI Accordion with shadcn/ui styling.</p>
+      </header>
+
+      <!-- Preview -->
+      <section class="section">
+        <h2 class="section-title">Preview</h2>
+        <p class="section-sub">Interactive accordion — click any item to expand it.</p>
+        <div class="preview-card">
+          <div class="preview-label">Default</div>
+          <div class="preview-body">
+            <div class="accordion" id="demo-accordion">
+              <div class="accordion-item">
+                <button class="accordion-trigger" onclick="toggleAccordion(this)">
+                  <span class="accordion-trigger-text">Product Information</span>
+                  <span class="accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </button>
+                <div class="accordion-content"><div class="accordion-content-inner">
+                  <p>Our flagship product combines cutting-edge technology with sleek design. Built with premium materials, it offers unparalleled performance and reliability.</p>
+                  <p>Key features include advanced processing capabilities, and an intuitive user interface designed for both beginners and experts.</p>
+                </div></div>
+              </div>
+              <div class="accordion-item">
+                <button class="accordion-trigger" onclick="toggleAccordion(this)">
+                  <span class="accordion-trigger-text">Shipping Details</span>
+                  <span class="accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </button>
+                <div class="accordion-content"><div class="accordion-content-inner">
+                  <p>We offer worldwide shipping through trusted courier partners. Standard delivery takes 3–5 business days.</p>
+                  <p>All orders are carefully packaged and fully insured. Track your shipment in real-time through our dedicated tracking portal.</p>
+                </div></div>
+              </div>
+              <div class="accordion-item">
+                <button class="accordion-trigger" onclick="toggleAccordion(this)">
+                  <span class="accordion-trigger-text">Return Policy</span>
+                  <span class="accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </button>
+                <div class="accordion-content"><div class="accordion-content-inner">
+                  <p>We stand behind our products with a comprehensive 30-day return policy.</p>
+                  <p>Our hassle-free return process includes free return shipping and full refunds processed within 48 hours.</p>
+                </div></div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div class="state-card">
-        <div class="state-card-label">Expanded</div>
-        <div class="state-card-body">
-          <div class="accordion">
-            <div class="accordion-item" data-open>
-              <button class="accordion-trigger" tabindex="-1">
-                <span class="accordion-trigger-text">Product Information</span>
-                <span class="accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
-              </button>
-              <div class="accordion-content" style="max-height:300px">
-                <div class="accordion-content-inner">
+      <!-- States -->
+      <section class="section">
+        <h2 class="section-title">States</h2>
+        <p class="section-sub">Collapsed and expanded states with chevron rotation animation.</p>
+        <div class="states-grid">
+          <div class="state-card">
+            <div class="state-card-label">Collapsed</div>
+            <div class="state-card-body">
+              <div class="accordion"><div class="accordion-item">
+                <button class="accordion-trigger" tabindex="-1" style="cursor:default">
+                  <span class="accordion-trigger-text">Product Information</span>
+                  <span class="accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </button>
+              </div></div>
+            </div>
+          </div>
+          <div class="state-card">
+            <div class="state-card-label">Expanded</div>
+            <div class="state-card-body">
+              <div class="accordion"><div class="accordion-item" data-open>
+                <button class="accordion-trigger" tabindex="-1">
+                  <span class="accordion-trigger-text">Product Information</span>
+                  <span class="accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </button>
+                <div class="accordion-content" style="max-height:300px"><div class="accordion-content-inner">
                   <p>Our flagship product combines cutting-edge technology with sleek design.</p>
-                </div>
-              </div>
+                </div></div>
+              </div></div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
+      </section>
 
-  <!-- ── Usage ────────────────────────────────────────────────── -->
-  <section class="section">
-    <h2 class="section-title">Usage — shadcn/ui</h2>
-    <p class="section-sub">Install the component then import the primitives directly.</p>
-
-    <div class="code-block">
-      <pre><span class="code-cmt"># Install via shadcn/ui CLI</span>
-npx shadcn@latest add accordion</pre>
-    </div>
-
-    <div class="code-block">
-      <pre><span class="code-kw">import</span> {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
+      <!-- Usage -->
+      <section class="section">
+        <h2 class="section-title">Usage — shadcn/ui</h2>
+        <div class="code-block"><pre><span class="code-cmt"># Install via shadcn/ui CLI</span>
+npx shadcn@latest add accordion</pre></div>
+        <div class="code-block"><pre><span class="code-kw">import</span> {
+  Accordion, AccordionContent,
+  AccordionItem, AccordionTrigger,
 } <span class="code-kw">from</span> <span class="code-str">"@/components/ui/accordion"</span>
 
 <span class="code-kw">export function</span> <span class="code-tag">AccordionDemo</span>() {
@@ -363,213 +566,97 @@ npx shadcn@latest add accordion</pre>
       <span class="code-tag">&lt;AccordionItem</span> <span class="code-attr">value</span>=<span class="code-str">"item-1"</span><span class="code-tag">&gt;</span>
         <span class="code-tag">&lt;AccordionTrigger&gt;</span>Product Information<span class="code-tag">&lt;/AccordionTrigger&gt;</span>
         <span class="code-tag">&lt;AccordionContent&gt;</span>
-          Our flagship product combines cutting-edge technology
-          with sleek design.
+          Our flagship product combines cutting-edge technology.
         <span class="code-tag">&lt;/AccordionContent&gt;</span>
       <span class="code-tag">&lt;/AccordionItem&gt;</span>
-
       <span class="code-tag">&lt;AccordionItem</span> <span class="code-attr">value</span>=<span class="code-str">"item-2"</span><span class="code-tag">&gt;</span>
         <span class="code-tag">&lt;AccordionTrigger&gt;</span>Shipping Details<span class="code-tag">&lt;/AccordionTrigger&gt;</span>
-        <span class="code-tag">&lt;AccordionContent&gt;</span>
-          Standard delivery takes 3–5 business days.
-        <span class="code-tag">&lt;/AccordionContent&gt;</span>
-      <span class="code-tag">&lt;/AccordionItem&gt;</span>
-
-      <span class="code-tag">&lt;AccordionItem</span> <span class="code-attr">value</span>=<span class="code-str">"item-3"</span><span class="code-tag">&gt;</span>
-        <span class="code-tag">&lt;AccordionTrigger&gt;</span>Return Policy<span class="code-tag">&lt;/AccordionTrigger&gt;</span>
-        <span class="code-tag">&lt;AccordionContent&gt;</span>
-          30-day hassle-free returns with free return shipping.
-        <span class="code-tag">&lt;/AccordionContent&gt;</span>
+        <span class="code-tag">&lt;AccordionContent&gt;</span>Standard delivery 3–5 days.<span class="code-tag">&lt;/AccordionContent&gt;</span>
       <span class="code-tag">&lt;/AccordionItem&gt;</span>
     <span class="code-tag">&lt;/Accordion&gt;</span>
   )
-}</pre>
-    </div>
-  </section>
+}</pre></div>
+      </section>
 
-  <!-- ── Props ─────────────────────────────────────────────────── -->
-  <section class="section">
-    <h2 class="section-title">Props</h2>
+      <!-- Props -->
+      <section class="section">
+        <h2 class="section-title">Props</h2>
+        <table class="data-table">
+          <thead><tr><th>Component</th><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>Accordion</code></td><td><code>type</code></td><td class="type-badge">"single" | "multiple"</td><td class="muted-text">—</td><td>Single or multiple open items.</td></tr>
+            <tr><td><code>Accordion</code></td><td><code>collapsible</code></td><td class="type-badge">boolean</td><td class="muted-text">false</td><td>Allow closing when <code>type="single"</code>.</td></tr>
+            <tr><td><code>Accordion</code></td><td><code>defaultValue</code></td><td class="type-badge">string | string[]</td><td class="muted-text">—</td><td>Default open item(s) — uncontrolled.</td></tr>
+            <tr><td><code>Accordion</code></td><td><code>value</code></td><td class="type-badge">string | string[]</td><td class="muted-text">—</td><td>Controlled open item(s).</td></tr>
+            <tr><td><code>AccordionItem</code></td><td><code>value</code></td><td class="type-badge">string</td><td class="muted-text">—</td><td>Unique identifier for this item.</td></tr>
+            <tr><td><code>AccordionItem</code></td><td><code>disabled</code></td><td class="type-badge">boolean</td><td class="muted-text">false</td><td>Prevents interaction.</td></tr>
+            <tr><td><code>AccordionTrigger</code></td><td><code>asChild</code></td><td class="type-badge">boolean</td><td class="muted-text">false</td><td>Merge props onto child (Radix slot).</td></tr>
+          </tbody>
+        </table>
+      </section>
 
-    <table class="props-table">
-      <thead>
-        <tr>
-          <th>Component</th>
-          <th>Prop</th>
-          <th>Type</th>
-          <th>Default</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><code>Accordion</code></td>
-          <td><code>type</code></td>
-          <td class="type">"single" | "multiple"</td>
-          <td class="default">—</td>
-          <td>Whether one or many items can be open simultaneously.</td>
-        </tr>
-        <tr>
-          <td><code>Accordion</code></td>
-          <td><code>collapsible</code></td>
-          <td class="type">boolean</td>
-          <td class="default">false</td>
-          <td>Allow all items to be closed when <code>type="single"</code>.</td>
-        </tr>
-        <tr>
-          <td><code>Accordion</code></td>
-          <td><code>defaultValue</code></td>
-          <td class="type">string | string[]</td>
-          <td class="default">—</td>
-          <td>The item value(s) open by default (uncontrolled).</td>
-        </tr>
-        <tr>
-          <td><code>Accordion</code></td>
-          <td><code>value</code></td>
-          <td class="type">string | string[]</td>
-          <td class="default">—</td>
-          <td>Controlled open item(s). Pair with <code>onValueChange</code>.</td>
-        </tr>
-        <tr>
-          <td><code>AccordionItem</code></td>
-          <td><code>value</code></td>
-          <td class="type">string</td>
-          <td class="default">—</td>
-          <td>Unique identifier for this item.</td>
-        </tr>
-        <tr>
-          <td><code>AccordionItem</code></td>
-          <td><code>disabled</code></td>
-          <td class="type">boolean</td>
-          <td class="default">false</td>
-          <td>Prevents the user from interacting with the item.</td>
-        </tr>
-        <tr>
-          <td><code>AccordionTrigger</code></td>
-          <td><code>asChild</code></td>
-          <td class="type">boolean</td>
-          <td class="default">false</td>
-          <td>Merge props onto the child element (Radix slot pattern).</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
+      <!-- Design Tokens -->
+      <section class="section">
+        <h2 class="section-title">Design Tokens</h2>
+        <p class="section-sub">CSS custom properties sourced from Figma Variables → <code>design-tokens.css</code>.</p>
+        <table class="data-table">
+          <thead><tr><th>Token</th><th>Value</th><th>Usage</th></tr></thead>
+          <tbody>
+            <tr><td><code>--border</code></td><td><span class="swatch"><span class="swatch-dot color-border"></span>hsl(0 0% 89.8%)</span></td><td>Item separator — <code>border-bottom</code></td></tr>
+            <tr><td><code>--foreground</code></td><td><span class="swatch"><span class="swatch-dot color-foreground"></span>hsl(0 0% 3.9%)</span></td><td>Trigger label + content text</td></tr>
+            <tr><td><code>--muted-foreground</code></td><td><span class="swatch"><span class="swatch-dot color-muted-fg"></span>hsl(0 0% 45.1%)</span></td><td>Secondary / subtitle text</td></tr>
+            <tr><td><code>--background</code></td><td><span class="swatch"><span class="swatch-dot color-background"></span>hsl(0 0% 100%)</span></td><td>Component background</td></tr>
+            <tr><td><code>--font-sans</code></td><td>Inter, system-ui</td><td>Trigger + content font family</td></tr>
+            <tr><td><code>--font-medium</code></td><td>500</td><td>Trigger label weight</td></tr>
+            <tr><td><code>--text-sm</code></td><td>0.875rem (14px)</td><td>Trigger + content size</td></tr>
+            <tr><td><code>--leading-5</code></td><td>1.25rem (20px)</td><td>Trigger + content line-height</td></tr>
+            <tr><td><code>--space-4</code></td><td>1rem (16px)</td><td>Trigger vertical padding; content bottom padding</td></tr>
+            <tr><td><code>--space-2-5</code></td><td>0.625rem (10px)</td><td>Gap between label and chevron</td></tr>
+            <tr><td><code>--duration-200</code></td><td>200ms</td><td>Expand/collapse duration</td></tr>
+            <tr><td><code>--easing-out</code></td><td>cubic-bezier(0,0,0.2,1)</td><td>Chevron + height easing</td></tr>
+          </tbody>
+        </table>
+      </section>
 
-  <!-- ── Design Tokens ─────────────────────────────────────────── -->
-  <section class="section">
-    <h2 class="section-title">Design Tokens</h2>
-    <p class="section-sub">CSS custom properties consumed by this component, sourced from Figma Variables.</p>
+      <!-- Accessibility -->
+      <section class="section">
+        <h2 class="section-title">Accessibility</h2>
+        <p class="section-sub">Implements the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/accordion/" style="color:inherit">WAI-ARIA Accordion pattern</a> via Radix UI.</p>
+        <table class="data-table">
+          <thead><tr><th>Key</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td><code>Space</code> / <code>Enter</code></td><td>Toggle focused item</td></tr>
+            <tr><td><code>Tab</code> / <code>Shift+Tab</code></td><td>Move focus between triggers</td></tr>
+            <tr><td><code>↓</code> / <code>↑</code></td><td>Navigate between triggers</td></tr>
+            <tr><td><code>Home</code> / <code>End</code></td><td>Jump to first / last trigger</td></tr>
+          </tbody>
+        </table>
+      </section>
 
-    <table class="token-table">
-      <thead>
-        <tr>
-          <th>Token</th>
-          <th>Value</th>
-          <th>Usage</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><code>--border</code></td>
-          <td><span class="swatch"><span class="swatch-dot color-border"></span>hsl(0 0% 89.8%)</span></td>
-          <td>Item separator line — <code>border-bottom</code></td>
-        </tr>
-        <tr>
-          <td><code>--foreground</code></td>
-          <td><span class="swatch"><span class="swatch-dot color-foreground"></span>hsl(0 0% 3.9%)</span></td>
-          <td>Trigger label + content text color</td>
-        </tr>
-        <tr>
-          <td><code>--muted-foreground</code></td>
-          <td><span class="swatch"><span class="swatch-dot color-muted-foreground"></span>hsl(0 0% 45.1%)</span></td>
-          <td>Subtitle / secondary text</td>
-        </tr>
-        <tr>
-          <td><code>--background</code></td>
-          <td><span class="swatch"><span class="swatch-dot color-background"></span>hsl(0 0% 100%)</span></td>
-          <td>Component background</td>
-        </tr>
-        <tr>
-          <td><code>--font-sans</code></td>
-          <td>Inter, system-ui</td>
-          <td>Trigger + content font family</td>
-        </tr>
-        <tr>
-          <td><code>--font-medium</code></td>
-          <td>500</td>
-          <td>Trigger label font weight</td>
-        </tr>
-        <tr>
-          <td><code>--font-normal</code></td>
-          <td>400</td>
-          <td>Content body font weight</td>
-        </tr>
-        <tr>
-          <td><code>--text-sm</code></td>
-          <td>0.875rem (14px)</td>
-          <td>Trigger + content font size</td>
-        </tr>
-        <tr>
-          <td><code>--leading-5</code></td>
-          <td>1.25rem (20px)</td>
-          <td>Trigger + content line height</td>
-        </tr>
-        <tr>
-          <td><code>--space-4</code></td>
-          <td>1rem (16px)</td>
-          <td>Trigger vertical padding; content bottom padding</td>
-        </tr>
-        <tr>
-          <td><code>--space-2-5</code></td>
-          <td>0.625rem (10px)</td>
-          <td>Gap between trigger text and chevron icon</td>
-        </tr>
-        <tr>
-          <td><code>--duration-200</code></td>
-          <td>200ms</td>
-          <td>Expand/collapse animation duration</td>
-        </tr>
-        <tr>
-          <td><code>--easing-out</code></td>
-          <td>cubic-bezier(0, 0, 0.2, 1)</td>
-          <td>Expand/collapse easing — chevron rotation + height</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
+    </main>
+  </div>
 
-  <!-- ── Accessibility ─────────────────────────────────────────── -->
-  <section class="section">
-    <h2 class="section-title">Accessibility</h2>
-    <p class="section-sub">Built on Radix UI Accordion, which implements the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/accordion/" style="color:inherit">WAI-ARIA Accordion pattern</a>.</p>
-    <table class="props-table">
-      <thead>
-        <tr><th>Key</th><th>Action</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><code>Space</code> / <code>Enter</code></td><td>Toggle the focused accordion item</td></tr>
-        <tr><td><code>Tab</code></td><td>Move focus to the next trigger</td></tr>
-        <tr><td><code>Shift + Tab</code></td><td>Move focus to the previous trigger</td></tr>
-        <tr><td><code>↓</code></td><td>Move focus to the next trigger (when focus is on a trigger)</td></tr>
-        <tr><td><code>↑</code></td><td>Move focus to the previous trigger</td></tr>
-        <tr><td><code>Home</code></td><td>Move focus to the first trigger</td></tr>
-        <tr><td><code>End</code></td><td>Move focus to the last trigger</td></tr>
-      </tbody>
-    </table>
-  </section>
+  <!-- Mobile toggle -->
+  <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
 
   <script>
     function toggleAccordion(trigger) {
       const item = trigger.closest('.accordion-item');
       const isOpen = item.hasAttribute('data-open');
-
-      // Close all siblings (single mode)
-      const accordion = item.closest('.accordion');
-      accordion.querySelectorAll('.accordion-item[data-open]').forEach(el => {
-        el.removeAttribute('data-open');
-      });
-
+      item.closest('.accordion').querySelectorAll('.accordion-item[data-open]').forEach(el => el.removeAttribute('data-open'));
       if (!isOpen) item.setAttribute('data-open', '');
+    }
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('overlay').classList.toggle('open');
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('overlay').classList.remove('open');
     }
   </script>
 </body>
