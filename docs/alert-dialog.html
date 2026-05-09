@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Alert — Design System</title>
+  <title>Alert Dialog — Design System</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -222,68 +222,133 @@
     .preview-body {
       padding: 2rem; background: hsl(var(--background));
       display: flex; flex-direction: column; gap: var(--space-4);
+      align-items: center;
     }
 
-    /* ── Alert component ──────────────────────────────────────── */
-    .alert {
-      display: flex;
-      gap: var(--space-3);
-      padding: var(--space-3) var(--space-4);
-      border: 1px solid hsl(var(--border));
-      border-radius: var(--radius-xl);
+    /* ── Trigger button ───────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      font-family: var(--font-sans); font-size: var(--text-sm); font-weight: var(--font-medium);
+      padding: 0.5rem 1rem; border-radius: var(--radius-md);
+      cursor: pointer; border: none;
+      transition: background var(--duration-150) var(--easing-out),
+                  color var(--duration-150) var(--easing-out);
+      text-decoration: none; white-space: nowrap;
+    }
+    .btn-outline {
       background: hsl(var(--background));
+      color: hsl(var(--foreground));
+      border: 1px solid hsl(var(--border));
+    }
+    .btn-outline:hover { background: hsl(var(--muted)); }
+    .btn-default {
+      background: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+    }
+    .btn-default:hover { background: hsl(var(--primary) / 0.9); }
+    .btn-destructive {
+      background: hsl(var(--destructive));
+      color: #fff;
+    }
+    .btn-destructive:hover { background: hsl(var(--destructive) / 0.9); }
+    .btn-ghost {
+      background: transparent;
+      color: hsl(var(--foreground));
+      border: 1px solid transparent;
+    }
+    .btn-ghost:hover { background: hsl(var(--muted)); }
+
+    /* ── Alert Dialog (modal) ─────────────────────────────────── */
+    .ad-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 100;
+      background: hsl(var(--foreground) / 0.5);
+      backdrop-filter: blur(2px);
+      align-items: center; justify-content: center;
+    }
+    .ad-overlay.open { display: flex; }
+
+    .ad-content {
+      background: hsl(var(--background));
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      padding: var(--space-6);
       width: 100%;
-    }
-    .alert-icon {
+      max-width: 432px;
+      margin: var(--space-4);
       display: flex;
-      align-items: flex-start;
-      flex-shrink: 0;
-      padding-top: 2px;
+      flex-direction: column;
+      gap: var(--space-4);
+      animation: adIn 150ms var(--easing-out);
     }
-    .alert-icon svg { width: 16px; height: 16px; }
-    .alert-center .alert-icon { align-items: center; padding-top: 0; }
-    .alert-body { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
-    .alert-title {
-      font-size: var(--text-sm); font-weight: var(--font-medium);
-      line-height: var(--leading-5); color: hsl(var(--foreground));
-    }
-    .alert-description {
-      font-size: var(--text-sm); font-weight: 300;
-      line-height: var(--leading-5); color: hsl(var(--foreground));
-    }
-    .alert-list {
-      font-size: var(--text-sm); font-weight: var(--font-normal);
-      line-height: var(--leading-5); color: hsl(var(--foreground));
-      list-style: disc;
-      padding-left: 1.25rem;
-      margin-top: var(--space-1);
-      display: flex; flex-direction: column; gap: var(--space-0-5);
+    @keyframes adIn {
+      from { opacity: 0; transform: scale(0.96) translateY(4px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
     }
 
-    /* Destructive variant — all text becomes --destructive */
-    .alert-destructive {
-      border-color: hsl(var(--destructive) / 0.35);
+    .ad-header { display: flex; flex-direction: column; gap: var(--space-1-5); }
+    .ad-title {
+      font-size: var(--text-lg); font-weight: var(--font-semibold);
+      line-height: var(--leading-7); color: hsl(var(--foreground));
     }
-    .alert-destructive .alert-icon,
-    .alert-destructive .alert-title,
-    .alert-destructive .alert-description,
-    .alert-destructive .alert-list {
-      color: hsl(var(--destructive));
+    .ad-description {
+      font-size: var(--text-sm); color: hsl(var(--muted-foreground));
+      line-height: var(--leading-5);
+    }
+
+    .ad-footer {
+      display: flex; justify-content: flex-end; gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+    @media (max-width: 480px) {
+      .ad-footer { flex-direction: column-reverse; }
+      .ad-footer .btn { width: 100%; justify-content: center; }
+    }
+
+    /* Static dialog preview (no overlay) */
+    .ad-static {
+      background: hsl(var(--background));
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      padding: var(--space-6);
+      width: 100%;
+      max-width: 432px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    /* Full modal simulation in a contained box */
+    .modal-scene {
+      width: 100%; min-height: 200px;
+      background: hsl(var(--muted) / 0.5);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .modal-scene-backdrop {
+      position: absolute; inset: 0;
+      background: hsl(var(--foreground) / 0.45);
+      backdrop-filter: blur(1px);
+    }
+    .modal-scene .ad-static {
+      position: relative; z-index: 1;
+      margin: var(--space-4);
+      box-shadow: var(--shadow-2xl);
     }
 
     /* ── Variants grid ────────────────────────────────────────── */
-    .variants-stack { display: flex; flex-direction: column; gap: var(--space-4); }
-
-    /* ── States grid ──────────────────────────────────────────── */
-    .states-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
-    @media (max-width: 640px) { .states-grid { grid-template-columns: 1fr; } }
-    .state-card { border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg); overflow: hidden; }
-    .state-card-label {
+    .variants-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+    @media (max-width: 640px) { .variants-grid { grid-template-columns: 1fr; } }
+    .variant-card { border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg); overflow: hidden; }
+    .variant-card-label {
       font-size: var(--text-xs); font-weight: var(--font-medium); color: hsl(var(--muted-foreground));
       padding: 0.5rem 0.75rem; background: hsl(var(--muted)); border-bottom: 1px solid hsl(var(--border));
       letter-spacing: var(--tracking-wide); text-transform: uppercase;
     }
-    .state-card-body { padding: 1rem; display: flex; flex-direction: column; gap: var(--space-3); }
+    .variant-card-body { padding: 1rem; }
 
     /* ── Code block ───────────────────────────────────────────── */
     .code-block {
@@ -316,11 +381,10 @@
     .color-muted-fg    { background: hsl(var(--muted-foreground)); }
     .color-border      { background: hsl(var(--border)); }
     .color-background  { background: hsl(var(--background)); }
+    .color-primary     { background: hsl(var(--primary)); border-color: hsl(var(--primary)); }
     .color-destructive { background: hsl(var(--destructive)); border-color: hsl(var(--destructive)); }
     .type-badge { color: #7c3aed; font-family: var(--font-mono); font-size: var(--text-xs); }
     .muted-text { color: hsl(var(--muted-foreground)); }
-
-    /* Inline token chip */
     .token { font-family: var(--font-mono); font-size: var(--text-xs); background: hsl(var(--muted)); padding: 0.1rem 0.35rem; border-radius: var(--radius-sm); color: hsl(var(--foreground)); white-space: nowrap; }
   </style>
 </head>
@@ -393,12 +457,12 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
           Accordion
         </a>
-        <a class="sidebar-item active" href="alert.html">
+        <a class="sidebar-item" href="alert.html">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
           Alert
           <span class="sidebar-item-badge">New</span>
         </a>
-        <a class="sidebar-item" href="alert-dialog.html">
+        <a class="sidebar-item active" href="alert-dialog.html">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           Alert Dialog
           <span class="sidebar-item-badge">New</span>
@@ -455,14 +519,14 @@
       <div class="topbar-breadcrumb">
         Components
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-        <span>Alert</span>
+        <span>Alert Dialog</span>
       </div>
       <div class="topbar-actions">
-        <a class="topbar-btn" href="https://www.figma.com/design/NN6Wp4Hgsug3OKhiQdL27d/-shadcn_ui-components-not-token--Fluke---Copy-?node-id=73-3398" target="_blank">
+        <a class="topbar-btn" href="https://www.figma.com/design/NN6Wp4Hgsug3OKhiQdL27d/" target="_blank">
           <svg viewBox="0 0 38 57" fill="none"><path d="M19 28.5A9.5 9.5 0 0 1 28.5 19H19V9.5A9.5 9.5 0 1 0 9.5 19H19v9.5A9.5 9.5 0 1 0 28.5 38H19v-9.5Z" fill="#1ABCFE"/><path d="M28.5 28.5a9.5 9.5 0 1 1 0-19 9.5 9.5 0 0 1 0 19Z" fill="#FF7262"/></svg>
           Figma
         </a>
-        <a class="topbar-btn" href="https://ui.shadcn.com/docs/components/alert" target="_blank">
+        <a class="topbar-btn" href="https://ui.shadcn.com/docs/components/alert-dialog" target="_blank">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           shadcn/ui
         </a>
@@ -473,68 +537,43 @@
 
       <header class="page-header">
         <span class="badge">Components</span>
-        <h1>Alert</h1>
-        <p>Displays a callout for user attention. Built on shadcn/ui with design tokens from Figma — supports default and destructive variants with optional description and list content.</p>
+        <h1>Alert Dialog</h1>
+        <p>A modal dialog that interrupts the user with important content and expects a response. Built on Radix UI AlertDialog — traps focus, blocks interaction with background content, and supports keyboard dismissal.</p>
       </header>
 
-      <!-- ── Preview ─────────────────────────────────────────── -->
+      <!-- ── Interactive Preview ─────────────────────────────── -->
       <section class="section">
         <h2 class="section-title">Preview</h2>
-        <p class="section-sub">All three variants from Figma — Default, Title Only, and Destructive.</p>
+        <p class="section-sub">Click the trigger to see a live Alert Dialog. Press <kbd style="font-family:var(--font-mono);font-size:var(--text-xs);background:hsl(var(--muted));border:1px solid hsl(var(--border));border-radius:var(--radius-sm);padding:0.1rem 0.35rem;">Esc</kbd> or Cancel to dismiss.</p>
 
         <div class="preview-card">
-          <div class="preview-label">Default — with icon, title &amp; description</div>
+          <div class="preview-label">Default — confirmation dialog</div>
           <div class="preview-body">
-            <div class="alert">
-              <div class="alert-icon">
-                <!-- check-circle icon -->
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/>
-                </svg>
-              </div>
-              <div class="alert-body">
-                <p class="alert-title">Success! Your changes have been saved</p>
-                <p class="alert-description">This is an alert with icon, title and description.</p>
-              </div>
-            </div>
+            <button class="btn btn-outline" onclick="openDialog('default')">Open Alert Dialog</button>
           </div>
         </div>
 
         <div class="preview-card">
-          <div class="preview-label">Title Only — with icon, no description</div>
+          <div class="preview-label">Destructive — dangerous action</div>
           <div class="preview-body">
-            <div class="alert alert-center">
-              <div class="alert-icon">
-                <!-- info icon -->
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-                </svg>
-              </div>
-              <div class="alert-body">
-                <p class="alert-title">This Alert has a title and an icon. No description.</p>
-              </div>
-            </div>
+            <button class="btn btn-destructive" onclick="openDialog('destructive')">Delete Account</button>
           </div>
         </div>
 
         <div class="preview-card">
-          <div class="preview-label">Destructive — with icon, title, description &amp; list</div>
-          <div class="preview-body">
-            <div class="alert alert-destructive">
-              <div class="alert-icon">
-                <!-- alert-circle icon -->
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-                </svg>
-              </div>
-              <div class="alert-body">
-                <p class="alert-title">Unable to process your payment.</p>
-                <p class="alert-description">Please verify your billing information and try again.</p>
-                <ul class="alert-list">
-                  <li>Check your card details</li>
-                  <li>Ensure sufficient funds</li>
-                  <li>Verify billing address</li>
-                </ul>
+          <div class="preview-label">In-context — dialog with backdrop (static)</div>
+          <div class="preview-body" style="padding:0; background:transparent;">
+            <div class="modal-scene">
+              <div class="modal-scene-backdrop"></div>
+              <div class="ad-static">
+                <div class="ad-header">
+                  <p class="ad-title">Are you absolutely sure?</p>
+                  <p class="ad-description">This action cannot be undone. This will permanently delete your account and remove your data from our servers.</p>
+                </div>
+                <div class="ad-footer">
+                  <button class="btn btn-ghost" disabled style="opacity:0.6;cursor:default;">Cancel</button>
+                  <button class="btn btn-default" disabled style="opacity:0.6;cursor:default;">Continue</button>
+                </div>
               </div>
             </div>
           </div>
@@ -544,67 +583,37 @@
       <!-- ── Variants ────────────────────────────────────────── -->
       <section class="section">
         <h2 class="section-title">Variants</h2>
-        <p class="section-sub">shadcn/ui Alert ships with two variants: <code>default</code> and <code>destructive</code>.</p>
+        <p class="section-sub">Alert Dialog supports two primary use cases: confirmation and destructive actions.</p>
 
-        <div class="states-grid">
+        <div class="variants-grid">
 
-          <div class="state-card">
-            <div class="state-card-label">Default</div>
-            <div class="state-card-body">
-              <div class="alert">
-                <div class="alert-icon">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+          <div class="variant-card">
+            <div class="variant-card-label">Default</div>
+            <div class="variant-card-body">
+              <div class="ad-static" style="box-shadow:var(--shadow-md); max-width:100%;">
+                <div class="ad-header">
+                  <p class="ad-title" style="font-size:var(--text-base);">Are you sure?</p>
+                  <p class="ad-description">This action cannot be undone.</p>
                 </div>
-                <div class="alert-body">
-                  <p class="alert-title">Heads up!</p>
-                  <p class="alert-description">You can add components using the CLI.</p>
+                <div class="ad-footer">
+                  <button class="btn btn-ghost" style="font-size:var(--text-xs);padding:0.35rem 0.75rem;">Cancel</button>
+                  <button class="btn btn-default" style="font-size:var(--text-xs);padding:0.35rem 0.75rem;">Continue</button>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="state-card">
-            <div class="state-card-label">Destructive</div>
-            <div class="state-card-body">
-              <div class="alert alert-destructive">
-                <div class="alert-icon">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div class="variant-card">
+            <div class="variant-card-label">Destructive</div>
+            <div class="variant-card-body">
+              <div class="ad-static" style="box-shadow:var(--shadow-md); max-width:100%; border-color:hsl(var(--destructive)/0.3);">
+                <div class="ad-header">
+                  <p class="ad-title" style="font-size:var(--text-base);">Delete account</p>
+                  <p class="ad-description">All data will be permanently removed.</p>
                 </div>
-                <div class="alert-body">
-                  <p class="alert-title">Error</p>
-                  <p class="alert-description">Your session has expired. Please log in again.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="state-card">
-            <div class="state-card-label">Title Only</div>
-            <div class="state-card-body">
-              <div class="alert alert-center">
-                <div class="alert-icon">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                </div>
-                <div class="alert-body">
-                  <p class="alert-title">No icon — title only variant.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="state-card">
-            <div class="state-card-label">With List</div>
-            <div class="state-card-body">
-              <div class="alert alert-destructive">
-                <div class="alert-icon">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                </div>
-                <div class="alert-body">
-                  <p class="alert-title">Validation errors</p>
-                  <ul class="alert-list">
-                    <li>Email is required</li>
-                    <li>Password too short</li>
-                  </ul>
+                <div class="ad-footer">
+                  <button class="btn btn-ghost" style="font-size:var(--text-xs);padding:0.35rem 0.75rem;">Cancel</button>
+                  <button class="btn btn-destructive" style="font-size:var(--text-xs);padding:0.35rem 0.75rem;">Delete</button>
                 </div>
               </div>
             </div>
@@ -617,35 +626,49 @@
       <section class="section">
         <h2 class="section-title">Usage — shadcn/ui</h2>
         <div class="code-block"><pre><span class="code-cmt"># Install via shadcn/ui CLI</span>
-npx shadcn@latest add alert</pre></div>
-        <div class="code-block"><pre><span class="code-kw">import</span> { Alert, AlertTitle, AlertDescription } <span class="code-kw">from</span> <span class="code-str">"@/components/ui/alert"</span>
-<span class="code-kw">import</span> { CheckCircle } <span class="code-kw">from</span> <span class="code-str">"lucide-react"</span>
+npx shadcn@latest add alert-dialog</pre></div>
+        <div class="code-block"><pre><span class="code-kw">import</span> {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} <span class="code-kw">from</span> <span class="code-str">"@/components/ui/alert-dialog"</span>
+<span class="code-kw">import</span> { Button } <span class="code-kw">from</span> <span class="code-str">"@/components/ui/button"</span>
 
-<span class="code-cmt">// Default variant</span>
-<span class="code-kw">export function</span> <span class="code-tag">AlertDemo</span>() {
+<span class="code-kw">export function</span> <span class="code-tag">AlertDialogDemo</span>() {
   <span class="code-kw">return</span> (
-    <span class="code-tag">&lt;Alert&gt;</span>
-      <span class="code-tag">&lt;CheckCircle</span> <span class="code-attr">className</span>=<span class="code-str">"h-4 w-4"</span> <span class="code-tag">/&gt;</span>
-      <span class="code-tag">&lt;AlertTitle&gt;</span>Success!<span class="code-tag">&lt;/AlertTitle&gt;</span>
-      <span class="code-tag">&lt;AlertDescription&gt;</span>
-        Your changes have been saved.
-      <span class="code-tag">&lt;/AlertDescription&gt;</span>
-    <span class="code-tag">&lt;/Alert&gt;</span>
-  )
-}
-
-<span class="code-cmt">// Destructive variant</span>
-<span class="code-kw">export function</span> <span class="code-tag">AlertDestructive</span>() {
-  <span class="code-kw">return</span> (
-    <span class="code-tag">&lt;Alert</span> <span class="code-attr">variant</span>=<span class="code-str">"destructive"</span><span class="code-tag">&gt;</span>
-      <span class="code-tag">&lt;AlertCircle</span> <span class="code-attr">className</span>=<span class="code-str">"h-4 w-4"</span> <span class="code-tag">/&gt;</span>
-      <span class="code-tag">&lt;AlertTitle&gt;</span>Error<span class="code-tag">&lt;/AlertTitle&gt;</span>
-      <span class="code-tag">&lt;AlertDescription&gt;</span>
-        Your session has expired. Please log in again.
-      <span class="code-tag">&lt;/AlertDescription&gt;</span>
-    <span class="code-tag">&lt;/Alert&gt;</span>
+    <span class="code-tag">&lt;AlertDialog&gt;</span>
+      <span class="code-tag">&lt;AlertDialogTrigger</span> <span class="code-attr">asChild</span><span class="code-tag">&gt;</span>
+        <span class="code-tag">&lt;Button</span> <span class="code-attr">variant</span>=<span class="code-str">"outline"</span><span class="code-tag">&gt;</span>Open<span class="code-tag">&lt;/Button&gt;</span>
+      <span class="code-tag">&lt;/AlertDialogTrigger&gt;</span>
+      <span class="code-tag">&lt;AlertDialogContent&gt;</span>
+        <span class="code-tag">&lt;AlertDialogHeader&gt;</span>
+          <span class="code-tag">&lt;AlertDialogTitle&gt;</span>Are you absolutely sure?<span class="code-tag">&lt;/AlertDialogTitle&gt;</span>
+          <span class="code-tag">&lt;AlertDialogDescription&gt;</span>
+            This action cannot be undone. This will permanently
+            delete your account and remove your data.
+          <span class="code-tag">&lt;/AlertDialogDescription&gt;</span>
+        <span class="code-tag">&lt;/AlertDialogHeader&gt;</span>
+        <span class="code-tag">&lt;AlertDialogFooter&gt;</span>
+          <span class="code-tag">&lt;AlertDialogCancel&gt;</span>Cancel<span class="code-tag">&lt;/AlertDialogCancel&gt;</span>
+          <span class="code-tag">&lt;AlertDialogAction&gt;</span>Continue<span class="code-tag">&lt;/AlertDialogAction&gt;</span>
+        <span class="code-tag">&lt;/AlertDialogFooter&gt;</span>
+      <span class="code-tag">&lt;/AlertDialogContent&gt;</span>
+    <span class="code-tag">&lt;/AlertDialog&gt;</span>
   )
 }</pre></div>
+
+        <p class="section-sub">For destructive actions, apply the <code>destructive</code> variant to <code>AlertDialogAction</code>:</p>
+        <div class="code-block"><pre><span class="code-tag">&lt;AlertDialogAction</span>
+  <span class="code-attr">className</span>=<span class="code-str">"bg-destructive text-white hover:bg-destructive/90"</span>
+<span class="code-tag">&gt;</span>
+  Delete Account
+<span class="code-tag">&lt;/AlertDialogAction&gt;</span></pre></div>
       </section>
 
       <!-- ── Props ───────────────────────────────────────────── -->
@@ -654,11 +677,14 @@ npx shadcn@latest add alert</pre></div>
         <table class="data-table">
           <thead><tr><th>Component</th><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
           <tbody>
-            <tr><td><code>Alert</code></td><td><code>variant</code></td><td class="type-badge">"default" | "destructive"</td><td class="muted-text">"default"</td><td>Visual style — neutral or error.</td></tr>
-            <tr><td><code>Alert</code></td><td><code>className</code></td><td class="type-badge">string</td><td class="muted-text">—</td><td>Additional CSS classes to merge.</td></tr>
-            <tr><td><code>AlertTitle</code></td><td><code>asChild</code></td><td class="type-badge">boolean</td><td class="muted-text">false</td><td>Merge props onto child element (Radix slot).</td></tr>
-            <tr><td><code>AlertDescription</code></td><td><code>asChild</code></td><td class="type-badge">boolean</td><td class="muted-text">false</td><td>Merge props onto child element (Radix slot).</td></tr>
-            <tr><td><code>Alert</code></td><td><code>role</code></td><td class="type-badge">string</td><td class="muted-text">"alert"</td><td>ARIA role. Override to <code>"status"</code> for non-critical messages.</td></tr>
+            <tr><td><code>AlertDialog</code></td><td><code>open</code></td><td class="type-badge">boolean</td><td class="muted-text">—</td><td>Controlled open state.</td></tr>
+            <tr><td><code>AlertDialog</code></td><td><code>defaultOpen</code></td><td class="type-badge">boolean</td><td class="muted-text">false</td><td>Initial open state (uncontrolled).</td></tr>
+            <tr><td><code>AlertDialog</code></td><td><code>onOpenChange</code></td><td class="type-badge">(open: boolean) =&gt; void</td><td class="muted-text">—</td><td>Called when the open state changes.</td></tr>
+            <tr><td><code>AlertDialogTrigger</code></td><td><code>asChild</code></td><td class="type-badge">boolean</td><td class="muted-text">false</td><td>Merge props onto child element (Radix slot).</td></tr>
+            <tr><td><code>AlertDialogContent</code></td><td><code>onOpenAutoFocus</code></td><td class="type-badge">(e: Event) =&gt; void</td><td class="muted-text">—</td><td>Override which element receives focus on open.</td></tr>
+            <tr><td><code>AlertDialogContent</code></td><td><code>onCloseAutoFocus</code></td><td class="type-badge">(e: Event) =&gt; void</td><td class="muted-text">—</td><td>Override focus restoration target on close.</td></tr>
+            <tr><td><code>AlertDialogAction</code></td><td><code>asChild</code></td><td class="type-badge">boolean</td><td class="muted-text">false</td><td>Renders the confirm button as child element.</td></tr>
+            <tr><td><code>AlertDialogCancel</code></td><td><code>asChild</code></td><td class="type-badge">boolean</td><td class="muted-text">false</td><td>Renders the cancel button as child element.</td></tr>
           </tbody>
         </table>
       </section>
@@ -672,63 +698,83 @@ npx shadcn@latest add alert</pre></div>
           <tbody>
             <tr>
               <td><code>--background</code></td>
-              <td><span class="swatch"><span class="swatch-dot color-background" style="border-color:hsl(var(--border))"></span>hsl(0 0% 100%)</span></td>
-              <td>Alert background — both variants</td>
+              <td><span class="swatch"><span class="swatch-dot color-background"></span>hsl(0 0% 100%)</span></td>
+              <td>Dialog content background</td>
             </tr>
             <tr>
               <td><code>--border</code></td>
               <td><span class="swatch"><span class="swatch-dot color-border"></span>hsl(0 0% 89.8%)</span></td>
-              <td>Default variant border</td>
+              <td>Dialog border and overlay dividers</td>
             </tr>
             <tr>
               <td><code>--foreground</code></td>
               <td><span class="swatch"><span class="swatch-dot color-foreground"></span>hsl(0 0% 3.9%)</span></td>
-              <td>Default variant — icon, title, description text</td>
-            </tr>
-            <tr>
-              <td><code>--destructive</code></td>
-              <td><span class="swatch"><span class="swatch-dot color-destructive"></span>#dc2626</span></td>
-              <td>Destructive variant — border, icon, title, description, list</td>
+              <td>Overlay backdrop + dialog title color</td>
             </tr>
             <tr>
               <td><code>--muted-foreground</code></td>
               <td><span class="swatch"><span class="swatch-dot color-muted-fg"></span>hsl(0 0% 45.1%)</span></td>
-              <td>Component description subtext</td>
+              <td>AlertDialogDescription text</td>
             </tr>
             <tr>
-              <td><code>--radius-xl</code></td>
-              <td>12px</td>
-              <td>Alert border-radius</td>
+              <td><code>--primary</code></td>
+              <td><span class="swatch"><span class="swatch-dot color-primary"></span>hsl(0 0% 9%)</span></td>
+              <td>AlertDialogAction (confirm) button background</td>
             </tr>
             <tr>
-              <td><code>--space-3</code></td>
-              <td>0.75rem (12px)</td>
-              <td>Gap between icon and content; vertical padding</td>
+              <td><code>--primary-foreground</code></td>
+              <td><span class="swatch"><span class="swatch-dot" style="background:#fafafa;"></span>hsl(0 0% 98%)</span></td>
+              <td>AlertDialogAction button text</td>
+            </tr>
+            <tr>
+              <td><code>--destructive</code></td>
+              <td><span class="swatch"><span class="swatch-dot color-destructive"></span>#dc2626</span></td>
+              <td>Destructive action button background</td>
+            </tr>
+            <tr>
+              <td><code>--radius-lg</code></td>
+              <td>0.5rem (8px)</td>
+              <td>Dialog content border-radius</td>
+            </tr>
+            <tr>
+              <td><code>--shadow-xl</code></td>
+              <td>0 20px 25px -5px …</td>
+              <td>Dialog elevation / box-shadow</td>
+            </tr>
+            <tr>
+              <td><code>--space-6</code></td>
+              <td>1.5rem (24px)</td>
+              <td>Dialog content padding</td>
             </tr>
             <tr>
               <td><code>--space-4</code></td>
               <td>1rem (16px)</td>
-              <td>Horizontal padding</td>
+              <td>Gap between header and footer sections</td>
             </tr>
             <tr>
-              <td><code>--font-sans</code></td>
-              <td>Inter, system-ui</td>
-              <td>All text within the alert</td>
+              <td><code>--space-2</code></td>
+              <td>0.5rem (8px)</td>
+              <td>Gap between Cancel and Action buttons</td>
             </tr>
             <tr>
-              <td><code>--font-medium</code></td>
-              <td>500</td>
-              <td><code>AlertTitle</code> font weight</td>
+              <td><code>--text-lg</code></td>
+              <td>1.125rem (18px)</td>
+              <td>AlertDialogTitle font size</td>
+            </tr>
+            <tr>
+              <td><code>--font-semibold</code></td>
+              <td>600</td>
+              <td>AlertDialogTitle font weight</td>
             </tr>
             <tr>
               <td><code>--text-sm</code></td>
               <td>0.875rem (14px)</td>
-              <td>Title and description font size</td>
+              <td>AlertDialogDescription font size</td>
             </tr>
             <tr>
-              <td><code>--leading-5</code></td>
-              <td>1.25rem (20px)</td>
-              <td>Title and description line-height</td>
+              <td><code>--duration-150</code></td>
+              <td>150ms</td>
+              <td>Open/close animation duration</td>
             </tr>
           </tbody>
         </table>
@@ -737,22 +783,41 @@ npx shadcn@latest add alert</pre></div>
       <!-- ── Accessibility ───────────────────────────────────── -->
       <section class="section">
         <h2 class="section-title">Accessibility</h2>
-        <p class="section-sub">Alert is a non-interactive landmark — it announces its content to assistive technologies on render.</p>
+        <p class="section-sub">Alert Dialog is a WAI-ARIA <code>alertdialog</code> modal — it traps focus and blocks all background interaction until dismissed.</p>
         <table class="data-table">
-          <thead><tr><th>Attribute</th><th>Value</th><th>Purpose</th></tr></thead>
+          <thead><tr><th>Feature</th><th>Behavior</th></tr></thead>
           <tbody>
-            <tr><td><code>role</code></td><td><code>"alert"</code></td><td>Triggers an immediate ARIA live announcement for critical messages.</td></tr>
-            <tr><td><code>role="status"</code></td><td>Override</td><td>Use for informational / non-critical callouts (polite announcement).</td></tr>
-            <tr><td><code>aria-live</code></td><td>Implied by <code>role="alert"</code></td><td>Assertive — screen readers interrupt the current reading context.</td></tr>
-            <tr><td>Icon</td><td>Decorative — <code>aria-hidden</code></td><td>Icon is hidden from screen readers; meaning is conveyed in text.</td></tr>
+            <tr><td><code>role="alertdialog"</code></td><td>Announces as a modal alert; screen readers immediately describe the dialog title and description.</td></tr>
+            <tr><td>Focus trap</td><td>Tab / Shift+Tab cycle only within the dialog while open. Background elements are inert.</td></tr>
+            <tr><td><kbd style="font-family:var(--font-mono);font-size:var(--text-xs);background:hsl(var(--muted));border:1px solid hsl(var(--border));border-radius:var(--radius-sm);padding:0.1rem 0.35rem;">Esc</kbd></td><td>Closes the dialog and restores focus to the trigger element. <em>Note: Esc does not close AlertDialog by default in shadcn — only explicit Cancel/Action buttons dismiss it, to prevent accidental dismissal.</em></td></tr>
+            <tr><td><code>aria-labelledby</code></td><td>Automatically wired to <code>AlertDialogTitle</code> by Radix UI.</td></tr>
+            <tr><td><code>aria-describedby</code></td><td>Automatically wired to <code>AlertDialogDescription</code> by Radix UI.</td></tr>
+            <tr><td>Scroll lock</td><td>Body scroll is locked while the dialog is open via Radix scroll-area utility.</td></tr>
+            <tr><td>Focus restoration</td><td>On close, focus returns to the element that triggered the dialog.</td></tr>
           </tbody>
         </table>
         <p class="section-sub" style="margin-top:1rem">
-          For dynamic alerts injected after page load, ensure the Alert component is present in the DOM before content is set — some screen readers only announce <code>role="alert"</code> content when it appears inside a pre-existing container.
+          Always pair <code>AlertDialogTitle</code> and <code>AlertDialogDescription</code> — do not omit the description for dialogs requesting destructive or irreversible actions.
         </p>
       </section>
 
     </main>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       LIVE DIALOG MODAL
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="ad-overlay" id="dialog-overlay" onclick="closeDialogOnBackdrop(event)">
+    <div class="ad-content" id="dialog-content" role="alertdialog" aria-modal="true" aria-labelledby="dialog-title" aria-describedby="dialog-desc">
+      <div class="ad-header">
+        <p class="ad-title" id="dialog-title">Are you absolutely sure?</p>
+        <p class="ad-description" id="dialog-desc">This action cannot be undone. This will permanently delete your account and remove your data from our servers.</p>
+      </div>
+      <div class="ad-footer">
+        <button class="btn btn-ghost" onclick="closeDialog()">Cancel</button>
+        <button class="btn btn-default" id="dialog-action" onclick="closeDialog()">Continue</button>
+      </div>
+    </div>
   </div>
 
   <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">
@@ -769,6 +834,42 @@ npx shadcn@latest add alert</pre></div>
     function closeSidebar() {
       document.getElementById('sidebar').classList.remove('open');
       document.getElementById('overlay').classList.remove('open');
+    }
+
+    function openDialog(variant) {
+      const overlay = document.getElementById('dialog-overlay');
+      const action  = document.getElementById('dialog-action');
+      const title   = document.getElementById('dialog-title');
+      const desc    = document.getElementById('dialog-desc');
+
+      if (variant === 'destructive') {
+        title.textContent   = 'Delete account?';
+        desc.textContent    = 'This action cannot be undone. All your data, settings, and history will be permanently removed.';
+        action.textContent  = 'Delete Account';
+        action.className    = 'btn btn-destructive';
+      } else {
+        title.textContent   = 'Are you absolutely sure?';
+        desc.textContent    = 'This action cannot be undone. This will permanently delete your account and remove your data from our servers.';
+        action.textContent  = 'Continue';
+        action.className    = 'btn btn-default';
+      }
+
+      overlay.classList.add('open');
+      document.addEventListener('keydown', handleEsc);
+      setTimeout(() => action.focus(), 50);
+    }
+
+    function closeDialog() {
+      document.getElementById('dialog-overlay').classList.remove('open');
+      document.removeEventListener('keydown', handleEsc);
+    }
+
+    function closeDialogOnBackdrop(e) {
+      if (e.target === document.getElementById('dialog-overlay')) closeDialog();
+    }
+
+    function handleEsc(e) {
+      if (e.key === 'Escape') closeDialog();
     }
   </script>
 </body>
