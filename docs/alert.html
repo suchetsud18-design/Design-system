@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Accordion — Design System</title>
+  <title>Alert — Design System</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../src/tokens/design-tokens.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -40,7 +40,6 @@
       overflow-y: auto;
     }
 
-    /* Sidebar header */
     .sidebar-header {
       display: flex;
       align-items: center;
@@ -57,9 +56,7 @@
       flex-shrink: 0;
     }
     .sidebar-logo svg { color: hsl(var(--sidebar-primary-foreground)); }
-    .sidebar-brand {
-      display: flex; flex-direction: column;
-    }
+    .sidebar-brand { display: flex; flex-direction: column; }
     .sidebar-brand-name {
       font-size: var(--text-sm); font-weight: var(--font-semibold);
       color: hsl(var(--sidebar-foreground));
@@ -71,9 +68,7 @@
       line-height: var(--leading-4);
     }
 
-    /* Sidebar nav */
     .sidebar-nav { flex: 1; padding: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem; }
-
     .sidebar-group { display: flex; flex-direction: column; gap: 0.125rem; }
     .sidebar-group-label {
       font-size: var(--text-xs); font-weight: var(--font-medium);
@@ -117,12 +112,8 @@
       color: hsl(var(--sidebar-primary-foreground));
     }
 
-    .sidebar-separator {
-      height: 1px; background: hsl(var(--sidebar-border));
-      margin: 0.25rem 0.75rem;
-    }
+    .sidebar-separator { height: 1px; background: hsl(var(--sidebar-border)); margin: 0.25rem 0.75rem; }
 
-    /* Sidebar footer */
     .sidebar-footer {
       padding: 0.75rem;
       border-top: 1px solid hsl(var(--sidebar-border));
@@ -139,7 +130,6 @@
     .sidebar-footer-item:hover { background: hsl(var(--sidebar-accent)); }
     .sidebar-footer-item svg { width: 16px; height: 16px; opacity: 0.7; }
 
-    /* Mobile toggle */
     .sidebar-toggle {
       display: none;
       position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 50;
@@ -160,22 +150,15 @@
       }
       .sidebar.open { transform: translateX(0); }
       .sidebar-toggle { display: flex; }
-      .sidebar-overlay {
-        display: none; position: fixed; inset: 0; z-index: 30;
-        background: rgba(0,0,0,0.5);
-      }
+      .sidebar-overlay { display: none; position: fixed; inset: 0; z-index: 30; background: rgba(0,0,0,0.5); }
       .sidebar-overlay.open { display: block; }
     }
 
     /* ═══════════════════════════════════════════════════════════
        MAIN
     ═══════════════════════════════════════════════════════════ */
-    .main {
-      flex: 1; min-width: 0;
-      display: flex; flex-direction: column;
-    }
+    .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 
-    /* Top bar */
     .topbar {
       height: 56px; flex-shrink: 0;
       border-bottom: 1px solid hsl(var(--border));
@@ -203,11 +186,7 @@
     .topbar-btn:hover { background: hsl(var(--muted)); }
     .topbar-btn svg { width: 14px; height: 14px; }
 
-    /* Content */
-    .content {
-      flex: 1; padding: 3rem 2rem;
-      max-width: 800px;
-    }
+    .content { flex: 1; padding: 3rem 2rem; max-width: 800px; }
 
     /* ── Page header ──────────────────────────────────────────── */
     .page-header { margin-bottom: 3rem; border-bottom: 1px solid hsl(var(--border)); padding-bottom: 2rem; }
@@ -240,35 +219,60 @@
       letter-spacing: var(--tracking-wide); text-transform: uppercase;
       padding: 0.75rem 1rem; background: hsl(var(--muted)); border-bottom: 1px solid hsl(var(--border));
     }
-    .preview-body { padding: 2rem; background: hsl(var(--background)); display: flex; justify-content: center; }
-
-    /* ── Accordion component ──────────────────────────────────── */
-    .accordion { width: 100%; max-width: 503px; }
-    .accordion-item { border-bottom: 1px solid hsl(var(--border)); }
-    .accordion-item:last-child { border-bottom: none; }
-    .accordion-trigger {
-      display: flex; align-items: center; width: 100%; height: 52px;
-      padding: var(--space-4) 0; background: none; border: none; cursor: pointer;
-      text-align: left; color: hsl(var(--foreground)); font-family: var(--font-sans);
-      font-size: var(--text-sm); font-weight: var(--font-medium); line-height: var(--leading-5);
-    }
-    .accordion-trigger:hover .accordion-trigger-text { text-decoration: underline; text-underline-offset: 2px; }
-    .accordion-trigger-text { flex: 1; min-width: 0; padding-right: var(--space-2-5); }
-    .accordion-icon {
-      width: 16px; height: 16px; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      transition: transform var(--duration-200) var(--easing-out);
-    }
-    .accordion-icon svg { width: 12px; height: 12px; }
-    .accordion-item[data-open] .accordion-icon { transform: rotate(180deg); }
-    .accordion-content { overflow: hidden; max-height: 0; transition: max-height var(--duration-200) var(--easing-out); }
-    .accordion-item[data-open] .accordion-content { max-height: 300px; }
-    .accordion-content-inner {
-      padding-bottom: var(--space-4); font-size: var(--text-sm); font-weight: var(--font-normal);
-      line-height: var(--leading-5); color: hsl(var(--foreground));
+    .preview-body {
+      padding: 2rem; background: hsl(var(--background));
       display: flex; flex-direction: column; gap: var(--space-4);
     }
-    .accordion-content-inner p { max-width: 411px; }
+
+    /* ── Alert component ──────────────────────────────────────── */
+    .alert {
+      display: flex;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius-xl);
+      background: hsl(var(--background));
+      width: 100%;
+    }
+    .alert-icon {
+      display: flex;
+      align-items: flex-start;
+      flex-shrink: 0;
+      padding-top: 2px;
+    }
+    .alert-icon svg { width: 16px; height: 16px; }
+    .alert-center .alert-icon { align-items: center; padding-top: 0; }
+    .alert-body { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+    .alert-title {
+      font-size: var(--text-sm); font-weight: var(--font-medium);
+      line-height: var(--leading-5); color: hsl(var(--foreground));
+    }
+    .alert-description {
+      font-size: var(--text-sm); font-weight: 300;
+      line-height: var(--leading-5); color: hsl(var(--foreground));
+    }
+    .alert-list {
+      font-size: var(--text-sm); font-weight: var(--font-normal);
+      line-height: var(--leading-5); color: hsl(var(--foreground));
+      list-style: disc;
+      padding-left: 1.25rem;
+      margin-top: var(--space-1);
+      display: flex; flex-direction: column; gap: var(--space-0-5);
+    }
+
+    /* Destructive variant — all text becomes --destructive */
+    .alert-destructive {
+      border-color: hsl(var(--destructive) / 0.35);
+    }
+    .alert-destructive .alert-icon,
+    .alert-destructive .alert-title,
+    .alert-destructive .alert-description,
+    .alert-destructive .alert-list {
+      color: hsl(var(--destructive));
+    }
+
+    /* ── Variants grid ────────────────────────────────────────── */
+    .variants-stack { display: flex; flex-direction: column; gap: var(--space-4); }
 
     /* ── States grid ──────────────────────────────────────────── */
     .states-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
@@ -279,8 +283,7 @@
       padding: 0.5rem 0.75rem; background: hsl(var(--muted)); border-bottom: 1px solid hsl(var(--border));
       letter-spacing: var(--tracking-wide); text-transform: uppercase;
     }
-    .state-card-body { padding: 1rem; }
-    .state-card-body .accordion { max-width: 100%; }
+    .state-card-body { padding: 1rem; display: flex; flex-direction: column; gap: var(--space-3); }
 
     /* ── Code block ───────────────────────────────────────────── */
     .code-block {
@@ -296,9 +299,7 @@
     .code-tag { color: #0284c7; } .code-attr { color: #b45309; }
 
     /* ── Tables ───────────────────────────────────────────────── */
-    .data-table {
-      width: 100%; border-collapse: collapse; font-size: var(--text-sm); margin-bottom: 1.5rem;
-    }
+    .data-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); margin-bottom: 1.5rem; }
     .data-table th {
       text-align: left; font-weight: var(--font-semibold); padding: 0.5rem 0.75rem;
       border-bottom: 2px solid hsl(var(--border));
@@ -311,23 +312,27 @@
     }
     .swatch { display: inline-flex; align-items: center; gap: 0.5rem; }
     .swatch-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid hsl(var(--border)); flex-shrink: 0; }
-    .color-muted-fg   { background: hsl(var(--muted-foreground)); }
-    .color-foreground { background: hsl(var(--foreground)); }
-    .color-border     { background: hsl(var(--border)); }
-    .color-background { background: hsl(var(--background)); border: 1px solid hsl(var(--border)); }
+    .color-foreground  { background: hsl(var(--foreground)); }
+    .color-muted-fg    { background: hsl(var(--muted-foreground)); }
+    .color-border      { background: hsl(var(--border)); }
+    .color-background  { background: hsl(var(--background)); }
+    .color-destructive { background: hsl(var(--destructive)); border-color: hsl(var(--destructive)); }
     .type-badge { color: #7c3aed; font-family: var(--font-mono); font-size: var(--text-xs); }
     .muted-text { color: hsl(var(--muted-foreground)); }
+
+    /* Inline token chip */
+    .token { font-family: var(--font-mono); font-size: var(--text-xs); background: hsl(var(--muted)); padding: 0.1rem 0.35rem; border-radius: var(--radius-sm); color: hsl(var(--foreground)); white-space: nowrap; }
   </style>
 </head>
 <body>
 
+  <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
   <!-- ═══════════════════════════════════════════════════════════
        SIDEBAR
   ══════════════════════════════════════════════════════════════ -->
-  <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
-
   <aside class="sidebar" id="sidebar">
-    <!-- Header -->
+
     <div class="sidebar-header">
       <div class="sidebar-logo">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -340,10 +345,8 @@
       </div>
     </div>
 
-    <!-- Nav -->
     <nav class="sidebar-nav">
 
-      <!-- Getting Started -->
       <div class="sidebar-group">
         <div class="sidebar-group-label">Getting Started</div>
         <a class="sidebar-item" href="#">
@@ -362,7 +365,6 @@
 
       <div class="sidebar-separator"></div>
 
-      <!-- Tokens -->
       <div class="sidebar-group">
         <div class="sidebar-group-label">Tokens</div>
         <a class="sidebar-item" href="#">
@@ -385,16 +387,16 @@
 
       <div class="sidebar-separator"></div>
 
-      <!-- Components -->
       <div class="sidebar-group">
         <div class="sidebar-group-label">Components</div>
-        <a class="sidebar-item active" href="accordion.html">
+        <a class="sidebar-item" href="accordion.html">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
           Accordion
         </a>
-        <a class="sidebar-item" href="alert.html">
+        <a class="sidebar-item active" href="alert.html">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
           Alert
+          <span class="sidebar-item-badge">New</span>
         </a>
         <a class="sidebar-item" href="#">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -435,7 +437,6 @@
       </div>
     </nav>
 
-    <!-- Footer -->
     <div class="sidebar-footer">
       <a class="sidebar-footer-item" href="https://www.figma.com/design/NN6Wp4Hgsug3OKhiQdL27d/" target="_blank">
         <svg width="16" height="16" viewBox="0 0 38 57" fill="none"><path d="M19 28.5A9.5 9.5 0 0 1 28.5 19H19V9.5A9.5 9.5 0 1 0 9.5 19H19v9.5A9.5 9.5 0 1 0 28.5 38H19v-9.5Z" fill="#1ABCFE"/><path d="M28.5 28.5a9.5 9.5 0 1 1 0-19 9.5 9.5 0 0 1 0 19Z" fill="#FF7262"/></svg>
@@ -449,197 +450,310 @@
   ══════════════════════════════════════════════════════════════ -->
   <div class="main">
 
-    <!-- Top bar -->
     <header class="topbar">
       <div class="topbar-breadcrumb">
         Components
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-        <span>Accordion</span>
+        <span>Alert</span>
       </div>
       <div class="topbar-actions">
-        <a class="topbar-btn" href="https://www.figma.com/design/NN6Wp4Hgsug3OKhiQdL27d/-shadcn_ui-components-not-token--Fluke---Copy-?node-id=308-14" target="_blank">
+        <a class="topbar-btn" href="https://www.figma.com/design/NN6Wp4Hgsug3OKhiQdL27d/-shadcn_ui-components-not-token--Fluke---Copy-?node-id=73-3398" target="_blank">
           <svg viewBox="0 0 38 57" fill="none"><path d="M19 28.5A9.5 9.5 0 0 1 28.5 19H19V9.5A9.5 9.5 0 1 0 9.5 19H19v9.5A9.5 9.5 0 1 0 28.5 38H19v-9.5Z" fill="#1ABCFE"/><path d="M28.5 28.5a9.5 9.5 0 1 1 0-19 9.5 9.5 0 0 1 0 19Z" fill="#FF7262"/></svg>
           Figma
         </a>
-        <a class="topbar-btn" href="https://ui.shadcn.com/docs/components/accordion" target="_blank">
+        <a class="topbar-btn" href="https://ui.shadcn.com/docs/components/alert" target="_blank">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           shadcn/ui
         </a>
       </div>
     </header>
 
-    <!-- Content -->
     <main class="content">
 
       <header class="page-header">
         <span class="badge">Components</span>
-        <h1>Accordion</h1>
-        <p>A vertically stacked set of interactive headings that each reveal a section of content. Built on Radix UI Accordion with shadcn/ui styling.</p>
+        <h1>Alert</h1>
+        <p>Displays a callout for user attention. Built on shadcn/ui with design tokens from Figma — supports default and destructive variants with optional description and list content.</p>
       </header>
 
-      <!-- Preview -->
+      <!-- ── Preview ─────────────────────────────────────────── -->
       <section class="section">
         <h2 class="section-title">Preview</h2>
-        <p class="section-sub">Interactive accordion — click any item to expand it.</p>
+        <p class="section-sub">All three variants from Figma — Default, Title Only, and Destructive.</p>
+
         <div class="preview-card">
-          <div class="preview-label">Default</div>
+          <div class="preview-label">Default — with icon, title &amp; description</div>
           <div class="preview-body">
-            <div class="accordion" id="demo-accordion">
-              <div class="accordion-item">
-                <button class="accordion-trigger" onclick="toggleAccordion(this)">
-                  <span class="accordion-trigger-text">Product Information</span>
-                  <span class="accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
-                </button>
-                <div class="accordion-content"><div class="accordion-content-inner">
-                  <p>Our flagship product combines cutting-edge technology with sleek design. Built with premium materials, it offers unparalleled performance and reliability.</p>
-                  <p>Key features include advanced processing capabilities, and an intuitive user interface designed for both beginners and experts.</p>
-                </div></div>
+            <div class="alert">
+              <div class="alert-icon">
+                <!-- check-circle icon -->
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/>
+                </svg>
               </div>
-              <div class="accordion-item">
-                <button class="accordion-trigger" onclick="toggleAccordion(this)">
-                  <span class="accordion-trigger-text">Shipping Details</span>
-                  <span class="accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
-                </button>
-                <div class="accordion-content"><div class="accordion-content-inner">
-                  <p>We offer worldwide shipping through trusted courier partners. Standard delivery takes 3–5 business days.</p>
-                  <p>All orders are carefully packaged and fully insured. Track your shipment in real-time through our dedicated tracking portal.</p>
-                </div></div>
+              <div class="alert-body">
+                <p class="alert-title">Success! Your changes have been saved</p>
+                <p class="alert-description">This is an alert with icon, title and description.</p>
               </div>
-              <div class="accordion-item">
-                <button class="accordion-trigger" onclick="toggleAccordion(this)">
-                  <span class="accordion-trigger-text">Return Policy</span>
-                  <span class="accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
-                </button>
-                <div class="accordion-content"><div class="accordion-content-inner">
-                  <p>We stand behind our products with a comprehensive 30-day return policy.</p>
-                  <p>Our hassle-free return process includes free return shipping and full refunds processed within 48 hours.</p>
-                </div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="preview-card">
+          <div class="preview-label">Title Only — with icon, no description</div>
+          <div class="preview-body">
+            <div class="alert alert-center">
+              <div class="alert-icon">
+                <!-- info icon -->
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+              </div>
+              <div class="alert-body">
+                <p class="alert-title">This Alert has a title and an icon. No description.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="preview-card">
+          <div class="preview-label">Destructive — with icon, title, description &amp; list</div>
+          <div class="preview-body">
+            <div class="alert alert-destructive">
+              <div class="alert-icon">
+                <!-- alert-circle icon -->
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+              </div>
+              <div class="alert-body">
+                <p class="alert-title">Unable to process your payment.</p>
+                <p class="alert-description">Please verify your billing information and try again.</p>
+                <ul class="alert-list">
+                  <li>Check your card details</li>
+                  <li>Ensure sufficient funds</li>
+                  <li>Verify billing address</li>
+                </ul>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- States -->
+      <!-- ── Variants ────────────────────────────────────────── -->
       <section class="section">
-        <h2 class="section-title">States</h2>
-        <p class="section-sub">Collapsed and expanded states with chevron rotation animation.</p>
+        <h2 class="section-title">Variants</h2>
+        <p class="section-sub">shadcn/ui Alert ships with two variants: <code>default</code> and <code>destructive</code>.</p>
+
         <div class="states-grid">
+
           <div class="state-card">
-            <div class="state-card-label">Collapsed</div>
+            <div class="state-card-label">Default</div>
             <div class="state-card-body">
-              <div class="accordion"><div class="accordion-item">
-                <button class="accordion-trigger" tabindex="-1" style="cursor:default">
-                  <span class="accordion-trigger-text">Product Information</span>
-                  <span class="accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
-                </button>
-              </div></div>
+              <div class="alert">
+                <div class="alert-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+                </div>
+                <div class="alert-body">
+                  <p class="alert-title">Heads up!</p>
+                  <p class="alert-description">You can add components using the CLI.</p>
+                </div>
+              </div>
             </div>
           </div>
+
           <div class="state-card">
-            <div class="state-card-label">Expanded</div>
+            <div class="state-card-label">Destructive</div>
             <div class="state-card-body">
-              <div class="accordion"><div class="accordion-item" data-open>
-                <button class="accordion-trigger" tabindex="-1">
-                  <span class="accordion-trigger-text">Product Information</span>
-                  <span class="accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
-                </button>
-                <div class="accordion-content" style="max-height:300px"><div class="accordion-content-inner">
-                  <p>Our flagship product combines cutting-edge technology with sleek design.</p>
-                </div></div>
-              </div></div>
+              <div class="alert alert-destructive">
+                <div class="alert-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                </div>
+                <div class="alert-body">
+                  <p class="alert-title">Error</p>
+                  <p class="alert-description">Your session has expired. Please log in again.</p>
+                </div>
+              </div>
             </div>
           </div>
+
+          <div class="state-card">
+            <div class="state-card-label">Title Only</div>
+            <div class="state-card-body">
+              <div class="alert alert-center">
+                <div class="alert-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                </div>
+                <div class="alert-body">
+                  <p class="alert-title">No icon — title only variant.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="state-card">
+            <div class="state-card-label">With List</div>
+            <div class="state-card-body">
+              <div class="alert alert-destructive">
+                <div class="alert-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                </div>
+                <div class="alert-body">
+                  <p class="alert-title">Validation errors</p>
+                  <ul class="alert-list">
+                    <li>Email is required</li>
+                    <li>Password too short</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
-      <!-- Usage -->
+      <!-- ── Usage ───────────────────────────────────────────── -->
       <section class="section">
         <h2 class="section-title">Usage — shadcn/ui</h2>
         <div class="code-block"><pre><span class="code-cmt"># Install via shadcn/ui CLI</span>
-npx shadcn@latest add accordion</pre></div>
-        <div class="code-block"><pre><span class="code-kw">import</span> {
-  Accordion, AccordionContent,
-  AccordionItem, AccordionTrigger,
-} <span class="code-kw">from</span> <span class="code-str">"@/components/ui/accordion"</span>
+npx shadcn@latest add alert</pre></div>
+        <div class="code-block"><pre><span class="code-kw">import</span> { Alert, AlertTitle, AlertDescription } <span class="code-kw">from</span> <span class="code-str">"@/components/ui/alert"</span>
+<span class="code-kw">import</span> { CheckCircle } <span class="code-kw">from</span> <span class="code-str">"lucide-react"</span>
 
-<span class="code-kw">export function</span> <span class="code-tag">AccordionDemo</span>() {
+<span class="code-cmt">// Default variant</span>
+<span class="code-kw">export function</span> <span class="code-tag">AlertDemo</span>() {
   <span class="code-kw">return</span> (
-    <span class="code-tag">&lt;Accordion</span> <span class="code-attr">type</span>=<span class="code-str">"single"</span> <span class="code-attr">collapsible</span> <span class="code-attr">className</span>=<span class="code-str">"w-full"</span><span class="code-tag">&gt;</span>
-      <span class="code-tag">&lt;AccordionItem</span> <span class="code-attr">value</span>=<span class="code-str">"item-1"</span><span class="code-tag">&gt;</span>
-        <span class="code-tag">&lt;AccordionTrigger&gt;</span>Product Information<span class="code-tag">&lt;/AccordionTrigger&gt;</span>
-        <span class="code-tag">&lt;AccordionContent&gt;</span>
-          Our flagship product combines cutting-edge technology.
-        <span class="code-tag">&lt;/AccordionContent&gt;</span>
-      <span class="code-tag">&lt;/AccordionItem&gt;</span>
-      <span class="code-tag">&lt;AccordionItem</span> <span class="code-attr">value</span>=<span class="code-str">"item-2"</span><span class="code-tag">&gt;</span>
-        <span class="code-tag">&lt;AccordionTrigger&gt;</span>Shipping Details<span class="code-tag">&lt;/AccordionTrigger&gt;</span>
-        <span class="code-tag">&lt;AccordionContent&gt;</span>Standard delivery 3–5 days.<span class="code-tag">&lt;/AccordionContent&gt;</span>
-      <span class="code-tag">&lt;/AccordionItem&gt;</span>
-    <span class="code-tag">&lt;/Accordion&gt;</span>
+    <span class="code-tag">&lt;Alert&gt;</span>
+      <span class="code-tag">&lt;CheckCircle</span> <span class="code-attr">className</span>=<span class="code-str">"h-4 w-4"</span> <span class="code-tag">/&gt;</span>
+      <span class="code-tag">&lt;AlertTitle&gt;</span>Success!<span class="code-tag">&lt;/AlertTitle&gt;</span>
+      <span class="code-tag">&lt;AlertDescription&gt;</span>
+        Your changes have been saved.
+      <span class="code-tag">&lt;/AlertDescription&gt;</span>
+    <span class="code-tag">&lt;/Alert&gt;</span>
+  )
+}
+
+<span class="code-cmt">// Destructive variant</span>
+<span class="code-kw">export function</span> <span class="code-tag">AlertDestructive</span>() {
+  <span class="code-kw">return</span> (
+    <span class="code-tag">&lt;Alert</span> <span class="code-attr">variant</span>=<span class="code-str">"destructive"</span><span class="code-tag">&gt;</span>
+      <span class="code-tag">&lt;AlertCircle</span> <span class="code-attr">className</span>=<span class="code-str">"h-4 w-4"</span> <span class="code-tag">/&gt;</span>
+      <span class="code-tag">&lt;AlertTitle&gt;</span>Error<span class="code-tag">&lt;/AlertTitle&gt;</span>
+      <span class="code-tag">&lt;AlertDescription&gt;</span>
+        Your session has expired. Please log in again.
+      <span class="code-tag">&lt;/AlertDescription&gt;</span>
+    <span class="code-tag">&lt;/Alert&gt;</span>
   )
 }</pre></div>
       </section>
 
-      <!-- Props -->
+      <!-- ── Props ───────────────────────────────────────────── -->
       <section class="section">
         <h2 class="section-title">Props</h2>
         <table class="data-table">
           <thead><tr><th>Component</th><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
           <tbody>
-            <tr><td><code>Accordion</code></td><td><code>type</code></td><td class="type-badge">"single" | "multiple"</td><td class="muted-text">—</td><td>Single or multiple open items.</td></tr>
-            <tr><td><code>Accordion</code></td><td><code>collapsible</code></td><td class="type-badge">boolean</td><td class="muted-text">false</td><td>Allow closing when <code>type="single"</code>.</td></tr>
-            <tr><td><code>Accordion</code></td><td><code>defaultValue</code></td><td class="type-badge">string | string[]</td><td class="muted-text">—</td><td>Default open item(s) — uncontrolled.</td></tr>
-            <tr><td><code>Accordion</code></td><td><code>value</code></td><td class="type-badge">string | string[]</td><td class="muted-text">—</td><td>Controlled open item(s).</td></tr>
-            <tr><td><code>AccordionItem</code></td><td><code>value</code></td><td class="type-badge">string</td><td class="muted-text">—</td><td>Unique identifier for this item.</td></tr>
-            <tr><td><code>AccordionItem</code></td><td><code>disabled</code></td><td class="type-badge">boolean</td><td class="muted-text">false</td><td>Prevents interaction.</td></tr>
-            <tr><td><code>AccordionTrigger</code></td><td><code>asChild</code></td><td class="type-badge">boolean</td><td class="muted-text">false</td><td>Merge props onto child (Radix slot).</td></tr>
+            <tr><td><code>Alert</code></td><td><code>variant</code></td><td class="type-badge">"default" | "destructive"</td><td class="muted-text">"default"</td><td>Visual style — neutral or error.</td></tr>
+            <tr><td><code>Alert</code></td><td><code>className</code></td><td class="type-badge">string</td><td class="muted-text">—</td><td>Additional CSS classes to merge.</td></tr>
+            <tr><td><code>AlertTitle</code></td><td><code>asChild</code></td><td class="type-badge">boolean</td><td class="muted-text">false</td><td>Merge props onto child element (Radix slot).</td></tr>
+            <tr><td><code>AlertDescription</code></td><td><code>asChild</code></td><td class="type-badge">boolean</td><td class="muted-text">false</td><td>Merge props onto child element (Radix slot).</td></tr>
+            <tr><td><code>Alert</code></td><td><code>role</code></td><td class="type-badge">string</td><td class="muted-text">"alert"</td><td>ARIA role. Override to <code>"status"</code> for non-critical messages.</td></tr>
           </tbody>
         </table>
       </section>
 
-      <!-- Design Tokens -->
+      <!-- ── Design Tokens ───────────────────────────────────── -->
       <section class="section">
         <h2 class="section-title">Design Tokens</h2>
         <p class="section-sub">CSS custom properties sourced from Figma Variables → <code>design-tokens.css</code>.</p>
         <table class="data-table">
           <thead><tr><th>Token</th><th>Value</th><th>Usage</th></tr></thead>
           <tbody>
-            <tr><td><code>--border</code></td><td><span class="swatch"><span class="swatch-dot color-border"></span>hsl(0 0% 89.8%)</span></td><td>Item separator — <code>border-bottom</code></td></tr>
-            <tr><td><code>--foreground</code></td><td><span class="swatch"><span class="swatch-dot color-foreground"></span>hsl(0 0% 3.9%)</span></td><td>Trigger label + content text</td></tr>
-            <tr><td><code>--muted-foreground</code></td><td><span class="swatch"><span class="swatch-dot color-muted-fg"></span>hsl(0 0% 45.1%)</span></td><td>Secondary / subtitle text</td></tr>
-            <tr><td><code>--background</code></td><td><span class="swatch"><span class="swatch-dot color-background"></span>hsl(0 0% 100%)</span></td><td>Component background</td></tr>
-            <tr><td><code>--font-sans</code></td><td>Inter, system-ui</td><td>Trigger + content font family</td></tr>
-            <tr><td><code>--font-medium</code></td><td>500</td><td>Trigger label weight</td></tr>
-            <tr><td><code>--text-sm</code></td><td>0.875rem (14px)</td><td>Trigger + content size</td></tr>
-            <tr><td><code>--leading-5</code></td><td>1.25rem (20px)</td><td>Trigger + content line-height</td></tr>
-            <tr><td><code>--space-4</code></td><td>1rem (16px)</td><td>Trigger vertical padding; content bottom padding</td></tr>
-            <tr><td><code>--space-2-5</code></td><td>0.625rem (10px)</td><td>Gap between label and chevron</td></tr>
-            <tr><td><code>--duration-200</code></td><td>200ms</td><td>Expand/collapse duration</td></tr>
-            <tr><td><code>--easing-out</code></td><td>cubic-bezier(0,0,0.2,1)</td><td>Chevron + height easing</td></tr>
+            <tr>
+              <td><code>--background</code></td>
+              <td><span class="swatch"><span class="swatch-dot color-background" style="border-color:hsl(var(--border))"></span>hsl(0 0% 100%)</span></td>
+              <td>Alert background — both variants</td>
+            </tr>
+            <tr>
+              <td><code>--border</code></td>
+              <td><span class="swatch"><span class="swatch-dot color-border"></span>hsl(0 0% 89.8%)</span></td>
+              <td>Default variant border</td>
+            </tr>
+            <tr>
+              <td><code>--foreground</code></td>
+              <td><span class="swatch"><span class="swatch-dot color-foreground"></span>hsl(0 0% 3.9%)</span></td>
+              <td>Default variant — icon, title, description text</td>
+            </tr>
+            <tr>
+              <td><code>--destructive</code></td>
+              <td><span class="swatch"><span class="swatch-dot color-destructive"></span>#dc2626</span></td>
+              <td>Destructive variant — border, icon, title, description, list</td>
+            </tr>
+            <tr>
+              <td><code>--muted-foreground</code></td>
+              <td><span class="swatch"><span class="swatch-dot color-muted-fg"></span>hsl(0 0% 45.1%)</span></td>
+              <td>Component description subtext</td>
+            </tr>
+            <tr>
+              <td><code>--radius-xl</code></td>
+              <td>12px</td>
+              <td>Alert border-radius</td>
+            </tr>
+            <tr>
+              <td><code>--space-3</code></td>
+              <td>0.75rem (12px)</td>
+              <td>Gap between icon and content; vertical padding</td>
+            </tr>
+            <tr>
+              <td><code>--space-4</code></td>
+              <td>1rem (16px)</td>
+              <td>Horizontal padding</td>
+            </tr>
+            <tr>
+              <td><code>--font-sans</code></td>
+              <td>Inter, system-ui</td>
+              <td>All text within the alert</td>
+            </tr>
+            <tr>
+              <td><code>--font-medium</code></td>
+              <td>500</td>
+              <td><code>AlertTitle</code> font weight</td>
+            </tr>
+            <tr>
+              <td><code>--text-sm</code></td>
+              <td>0.875rem (14px)</td>
+              <td>Title and description font size</td>
+            </tr>
+            <tr>
+              <td><code>--leading-5</code></td>
+              <td>1.25rem (20px)</td>
+              <td>Title and description line-height</td>
+            </tr>
           </tbody>
         </table>
       </section>
 
-      <!-- Accessibility -->
+      <!-- ── Accessibility ───────────────────────────────────── -->
       <section class="section">
         <h2 class="section-title">Accessibility</h2>
-        <p class="section-sub">Implements the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/accordion/" style="color:inherit">WAI-ARIA Accordion pattern</a> via Radix UI.</p>
+        <p class="section-sub">Alert is a non-interactive landmark — it announces its content to assistive technologies on render.</p>
         <table class="data-table">
-          <thead><tr><th>Key</th><th>Action</th></tr></thead>
+          <thead><tr><th>Attribute</th><th>Value</th><th>Purpose</th></tr></thead>
           <tbody>
-            <tr><td><code>Space</code> / <code>Enter</code></td><td>Toggle focused item</td></tr>
-            <tr><td><code>Tab</code> / <code>Shift+Tab</code></td><td>Move focus between triggers</td></tr>
-            <tr><td><code>↓</code> / <code>↑</code></td><td>Navigate between triggers</td></tr>
-            <tr><td><code>Home</code> / <code>End</code></td><td>Jump to first / last trigger</td></tr>
+            <tr><td><code>role</code></td><td><code>"alert"</code></td><td>Triggers an immediate ARIA live announcement for critical messages.</td></tr>
+            <tr><td><code>role="status"</code></td><td>Override</td><td>Use for informational / non-critical callouts (polite announcement).</td></tr>
+            <tr><td><code>aria-live</code></td><td>Implied by <code>role="alert"</code></td><td>Assertive — screen readers interrupt the current reading context.</td></tr>
+            <tr><td>Icon</td><td>Decorative — <code>aria-hidden</code></td><td>Icon is hidden from screen readers; meaning is conveyed in text.</td></tr>
           </tbody>
         </table>
+        <p class="section-sub" style="margin-top:1rem">
+          For dynamic alerts injected after page load, ensure the Alert component is present in the DOM before content is set — some screen readers only announce <code>role="alert"</code> content when it appears inside a pre-existing container.
+        </p>
       </section>
 
     </main>
   </div>
 
-  <!-- Mobile toggle -->
   <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
@@ -647,12 +761,6 @@ npx shadcn@latest add accordion</pre></div>
   </button>
 
   <script>
-    function toggleAccordion(trigger) {
-      const item = trigger.closest('.accordion-item');
-      const isOpen = item.hasAttribute('data-open');
-      item.closest('.accordion').querySelectorAll('.accordion-item[data-open]').forEach(el => el.removeAttribute('data-open'));
-      if (!isOpen) item.setAttribute('data-open', '');
-    }
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('open');
       document.getElementById('overlay').classList.toggle('open');
