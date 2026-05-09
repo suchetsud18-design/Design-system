@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Card — Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../src/tokens/design-tokens.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: var(--font-sans);
+      background: hsl(var(--background));
+      color: hsl(var(--foreground));
+      font-size: var(--text-base);
+      line-height: var(--leading-6);
+      display: flex; min-height: 100vh;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       SIDEBAR
+    ═══════════════════════════════════════════════════════════ */
+    .sidebar { width: 16rem; flex-shrink: 0; background: hsl(var(--sidebar)); border-right: 1px solid hsl(var(--sidebar-border)); display: flex; flex-direction: column; height: 100vh; position: sticky; top: 0; overflow-y: auto; }
+    .sidebar-header { display: flex; align-items: center; gap: 0.625rem; padding: 1rem; border-bottom: 1px solid hsl(var(--sidebar-border)); flex-shrink: 0; }
+    .sidebar-logo { width: 28px; height: 28px; background: hsl(var(--sidebar-primary)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sidebar-logo svg { color: hsl(var(--sidebar-primary-foreground)); }
+    .sidebar-brand { display: flex; flex-direction: column; }
+    .sidebar-brand-name { font-size: var(--text-sm); font-weight: var(--font-semibold); color: hsl(var(--sidebar-foreground)); line-height: var(--leading-5); }
+    .sidebar-brand-sub { font-size: var(--text-xs); color: hsl(var(--sidebar-accent-foreground)); line-height: var(--leading-4); }
+    .sidebar-nav { flex: 1; padding: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem; }
+    .sidebar-group { display: flex; flex-direction: column; gap: 0.125rem; }
+    .sidebar-group-label { font-size: var(--text-xs); font-weight: var(--font-medium); color: hsl(var(--sidebar-accent-foreground)); letter-spacing: var(--tracking-wide); text-transform: uppercase; padding: 0.75rem 0.75rem 0.25rem; }
+    .sidebar-item { display: flex; align-items: center; gap: 0.625rem; padding: 0.375rem 0.75rem; border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: var(--font-medium); color: hsl(var(--sidebar-foreground)); text-decoration: none; cursor: pointer; border: none; background: none; width: 100%; text-align: left; transition: background var(--duration-150) var(--easing-out); }
+    .sidebar-item:hover { background: hsl(var(--sidebar-accent)); color: hsl(var(--sidebar-accent-foreground)); }
+    .sidebar-item.active { background: hsl(var(--sidebar-primary)); color: hsl(var(--sidebar-primary-foreground)); }
+    .sidebar-item svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.8; }
+    .sidebar-item.active svg { opacity: 1; }
+    .sidebar-item-badge { margin-left: auto; font-size: var(--text-xs); font-weight: var(--font-medium); background: hsl(var(--sidebar-accent)); color: hsl(var(--sidebar-accent-foreground)); padding: 0.1rem 0.4rem; border-radius: var(--radius-full); line-height: var(--leading-5); }
+    .sidebar-item.active .sidebar-item-badge { background: hsl(var(--sidebar-primary-foreground) / 0.2); color: hsl(var(--sidebar-primary-foreground)); }
+    .sidebar-separator { height: 1px; background: hsl(var(--sidebar-border)); margin: 0.25rem 0.75rem; }
+    .sidebar-footer { padding: 0.75rem; border-top: 1px solid hsl(var(--sidebar-border)); flex-shrink: 0; }
+    .sidebar-footer-item { display: flex; align-items: center; gap: 0.625rem; padding: 0.375rem 0.75rem; border-radius: var(--radius-md); font-size: var(--text-sm); color: hsl(var(--sidebar-foreground)); text-decoration: none; }
+    .sidebar-footer-item:hover { background: hsl(var(--sidebar-accent)); }
+    .sidebar-footer-item svg { width: 16px; height: 16px; opacity: 0.7; }
+    .sidebar-toggle { display: none; position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 50; width: 44px; height: 44px; background: hsl(var(--foreground)); color: hsl(var(--background)); border: none; border-radius: var(--radius-full); cursor: pointer; align-items: center; justify-content: center; box-shadow: var(--shadow-lg); }
+    @media (max-width: 768px) {
+      .sidebar { position: fixed; top: 0; left: 0; z-index: 40; transform: translateX(-100%); transition: transform var(--duration-300) var(--easing-out); box-shadow: var(--shadow-xl); }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-toggle { display: flex; }
+      .sidebar-overlay { display: none; position: fixed; inset: 0; z-index: 30; background: rgba(0,0,0,0.5); }
+      .sidebar-overlay.open { display: block; }
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       MAIN
+    ═══════════════════════════════════════════════════════════ */
+    .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .topbar { height: 56px; flex-shrink: 0; border-bottom: 1px solid hsl(var(--border)); display: flex; align-items: center; padding: 0 2rem; gap: 1rem; position: sticky; top: 0; background: hsl(var(--background) / 0.9); backdrop-filter: blur(8px); z-index: 20; }
+    .topbar-breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: var(--text-sm); color: hsl(var(--muted-foreground)); }
+    .topbar-breadcrumb span { color: hsl(var(--foreground)); font-weight: var(--font-medium); }
+    .topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; }
+    .topbar-btn { display: inline-flex; align-items: center; gap: 0.375rem; font-size: var(--text-sm); padding: 0.375rem 0.75rem; border: 1px solid hsl(var(--border)); border-radius: var(--radius-md); background: none; cursor: pointer; color: hsl(var(--foreground)); font-family: var(--font-sans); text-decoration: none; transition: background var(--duration-150) var(--easing-out); }
+    .topbar-btn:hover { background: hsl(var(--muted)); }
+    .topbar-btn svg { width: 14px; height: 14px; }
+
+    .content { flex: 1; padding: 3rem 2rem; max-width: 800px; }
+
+    .page-header { margin-bottom: 3rem; border-bottom: 1px solid hsl(var(--border)); padding-bottom: 2rem; }
+    .page-header .lbl { display: inline-flex; font-size: var(--text-xs); font-weight: var(--font-medium); color: hsl(var(--muted-foreground)); letter-spacing: var(--tracking-wide); text-transform: uppercase; margin-bottom: 0.5rem; }
+    .page-header h1 { font-size: var(--text-4xl); font-weight: var(--font-bold); line-height: var(--leading-10); letter-spacing: var(--tracking-tight); margin-bottom: 0.5rem; }
+    .page-header p { color: hsl(var(--muted-foreground)); max-width: 48rem; }
+
+    .section { margin-bottom: 3rem; }
+    .section-title { font-size: var(--text-xl); font-weight: var(--font-semibold); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid hsl(var(--border)); }
+    .section-sub { font-size: var(--text-sm); color: hsl(var(--muted-foreground)); margin-bottom: 1.5rem; }
+
+    .preview-card-wrap { border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.5rem; }
+    .preview-label { font-size: var(--text-xs); font-weight: var(--font-medium); color: hsl(var(--muted-foreground)); letter-spacing: var(--tracking-wide); text-transform: uppercase; padding: 0.75rem 1rem; background: hsl(var(--muted)); border-bottom: 1px solid hsl(var(--border)); }
+    .preview-body { padding: 2rem; background: hsl(var(--muted) / 0.4); display: flex; flex-wrap: wrap; gap: var(--space-4); justify-content: center; }
+
+    /* ═══════════════════════════════════════════════════════════
+       CARD COMPONENT
+    ═══════════════════════════════════════════════════════════ */
+    .card {
+      background: hsl(var(--card));
+      color: hsl(var(--card-foreground));
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+    .card-header {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1-5);
+      padding: var(--space-6);
+      padding-bottom: 0;
+    }
+    .card-title {
+      font-size: var(--text-lg);
+      font-weight: var(--font-semibold);
+      line-height: var(--leading-7);
+      letter-spacing: var(--tracking-tight);
+      color: hsl(var(--card-foreground));
+    }
+    .card-description {
+      font-size: var(--text-sm);
+      color: hsl(var(--muted-foreground));
+      line-height: var(--leading-5);
+    }
+    .card-content {
+      padding: var(--space-6);
+      flex: 1;
+    }
+    .card-footer {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-6);
+      padding-top: 0;
+    }
+
+    /* ── Button (reused from button.html pattern) ─────────────── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      font-family: var(--font-sans); font-size: var(--text-sm); font-weight: var(--font-medium);
+      line-height: var(--leading-5); white-space: nowrap;
+      border-radius: var(--radius-md); border: 1px solid transparent;
+      cursor: pointer; text-decoration: none;
+      transition: background var(--duration-150) var(--easing-out);
+      outline: none; padding: 0 1rem; height: 2.25rem;
+    }
+    .btn:focus-visible { box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring)); }
+    .btn-default { background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); border-color: hsl(var(--primary)); }
+    .btn-default:hover { background: hsl(var(--primary) / 0.9); }
+    .btn-outline { background: hsl(var(--background)); color: hsl(var(--foreground)); border-color: hsl(var(--border)); }
+    .btn-outline:hover { background: hsl(var(--muted)); }
+    .btn-ghost { background: transparent; color: hsl(var(--foreground)); border-color: transparent; }
+    .btn-ghost:hover { background: hsl(var(--muted)); }
+    .btn-sm { height: 2rem; padding: 0 0.75rem; font-size: var(--text-xs); }
+    .btn-w-full { width: 100%; justify-content: center; }
+
+    /* ── Input (for form card demo) ───────────────────────────── */
+    .input {
+      display: block; width: 100%;
+      height: 2.25rem; padding: 0 0.75rem;
+      font-family: var(--font-sans); font-size: var(--text-sm);
+      color: hsl(var(--foreground)); background: hsl(var(--background));
+      border: 1px solid hsl(var(--border)); border-radius: var(--radius-md);
+      outline: none; transition: box-shadow var(--duration-150) var(--easing-out);
+    }
+    .input:focus { box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring)); }
+    .input::placeholder { color: hsl(var(--muted-foreground)); }
+    .form-field { display: flex; flex-direction: column; gap: var(--space-1-5); }
+    .form-label { font-size: var(--text-sm); font-weight: var(--font-medium); color: hsl(var(--foreground)); }
+
+    /* ── Badge (for stat card) ────────────────────────────────── */
+    .badge { display: inline-flex; align-items: center; border-radius: var(--radius-full); padding: 0.125rem 0.625rem; font-size: var(--text-xs); font-weight: var(--font-semibold); white-space: nowrap; }
+    .badge-default { background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
+    .badge-secondary { background: hsl(var(--secondary)); color: hsl(var(--secondary-foreground)); }
+    .badge-outline { background: transparent; color: hsl(var(--foreground)); border: 1px solid hsl(var(--border)); }
+
+    /* ── Separator ────────────────────────────────────────────── */
+    .separator { height: 1px; background: hsl(var(--border)); margin: 0; }
+
+    /* ── Stat number ──────────────────────────────────────────── */
+    .stat-value { font-size: var(--text-3xl); font-weight: var(--font-bold); line-height: var(--leading-9); letter-spacing: var(--tracking-tight); }
+    .stat-delta { font-size: var(--text-xs); color: hsl(var(--muted-foreground)); display: flex; align-items: center; gap: 0.25rem; margin-top: 0.25rem; }
+    .delta-up { color: #16a34a; }
+    .delta-down { color: hsl(var(--destructive)); }
+
+    /* ── Avatar placeholder ───────────────────────────────────── */
+    .avatar { width: 40px; height: 40px; border-radius: var(--radius-full); background: hsl(var(--muted)); display: flex; align-items: center; justify-content: center; font-size: var(--text-sm); font-weight: var(--font-semibold); color: hsl(var(--muted-foreground)); flex-shrink: 0; }
+
+    /* ── Progress bar ─────────────────────────────────────────── */
+    .progress-track { height: 8px; background: hsl(var(--muted)); border-radius: var(--radius-full); overflow: hidden; }
+    .progress-fill { height: 100%; background: hsl(var(--primary)); border-radius: var(--radius-full); }
+
+    /* ── Variants grid ────────────────────────────────────────── */
+    .variants-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem; }
+    @media (max-width: 600px) { .variants-grid { grid-template-columns: 1fr; } }
+
+    /* ── Code block ───────────────────────────────────────────── */
+    .code-block { background: hsl(var(--muted)); border: 1px solid hsl(var(--border)); border-radius: var(--radius-md); padding: 1rem 1.25rem; overflow-x: auto; margin-bottom: 1.5rem; }
+    .code-block pre { font-family: var(--font-mono); font-size: var(--text-sm); line-height: var(--leading-6); white-space: pre; color: hsl(var(--foreground)); }
+    .code-kw { color: #7c3aed; } .code-str { color: #059669; }
+    .code-cmt { color: hsl(var(--muted-foreground)); font-style: italic; }
+    .code-tag { color: #0284c7; } .code-attr { color: #b45309; }
+
+    /* ── Tables ───────────────────────────────────────────────── */
+    .data-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); margin-bottom: 1.5rem; }
+    .data-table th { text-align: left; font-weight: var(--font-semibold); padding: 0.5rem 0.75rem; border-bottom: 2px solid hsl(var(--border)); }
+    .data-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid hsl(var(--border)); vertical-align: top; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table code { font-family: var(--font-mono); font-size: var(--text-xs); background: hsl(var(--muted)); padding: 0.1rem 0.4rem; border-radius: var(--radius-sm); }
+    .swatch { display: inline-flex; align-items: center; gap: 0.5rem; }
+    .swatch-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid hsl(var(--border)); flex-shrink: 0; }
+    .type-badge { color: #7c3aed; font-family: var(--font-mono); font-size: var(--text-xs); }
+    .muted-text { color: hsl(var(--muted-foreground)); }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SIDEBAR
+  ══════════════════════════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="sidebar-brand">
+        <span class="sidebar-brand-name">Design System</span>
+        <span class="sidebar-brand-sub">v1.0.0</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-group">
+        <div class="sidebar-group-label">Getting Started</div>
+        <a class="sidebar-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Introduction</a>
+        <a class="sidebar-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/></svg>Installation</a>
+        <a class="sidebar-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 1 0 4.93 19.07"/></svg>Theming</a>
+      </div>
+      <div class="sidebar-separator"></div>
+      <div class="sidebar-group">
+        <div class="sidebar-group-label">Tokens</div>
+        <a class="sidebar-item" href="colors.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>Colors</a>
+        <a class="sidebar-item" href="typography.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>Typography</a>
+        <a class="sidebar-item" href="spacing.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Spacing</a>
+        <a class="sidebar-item" href="effects.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Effects</a>
+      </div>
+      <div class="sidebar-separator"></div>
+      <div class="sidebar-group">
+        <div class="sidebar-group-label">Components</div>
+        <a class="sidebar-item" href="accordion.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>Accordion</a>
+        <a class="sidebar-item" href="alert.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Alert<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="alert-dialog.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Alert Dialog<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="badge.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="2" y1="9" x2="22" y2="9"/><path d="M8 3v6M16 3v6"/></svg>Badge<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="button.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="16 2 12 7 8 2"/></svg>Button<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item active" href="card.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Card<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15h0M2 9h20"/></svg>Dialog</a>
+        <a class="sidebar-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Input</a>
+        <a class="sidebar-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Select</a>
+        <a class="sidebar-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 3H3v7h18V3zM21 14H3v7h18v-7z"/></svg>Table</a>
+        <a class="sidebar-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Toast</a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <a class="sidebar-footer-item" href="https://www.figma.com/design/NN6Wp4Hgsug3OKhiQdL27d/" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 38 57" fill="none"><path d="M19 28.5A9.5 9.5 0 0 1 28.5 19H19V9.5A9.5 9.5 0 1 0 9.5 19H19v9.5A9.5 9.5 0 1 0 28.5 38H19v-9.5Z" fill="#1ABCFE"/><path d="M28.5 28.5a9.5 9.5 0 1 1 0-19 9.5 9.5 0 0 1 0 19Z" fill="#FF7262"/></svg>
+        Figma Source
+      </a>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       MAIN
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-breadcrumb">
+        Components
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span>Card</span>
+      </div>
+      <div class="topbar-actions">
+        <a class="topbar-btn" href="https://www.figma.com/design/NN6Wp4Hgsug3OKhiQdL27d/" target="_blank">
+          <svg viewBox="0 0 38 57" fill="none"><path d="M19 28.5A9.5 9.5 0 0 1 28.5 19H19V9.5A9.5 9.5 0 1 0 9.5 19H19v9.5A9.5 9.5 0 1 0 28.5 38H19v-9.5Z" fill="#1ABCFE"/><path d="M28.5 28.5a9.5 9.5 0 1 1 0-19 9.5 9.5 0 0 1 0 19Z" fill="#FF7262"/></svg>
+          Figma
+        </a>
+        <a class="topbar-btn" href="https://ui.shadcn.com/docs/components/card" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          shadcn/ui
+        </a>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <header class="page-header">
+        <span class="lbl">Components</span>
+        <h1>Card</h1>
+        <p>A surface container for related content and actions. Composed of five sub-components — <code>CardHeader</code>, <code>CardTitle</code>, <code>CardDescription</code>, <code>CardContent</code>, and <code>CardFooter</code> — which can be combined freely.</p>
+      </header>
+
+      <!-- ── Preview ─────────────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Preview</h2>
+        <p class="section-sub">The canonical form card — header, content with fields, footer with actions.</p>
+
+        <div class="preview-card-wrap">
+          <div class="preview-label">Default</div>
+          <div class="preview-body">
+            <div class="card" style="max-width:380px;">
+              <div class="card-header">
+                <p class="card-title">Create project</p>
+                <p class="card-description">Deploy your new project in one-click.</p>
+              </div>
+              <div class="card-content" style="display:flex;flex-direction:column;gap:var(--space-4);padding-top:var(--space-4);">
+                <div class="form-field">
+                  <label class="form-label">Name</label>
+                  <input class="input" type="text" placeholder="Name of your project" />
+                </div>
+                <div class="form-field">
+                  <label class="form-label">Framework</label>
+                  <input class="input" type="text" placeholder="Next.js" />
+                </div>
+              </div>
+              <div class="card-footer" style="padding-top:var(--space-4);">
+                <button class="btn btn-outline">Cancel</button>
+                <button class="btn btn-default">Deploy</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Examples ────────────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Examples</h2>
+        <p class="section-sub">Card adapts to many content patterns by mixing and omitting sub-components.</p>
+
+        <div class="variants-grid">
+
+          <!-- Stat card -->
+          <div class="card">
+            <div class="card-header" style="flex-direction:row;align-items:flex-start;justify-content:space-between;">
+              <p class="card-description" style="font-size:var(--text-sm);font-weight:var(--font-medium);color:hsl(var(--foreground));">Total Revenue</p>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:hsl(var(--muted-foreground));flex-shrink:0;"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div class="card-content" style="padding-top:var(--space-2);">
+              <p class="stat-value">$45,231.89</p>
+              <p class="stat-delta"><span class="delta-up">↑ +20.1%</span> from last month</p>
+            </div>
+          </div>
+
+          <!-- User profile card -->
+          <div class="card">
+            <div class="card-header" style="flex-direction:row;align-items:center;gap:var(--space-3);">
+              <div class="avatar" style="background:#e0f2fe;color:#0284c7;">JD</div>
+              <div>
+                <p class="card-title" style="font-size:var(--text-base);">Jordan Davies</p>
+                <p class="card-description">Product Designer</p>
+              </div>
+              <span class="badge badge-secondary" style="margin-left:auto;">Pro</span>
+            </div>
+            <div class="card-content" style="padding-top:var(--space-3);">
+              <div style="display:flex;flex-direction:column;gap:var(--space-2);">
+                <div style="display:flex;justify-content:space-between;font-size:var(--text-xs);color:hsl(var(--muted-foreground));">
+                  <span>Storage used</span><span>68%</span>
+                </div>
+                <div class="progress-track"><div class="progress-fill" style="width:68%;"></div></div>
+              </div>
+            </div>
+            <div class="card-footer" style="padding-top:var(--space-3);">
+              <button class="btn btn-outline btn-sm btn-w-full">View profile</button>
+            </div>
+          </div>
+
+          <!-- Notification card (header + content only) -->
+          <div class="card">
+            <div class="card-header">
+              <p class="card-title" style="font-size:var(--text-base);">Notifications</p>
+              <p class="card-description">You have 3 unread messages.</p>
+            </div>
+            <div class="card-content" style="padding-top:var(--space-3);display:flex;flex-direction:column;gap:var(--space-3);">
+              <div style="display:flex;align-items:flex-start;gap:var(--space-3);">
+                <div style="width:8px;height:8px;border-radius:50%;background:hsl(var(--primary));margin-top:5px;flex-shrink:0;"></div>
+                <div><p style="font-size:var(--text-sm);font-weight:var(--font-medium);">Your call is confirmed.</p><p style="font-size:var(--text-xs);color:hsl(var(--muted-foreground));">5 min ago</p></div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:var(--space-3);">
+                <div style="width:8px;height:8px;border-radius:50%;background:hsl(var(--primary));margin-top:5px;flex-shrink:0;"></div>
+                <div><p style="font-size:var(--text-sm);font-weight:var(--font-medium);">You have a new message.</p><p style="font-size:var(--text-xs);color:hsl(var(--muted-foreground));">1 hour ago</p></div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:var(--space-3);">
+                <div style="width:8px;height:8px;border-radius:50%;background:hsl(var(--muted-foreground));margin-top:5px;flex-shrink:0;"></div>
+                <div><p style="font-size:var(--text-sm);font-weight:var(--font-medium);">Your subscription is expiring soon.</p><p style="font-size:var(--text-xs);color:hsl(var(--muted-foreground));">2 days ago</p></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Simple content-only card -->
+          <div class="card">
+            <div class="card-header">
+              <div style="display:flex;align-items:center;gap:var(--space-2);">
+                <div style="width:32px;height:32px;border-radius:var(--radius-md);background:hsl(var(--primary));display:flex;align-items:center;justify-content:center;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                </div>
+                <p class="card-title" style="font-size:var(--text-base);">Performance</p>
+              </div>
+            </div>
+            <div class="card-content" style="padding-top:var(--space-3);display:flex;flex-direction:column;gap:var(--space-3);">
+              <div><div style="display:flex;justify-content:space-between;font-size:var(--text-xs);margin-bottom:var(--space-1);"><span style="color:hsl(var(--muted-foreground));">Page speed</span><span style="font-weight:var(--font-medium);">92</span></div><div class="progress-track"><div class="progress-fill" style="width:92%;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:var(--text-xs);margin-bottom:var(--space-1);"><span style="color:hsl(var(--muted-foreground));">Accessibility</span><span style="font-weight:var(--font-medium);">78</span></div><div class="progress-track"><div class="progress-fill" style="width:78%;background:hsl(220 90% 56%);"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:var(--text-xs);margin-bottom:var(--space-1);"><span style="color:hsl(var(--muted-foreground));">SEO</span><span style="font-weight:var(--font-medium);">100</span></div><div class="progress-track"><div class="progress-fill" style="width:100%;background:#16a34a;"></div></div></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── Anatomy ──────────────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Anatomy</h2>
+        <p class="section-sub">All five sub-components are optional and independently composable.</p>
+
+        <div class="preview-card-wrap">
+          <div class="preview-label">Anatomy — all sub-components labelled</div>
+          <div class="preview-body">
+            <div class="card" style="max-width:380px;position:relative;">
+
+              <!-- CardHeader annotation -->
+              <div style="position:absolute;top:var(--space-4);left:-3rem;font-size:var(--text-xs);color:hsl(var(--muted-foreground));font-family:var(--font-mono);white-space:nowrap;display:none;"></div>
+
+              <div class="card-header" style="outline:1.5px dashed hsl(var(--ring)/0.3);outline-offset:2px;border-radius:var(--radius-sm);position:relative;">
+                <div style="position:absolute;top:-1.1rem;left:0;font-size:10px;font-family:var(--font-mono);color:hsl(var(--muted-foreground));">CardHeader</div>
+                <p class="card-title" style="outline:1.5px dashed hsl(220 90% 56%/0.4);outline-offset:1px;border-radius:2px;position:relative;">
+                  <span style="position:absolute;top:-1rem;left:0;font-size:10px;font-family:var(--font-mono);color:hsl(220 90% 56%);">CardTitle</span>
+                  Card Title
+                </p>
+                <p class="card-description" style="outline:1.5px dashed hsl(142 76% 36%/0.4);outline-offset:1px;border-radius:2px;position:relative;">
+                  <span style="position:absolute;top:-1rem;left:0;font-size:10px;font-family:var(--font-mono);color:hsl(142 76% 36%);">CardDescription</span>
+                  Card description text.
+                </p>
+              </div>
+
+              <div class="card-content" style="outline:1.5px dashed hsl(38 92% 50%/0.4);outline-offset:2px;border-radius:var(--radius-sm);position:relative;padding-top:var(--space-5);margin-top:var(--space-2);">
+                <div style="position:absolute;top:-0.9rem;left:0;font-size:10px;font-family:var(--font-mono);color:hsl(38 92% 50%);">CardContent</div>
+                <div style="height:48px;background:hsl(var(--muted));border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:var(--text-xs);color:hsl(var(--muted-foreground));">Your content here</div>
+              </div>
+
+              <div class="card-footer" style="outline:1.5px dashed hsl(var(--destructive)/0.3);outline-offset:2px;border-radius:var(--radius-sm);position:relative;padding-top:var(--space-5);margin-top:var(--space-2);">
+                <div style="position:absolute;top:-0.9rem;left:0;font-size:10px;font-family:var(--font-mono);color:hsl(var(--destructive));">CardFooter</div>
+                <button class="btn btn-outline btn-sm">Cancel</button>
+                <button class="btn btn-default btn-sm">Submit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Usage ───────────────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Usage — shadcn/ui</h2>
+        <div class="code-block"><pre><span class="code-cmt"># Install via shadcn/ui CLI</span>
+npx shadcn@latest add card</pre></div>
+        <div class="code-block"><pre><span class="code-kw">import</span> {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} <span class="code-kw">from</span> <span class="code-str">"@/components/ui/card"</span>
+
+<span class="code-kw">export function</span> <span class="code-tag">CardDemo</span>() {
+  <span class="code-kw">return</span> (
+    <span class="code-tag">&lt;Card&gt;</span>
+      <span class="code-tag">&lt;CardHeader&gt;</span>
+        <span class="code-tag">&lt;CardTitle&gt;</span>Create project<span class="code-tag">&lt;/CardTitle&gt;</span>
+        <span class="code-tag">&lt;CardDescription&gt;</span>
+          Deploy your new project in one-click.
+        <span class="code-tag">&lt;/CardDescription&gt;</span>
+      <span class="code-tag">&lt;/CardHeader&gt;</span>
+      <span class="code-tag">&lt;CardContent&gt;</span>
+        <span class="code-cmt">{/* Your content */}</span>
+      <span class="code-tag">&lt;/CardContent&gt;</span>
+      <span class="code-tag">&lt;CardFooter</span> <span class="code-attr">className</span>=<span class="code-str">"flex justify-between"</span><span class="code-tag">&gt;</span>
+        <span class="code-tag">&lt;Button</span> <span class="code-attr">variant</span>=<span class="code-str">"outline"</span><span class="code-tag">&gt;</span>Cancel<span class="code-tag">&lt;/Button&gt;</span>
+        <span class="code-tag">&lt;Button&gt;</span>Deploy<span class="code-tag">&lt;/Button&gt;</span>
+      <span class="code-tag">&lt;/CardFooter&gt;</span>
+    <span class="code-tag">&lt;/Card&gt;</span>
+  )
+}
+
+<span class="code-cmt">// Stat card — no footer, horizontal header</span>
+<span class="code-tag">&lt;Card&gt;</span>
+  <span class="code-tag">&lt;CardHeader</span> <span class="code-attr">className</span>=<span class="code-str">"flex-row items-center justify-between"</span><span class="code-tag">&gt;</span>
+    <span class="code-tag">&lt;CardDescription&gt;</span>Total Revenue<span class="code-tag">&lt;/CardDescription&gt;</span>
+    <span class="code-tag">&lt;DollarSign</span> <span class="code-attr">className</span>=<span class="code-str">"h-4 w-4 text-muted-foreground"</span> <span class="code-tag">/&gt;</span>
+  <span class="code-tag">&lt;/CardHeader&gt;</span>
+  <span class="code-tag">&lt;CardContent&gt;</span>
+    <span class="code-tag">&lt;p</span> <span class="code-attr">className</span>=<span class="code-str">"text-3xl font-bold"</span><span class="code-tag">&gt;</span>$45,231.89<span class="code-tag">&lt;/p&gt;</span>
+    <span class="code-tag">&lt;p</span> <span class="code-attr">className</span>=<span class="code-str">"text-xs text-muted-foreground"</span><span class="code-tag">&gt;</span>
+      +20.1% from last month
+    <span class="code-tag">&lt;/p&gt;</span>
+  <span class="code-tag">&lt;/CardContent&gt;</span>
+<span class="code-tag">&lt;/Card&gt;</span></pre></div>
+      </section>
+
+      <!-- ── Props ───────────────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Props</h2>
+        <p class="section-sub">All sub-components are thin wrappers that extend <code>HTMLDivElement</code>.</p>
+        <table class="data-table">
+          <thead><tr><th>Component</th><th>Element</th><th>Default classes</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>Card</code></td><td><code>&lt;div&gt;</code></td><td><code>rounded-xl border bg-card shadow-sm</code></td><td>Root container. Accepts any <code>div</code> props.</td></tr>
+            <tr><td><code>CardHeader</code></td><td><code>&lt;div&gt;</code></td><td><code>flex flex-col space-y-1.5 p-6</code></td><td>Top section — typically holds title and description.</td></tr>
+            <tr><td><code>CardTitle</code></td><td><code>&lt;h3&gt;</code></td><td><code>font-semibold leading-none tracking-tight</code></td><td>Primary heading. Semantically <code>&lt;h3&gt;</code> — override with <code>asChild</code> if needed.</td></tr>
+            <tr><td><code>CardDescription</code></td><td><code>&lt;p&gt;</code></td><td><code>text-sm text-muted-foreground</code></td><td>Supporting subtitle beneath the title.</td></tr>
+            <tr><td><code>CardContent</code></td><td><code>&lt;div&gt;</code></td><td><code>p-6 pt-0</code></td><td>Main body area — no top padding by default (header provides it).</td></tr>
+            <tr><td><code>CardFooter</code></td><td><code>&lt;div&gt;</code></td><td><code>flex items-center p-6 pt-0</code></td><td>Bottom action row — no top padding by default.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ── Design Tokens ───────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Design Tokens</h2>
+        <p class="section-sub">CSS custom properties sourced from Figma Variables → <code>design-tokens.css</code>.</p>
+        <table class="data-table">
+          <thead><tr><th>Token</th><th>Value</th><th>Usage</th></tr></thead>
+          <tbody>
+            <tr><td><code>--card</code></td><td><span class="swatch"><span class="swatch-dot" style="background:hsl(var(--card));"></span>hsl(0 0% 100%)</span></td><td>Card background color</td></tr>
+            <tr><td><code>--card-foreground</code></td><td><span class="swatch"><span class="swatch-dot" style="background:hsl(var(--card-foreground));"></span>hsl(0 0% 3.9%)</span></td><td>Default text color within the card</td></tr>
+            <tr><td><code>--border</code></td><td><span class="swatch"><span class="swatch-dot" style="background:hsl(var(--border));"></span>hsl(0 0% 89.8%)</span></td><td>Card border</td></tr>
+            <tr><td><code>--muted-foreground</code></td><td><span class="swatch"><span class="swatch-dot" style="background:hsl(var(--muted-foreground));"></span>hsl(0 0% 45.1%)</span></td><td>CardDescription text color</td></tr>
+            <tr><td><code>--radius-xl</code></td><td>0.75rem (12px)</td><td>Card border-radius</td></tr>
+            <tr><td><code>--shadow-sm</code></td><td>0 1px 2px 0 rgba(0,0,0,0.05)</td><td>Card box-shadow</td></tr>
+            <tr><td><code>--space-6</code></td><td>1.5rem (24px)</td><td>CardHeader / CardContent / CardFooter padding</td></tr>
+            <tr><td><code>--space-1-5</code></td><td>0.375rem (6px)</td><td>Gap between CardTitle and CardDescription</td></tr>
+            <tr><td><code>--text-lg</code></td><td>1.125rem (18px)</td><td>CardTitle font size</td></tr>
+            <tr><td><code>--font-semibold</code></td><td>600</td><td>CardTitle font weight</td></tr>
+            <tr><td><code>--tracking-tight</code></td><td>-0.025em</td><td>CardTitle letter-spacing</td></tr>
+            <tr><td><code>--text-sm</code></td><td>0.875rem (14px)</td><td>CardDescription font size</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ── Accessibility ───────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Accessibility</h2>
+        <table class="data-table">
+          <thead><tr><th>Pattern</th><th>Guidance</th></tr></thead>
+          <tbody>
+            <tr><td>Heading level</td><td><code>CardTitle</code> renders as <code>&lt;h3&gt;</code>. Adjust with <code>asChild</code> + <code>&lt;h2&gt;</code> or <code>&lt;h4&gt;</code> to match the page outline — don't skip heading levels.</td></tr>
+            <tr><td>Interactive cards</td><td>If the entire card is clickable, use a wrapping <code>&lt;a&gt;</code> or add <code>role="button"</code> with keyboard handlers. Avoid placing multiple interactive elements inside an already-clickable card.</td></tr>
+            <tr><td>Landmark regions</td><td>In dashboards with many metric cards, wrap groups in a <code>&lt;section aria-label="…"&gt;</code> to create navigable landmarks for screen readers.</td></tr>
+            <tr><td>Decorative images</td><td>Hero images in card headers should use <code>alt=""</code> (empty alt) if the image is purely decorative — the title already describes the card.</td></tr>
+            <tr><td>Focus order</td><td>Interactive elements in CardFooter receive focus in DOM order. Ensure Cancel precedes Submit in the DOM to match the visual left-to-right order.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+    </main>
+  </div>
+
+  <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('overlay').classList.toggle('open');
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('overlay').classList.remove('open');
+    }
+  </script>
+</body>
+</html>
