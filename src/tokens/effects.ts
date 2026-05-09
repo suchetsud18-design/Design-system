@@ -1,6 +1,6 @@
 /**
  * Effects Design Tokens — Shadows, Borders, Animations
- * Generated from Figma Variables → border-radius, border-width collections
+ * Generated from Figma Variables → border-radius (150 vars), border-width collections
  * File: -shadcn_ui-components-not-token--Fluke---Copy-
  * Last synced: 2026-05-09
  */
@@ -23,6 +23,42 @@ export const borderRadius = {
   "4xl":   "var(--radius-4xl)",    /* 32px */
   full:    "var(--radius-full)",   /* 9999px */
 } as const;
+
+/**
+ * Shared radius scale for directional variants — all 15 direction groups × 10 sizes = 150 vars.
+ * All directionals resolve to the same values as the base borderRadius scale.
+ * @figmaVariable border-radius/rounded-{direction}-*
+ */
+const radiusScale = borderRadius;
+
+/** rounded-s-* — start side (top-left + bottom-left in LTR) */
+export const borderRadiusS  = radiusScale;
+/** rounded-e-* — end side (top-right + bottom-right in LTR) */
+export const borderRadiusE  = radiusScale;
+/** rounded-t-* — top side (top-left + top-right) */
+export const borderRadiusT  = radiusScale;
+/** rounded-r-* — right side (top-right + bottom-right) */
+export const borderRadiusR  = radiusScale;
+/** rounded-b-* — bottom side (bottom-left + bottom-right) */
+export const borderRadiusB  = radiusScale;
+/** rounded-l-* — left side (top-left + bottom-left) */
+export const borderRadiusL  = radiusScale;
+/** rounded-ss-* — start-start corner (top-left in LTR) */
+export const borderRadiusSS = radiusScale;
+/** rounded-se-* — start-end corner (top-right in LTR) */
+export const borderRadiusSE = radiusScale;
+/** rounded-ee-* — end-end corner (bottom-right in LTR) */
+export const borderRadiusEE = radiusScale;
+/** rounded-es-* — end-start corner (bottom-left in LTR) */
+export const borderRadiusES = radiusScale;
+/** rounded-tl-* — top-left corner (physical) */
+export const borderRadiusTL = radiusScale;
+/** rounded-tr-* — top-right corner (physical) */
+export const borderRadiusTR = radiusScale;
+/** rounded-br-* — bottom-right corner (physical) */
+export const borderRadiusBR = radiusScale;
+/** rounded-bl-* — bottom-left corner (physical) */
+export const borderRadiusBL = radiusScale;
 
 /** Border width scale */
 export const borderWidth = {

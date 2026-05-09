@@ -7,7 +7,13 @@ import { colors } from "./colors";
 import { typography, textStyles } from "./typography";
 import { spacing, spacingAlias, padding, p, px, py, pt, pr, pb, pl, m, mx, my, mt, mr, mb, ml, gap, gapX, gapY } from "./spacing";
 import {
-  shadows, borderRadius, borderWidth,
+  shadows,
+  borderRadius,
+  borderRadiusS, borderRadiusE,
+  borderRadiusT, borderRadiusR, borderRadiusB, borderRadiusL,
+  borderRadiusSS, borderRadiusSE, borderRadiusEE, borderRadiusES,
+  borderRadiusTL, borderRadiusTR, borderRadiusBR, borderRadiusBL,
+  borderWidth,
   borderWidthX, borderWidthY, borderWidthS, borderWidthE,
   borderWidthT, borderWidthR, borderWidthB, borderWidthL,
   duration, easing, zIndex, transitions,
@@ -31,6 +37,12 @@ export const tokens = {
   gapY,
   shadows,
   borderRadius,
+  borderRadiusDirectional: {
+    s: borderRadiusS,   e: borderRadiusE,
+    t: borderRadiusT,   r: borderRadiusR,   b: borderRadiusB,   l: borderRadiusL,
+    ss: borderRadiusSS, se: borderRadiusSE, ee: borderRadiusEE, es: borderRadiusES,
+    tl: borderRadiusTL, tr: borderRadiusTR, br: borderRadiusBR, bl: borderRadiusBL,
+  },
   borderWidth,
   borderWidthDirectional: { x: borderWidthX, y: borderWidthY, s: borderWidthS, e: borderWidthE, t: borderWidthT, r: borderWidthR, b: borderWidthB, l: borderWidthL },
   duration,

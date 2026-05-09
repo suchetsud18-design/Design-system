@@ -24,6 +24,10 @@ export type { SpacingToken, SpacingKey, GapToken, DirectionalScale } from "./spa
 export {
   shadows,
   borderRadius,
+  borderRadiusS, borderRadiusE,
+  borderRadiusT, borderRadiusR, borderRadiusB, borderRadiusL,
+  borderRadiusSS, borderRadiusSE, borderRadiusEE, borderRadiusES,
+  borderRadiusTL, borderRadiusTR, borderRadiusBR, borderRadiusBL,
   borderWidth,
   borderWidthX,
   borderWidthY,
