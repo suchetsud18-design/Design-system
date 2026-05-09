@@ -42,6 +42,14 @@ export const spacing = {
   "96":  "var(--space-96)",
 } as const;
 
+/**
+ * Space between — horizontal/vertical gap between flex/grid children.
+ * @figmaVariable space/space-x-* and space/space-y-*
+ * 34 values (0–96, no px), aliasing the same --space-* CSS vars.
+ */
+export const spaceX = spacing;
+export const spaceY = spacing;
+
 /** Named spacing aliases for semantic use */
 export const spacingAlias = {
   none: "var(--space-0)",

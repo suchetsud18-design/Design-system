@@ -15,6 +15,7 @@ export type { TypographyToken, TextStyleKey } from "./typography";
 
 export {
   spacing, spacingAlias, padding,
+  spaceX, spaceY,
   p, px, py, pt, pr, pb, pl,
   m, mx, my, mt, mr, mb, ml,
   gap, gapX, gapY,

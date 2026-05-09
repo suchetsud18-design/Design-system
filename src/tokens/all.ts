@@ -5,7 +5,7 @@
 
 import { colors } from "./colors";
 import { typography, textStyles } from "./typography";
-import { spacing, spacingAlias, padding, p, px, py, pt, pr, pb, pl, m, mx, my, mt, mr, mb, ml, gap, gapX, gapY } from "./spacing";
+import { spacing, spacingAlias, padding, spaceX, spaceY, p, px, py, pt, pr, pb, pl, m, mx, my, mt, mr, mb, ml, gap, gapX, gapY } from "./spacing";
 import {
   shadows,
   borderRadius,
@@ -32,6 +32,7 @@ export const tokens = {
   componentPadding: padding,
   padding: { p, px, py, pt, pr, pb, pl },
   margin:  { m, mx, my, mt, mr, mb, ml },
+  space:   { x: spaceX, y: spaceY },
   gap,
   gapX,
   gapY,
