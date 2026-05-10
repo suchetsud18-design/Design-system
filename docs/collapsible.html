@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Checkbox — Design System</title>
+  <title>Collapsible — Design System</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -79,105 +79,130 @@
 
     .preview-card { border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.5rem; }
     .preview-label { font-size: var(--text-xs); font-weight: var(--font-medium); color: hsl(var(--muted-foreground)); letter-spacing: var(--tracking-wide); text-transform: uppercase; padding: 0.75rem 1rem; background: hsl(var(--muted)); border-bottom: 1px solid hsl(var(--border)); }
-    .preview-body { padding: 2rem; background: hsl(var(--background)); }
-    .preview-body.col { display: flex; flex-direction: column; gap: 1.25rem; }
-    .preview-body.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .preview-body { padding: 2rem; background: hsl(var(--background)); display: flex; flex-direction: column; gap: 1.5rem; align-items: flex-start; }
+    .preview-body.center { align-items: center; }
 
     /* ═══════════════════════════════════════════════════════════
-       CHECKBOX COMPONENT
+       COLLAPSIBLE COMPONENT
     ═══════════════════════════════════════════════════════════ */
 
-    /* Wrapper row */
-    .cb-wrap {
+    .coll-root {
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius-lg);
+      padding: 20px;
       display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      cursor: pointer;
-      user-select: none;
-    }
-    .cb-wrap.disabled {
-      opacity: 0.5;
-      pointer-events: none;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      max-width: 390px;
     }
 
-    /* The box */
-    .cb {
-      width: 16px;
-      height: 16px;
-      border-radius: 6px;
-      border: 1px solid hsl(var(--border));
-      background: hsl(var(--background));
-      flex-shrink: 0;
+    /* Trigger row */
+    .coll-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      width: 100%;
+      font-family: var(--font-sans);
+      min-height: 32px;
+    }
+
+    .coll-title {
+      font-size: var(--text-sm);
+      font-weight: var(--font-semibold);
+      color: hsl(var(--foreground));
+      text-align: left;
+      line-height: var(--leading-5);
+    }
+
+    .coll-icon {
+      width: 32px;
+      height: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition:
-        background var(--duration-150) var(--easing-out),
-        border-color var(--duration-150) var(--easing-out);
-      margin-top: 2px;
+      border-radius: var(--radius-md);
+      flex-shrink: 0;
+      transition: background var(--duration-150) var(--easing-out);
     }
-    .cb.checked {
-      background: hsl(var(--foreground));
-      border-color: hsl(var(--foreground));
-    }
-    .cb.indeterminate {
-      background: hsl(var(--foreground));
-      border-color: hsl(var(--foreground));
-    }
-    .cb:focus-visible {
-      outline: 2px solid hsl(var(--ring));
-      outline-offset: 2px;
-    }
-
-    /* Label area */
-    .cb-label {
-      font-size: var(--text-sm);
-      font-weight: var(--font-medium);
+    .coll-icon:hover { background: hsl(var(--muted)); }
+    .coll-icon svg {
+      width: 16px;
+      height: 16px;
       color: hsl(var(--foreground));
-      line-height: var(--leading-5);
+      transition: transform var(--duration-200) var(--easing-out);
     }
-    .cb-desc {
-      font-size: var(--text-sm);
-      font-weight: var(--font-normal);
-      color: hsl(var(--muted-foreground));
-      margin-top: 4px;
-      line-height: var(--leading-5);
+    .coll-root.open .coll-icon svg {
+      transform: rotate(180deg);
     }
 
-    /* Card variant */
-    .cb-card {
-      border: 1px solid hsl(var(--border));
-      border-radius: var(--radius-lg);
-      padding: 12px;
-      background: hsl(var(--background));
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      cursor: pointer;
-      user-select: none;
-      transition:
-        background var(--duration-150) var(--easing-out),
-        border-color var(--duration-150) var(--easing-out);
-    }
-    .cb-card.checked {
-      background: hsl(var(--muted));
-      border-color: hsl(var(--foreground));
-    }
-    .cb-card .cb { margin-top: 2px; }
-
-    /* Group layout */
-    .cb-group {
+    /* Row items */
+    .coll-items {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
     }
 
-    /* ═══════════════════════════════════════════════════════════
-       STATES GRID
-    ═══════════════════════════════════════════════════════════ */
+    .coll-item {
+      border: 1px solid hsl(var(--border));
+      border-radius: 8px;
+      padding: 8px 16px;
+      background: hsl(var(--background));
+      display: flex;
+      align-items: center;
+      min-height: 36px;
+    }
+
+    .coll-item-text {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: hsl(var(--foreground));
+    }
+
+    /* Collapsible content — animated height */
+    .coll-content {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition:
+        max-height var(--duration-300) var(--easing-out),
+        opacity var(--duration-200) var(--easing-out);
+    }
+    .coll-root.open .coll-content {
+      max-height: 500px;
+      opacity: 1;
+    }
+
+    /* ── Variants ── */
+    .coll-root.plain {
+      border: none;
+      padding: 0;
+      gap: 8px;
+    }
+    .coll-root.plain .coll-trigger {
+      padding: 0;
+      gap: 8px;
+      justify-content: flex-start;
+    }
+    .coll-root.plain .coll-title {
+      font-size: var(--text-base);
+      font-weight: var(--font-medium);
+    }
+    .coll-root.plain .coll-icon {
+      order: -1;
+    }
+
+    /* States grid */
     .states-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: 1fr 1fr;
       gap: 1rem;
     }
     .state-cell {
@@ -195,16 +220,9 @@
       background: hsl(var(--muted));
       border-bottom: 1px solid hsl(var(--border));
     }
-    .state-cell-body {
-      padding: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    .state-cell-body { padding: 1rem; }
 
-    /* ═══════════════════════════════════════════════════════════
-       TABLES
-    ═══════════════════════════════════════════════════════════ */
+    /* Tables */
     .table-wrap { overflow-x: auto; margin-bottom: 1.5rem; }
     table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
     thead tr { border-bottom: 2px solid hsl(var(--border)); }
@@ -215,21 +233,11 @@
     td:first-child { font-family: var(--font-mono); font-size: var(--text-xs); color: hsl(var(--foreground)); white-space: nowrap; }
     td code { font-family: var(--font-mono); font-size: var(--text-xs); background: hsl(var(--muted)); padding: 0.1em 0.35em; border-radius: var(--radius-sm); color: hsl(var(--foreground)); }
 
-    /* ═══════════════════════════════════════════════════════════
-       TOKEN TABLE
-    ═══════════════════════════════════════════════════════════ */
-    .token-table td:first-child { color: hsl(var(--muted-foreground)); font-family: var(--font-mono); font-size: var(--text-xs); }
-    .token-table td:nth-child(2) { font-family: var(--font-mono); font-size: var(--text-xs); color: hsl(var(--foreground)); }
+    .token-table td:first-child { color: hsl(var(--muted-foreground)); }
     .token-swatch { display: inline-block; width: 14px; height: 14px; border-radius: var(--radius-sm); border: 1px solid hsl(var(--border)); vertical-align: middle; margin-right: 6px; }
 
-    /* ═══════════════════════════════════════════════════════════
-       USAGE CODE BLOCK
-    ═══════════════════════════════════════════════════════════ */
     .code-block { background: hsl(var(--muted)); border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; font-family: var(--font-mono); font-size: var(--text-xs); line-height: var(--leading-6); overflow-x: auto; margin-bottom: 1.5rem; white-space: pre; }
 
-    /* ═══════════════════════════════════════════════════════════
-       ACCESSIBILITY CALLOUT
-    ═══════════════════════════════════════════════════════════ */
     .a11y-box { background: hsl(var(--muted)); border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; }
     .a11y-box h4 { font-size: var(--text-sm); font-weight: var(--font-semibold); margin-bottom: 0.75rem; }
     .a11y-box ul { padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.375rem; }
@@ -279,8 +287,8 @@
         <a class="sidebar-item" href="breadcrumb.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>Breadcrumb <span class="sidebar-item-badge">New</span></a>
         <a class="sidebar-item" href="button.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="16 2 12 7 8 2"/></svg>Button<span class="sidebar-item-badge">New</span></a>
         <a class="sidebar-item" href="card.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Card<span class="sidebar-item-badge">New</span></a>
-        <a class="sidebar-item active" href="checkbox.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12l2 2 4-4"/></svg>Checkbox <span class="sidebar-item-badge">New</span></a>
-        <a class="sidebar-item" href="collapsible.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M2 9h20"/><polyline points="8 13 12 17 16 13"/></svg>Collapsible <span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="checkbox.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12l2 2 4-4"/></svg>Checkbox <span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item active" href="collapsible.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M2 9h20"/><polyline points="8 13 12 17 16 13"/></svg>Collapsible <span class="sidebar-item-badge">New</span></a>
         <a class="sidebar-item" href="dialog.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15h0M2 9h20"/></svg>Dialog<span class="sidebar-item-badge">New</span></a>
         <a class="sidebar-item" href="input.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Input<span class="sidebar-item-badge">New</span></a>
         <a class="sidebar-item" href="select.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Select<span class="sidebar-item-badge">New</span></a>
@@ -306,14 +314,14 @@
   <main class="main">
     <header class="topbar">
       <div class="topbar-breadcrumb">
-        Components <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg> <span>Checkbox</span>
+        Components <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg> <span>Collapsible</span>
       </div>
       <div class="topbar-actions">
-        <a class="topbar-btn" href="https://ui.shadcn.com/docs/components/checkbox" target="_blank">
+        <a class="topbar-btn" href="https://ui.shadcn.com/docs/components/collapsible" target="_blank">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           Shadcn Docs
         </a>
-        <a class="topbar-btn" href="https://www.radix-ui.com/primitives/docs/components/checkbox" target="_blank">
+        <a class="topbar-btn" href="https://www.radix-ui.com/primitives/docs/components/collapsible" target="_blank">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           Radix UI
         </a>
@@ -324,75 +332,38 @@
       <!-- PAGE HEADER -->
       <div class="page-header">
         <div class="lbl">Component</div>
-        <h1>Checkbox</h1>
-        <p>A control that allows the user to toggle between checked and not checked. Supports default, subtext, disabled, and card variants.</p>
+        <h1>Collapsible</h1>
+        <p>An interactive component which expands/collapses a panel. One item is always visible; additional items are revealed by toggling the trigger.</p>
       </div>
 
       <!-- ── SECTION: Default ───────────────────────────────────── -->
       <section class="section">
         <h2 class="section-title">Default</h2>
-        <p class="section-sub">Click any checkbox to toggle its state. The box is 16×16px with a 6px border-radius from Figma.</p>
+        <p class="section-sub">Exact Figma layout — a bordered card with a title row, a permanently visible item, and two additional items behind the toggle.</p>
 
         <div class="preview-card">
           <div class="preview-label">Preview — interactive</div>
-          <div class="preview-body col">
+          <div class="preview-body center">
 
-            <!-- Unchecked -->
-            <div class="cb-wrap" onclick="toggleCb(this)">
-              <div class="cb" role="checkbox" aria-checked="false" tabindex="0"></div>
-              <div>
-                <div class="cb-label">Accept terms and conditions</div>
+            <div class="coll-root" id="coll-default">
+              <button class="coll-trigger" onclick="toggleColl('coll-default')" aria-expanded="false" aria-controls="coll-default-content">
+                <span class="coll-title">@peduarte starred 3 repositories</span>
+                <span class="coll-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+              </button>
+              <!-- Always-visible item -->
+              <div class="coll-item">
+                <span class="coll-item-text">@radix-ui/primitives</span>
               </div>
-            </div>
-
-            <!-- Pre-checked -->
-            <div class="cb-wrap" onclick="toggleCb(this)">
-              <div class="cb checked" role="checkbox" aria-checked="true" tabindex="0">
-                <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1,4 3.5,6.5 9,1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </div>
-              <div>
-                <div class="cb-label">Marketing emails</div>
-              </div>
-            </div>
-
-            <!-- Indeterminate -->
-            <div class="cb-wrap" onclick="toggleCbIndeterminate(this)">
-              <div class="cb indeterminate" role="checkbox" aria-checked="mixed" tabindex="0">
-                <svg width="8" height="2" viewBox="0 0 8 2" fill="none"><line x1="0" y1="1" x2="8" y2="1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
-              </div>
-              <div>
-                <div class="cb-label">Select all (indeterminate)</div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      <!-- ── SECTION: With Description ─────────────────────────── -->
-      <section class="section">
-        <h2 class="section-title">With Description</h2>
-        <p class="section-sub">A secondary description line can appear below the label, using <code>muted-foreground</code> colour.</p>
-
-        <div class="preview-card">
-          <div class="preview-label">Preview — interactive</div>
-          <div class="preview-body col">
-
-            <div class="cb-wrap" onclick="toggleCb(this)">
-              <div class="cb" role="checkbox" aria-checked="false" tabindex="0"></div>
-              <div>
-                <div class="cb-label">Accept terms and conditions</div>
-                <div class="cb-desc">By clicking this checkbox, you agree to the terms and conditions.</div>
-              </div>
-            </div>
-
-            <div class="cb-wrap" onclick="toggleCb(this)">
-              <div class="cb checked" role="checkbox" aria-checked="true" tabindex="0">
-                <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1,4 3.5,6.5 9,1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </div>
-              <div>
-                <div class="cb-label">Enable notifications</div>
-                <div class="cb-desc">You can enable or disable notifications at any time.</div>
+              <!-- Collapsible content -->
+              <div class="coll-content" id="coll-default-content" role="region">
+                <div class="coll-item">
+                  <span class="coll-item-text">@radix-ui/colors</span>
+                </div>
+                <div class="coll-item">
+                  <span class="coll-item-text">@stitches/react</span>
+                </div>
               </div>
             </div>
 
@@ -403,136 +374,98 @@
       <!-- ── SECTION: States ────────────────────────────────────── -->
       <section class="section">
         <h2 class="section-title">States</h2>
-        <p class="section-sub">All four states the checkbox box can be in. Disabled uses 0.5 opacity on the entire row.</p>
+        <p class="section-sub">The two variants from Figma: collapsed (default) and open.</p>
 
         <div class="states-grid">
           <div class="state-cell">
-            <div class="state-cell-label">Unchecked</div>
+            <div class="state-cell-label">Collapsed (default)</div>
             <div class="state-cell-body">
-              <div class="cb-wrap">
-                <div class="cb"></div>
-                <div class="cb-label">Unchecked</div>
-              </div>
-            </div>
-          </div>
-          <div class="state-cell">
-            <div class="state-cell-label">Checked</div>
-            <div class="state-cell-body">
-              <div class="cb-wrap">
-                <div class="cb checked">
-                  <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1,4 3.5,6.5 9,1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <div class="coll-root">
+                <div class="coll-trigger" style="pointer-events:none;">
+                  <span class="coll-title">@peduarte starred 3 repositories</span>
+                  <span class="coll-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                  </span>
                 </div>
-                <div class="cb-label">Checked</div>
-              </div>
-            </div>
-          </div>
-          <div class="state-cell">
-            <div class="state-cell-label">Indeterminate</div>
-            <div class="state-cell-body">
-              <div class="cb-wrap">
-                <div class="cb indeterminate">
-                  <svg width="8" height="2" viewBox="0 0 8 2" fill="none"><line x1="0" y1="1" x2="8" y2="1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+                <div class="coll-item">
+                  <span class="coll-item-text">@radix-ui/primitives</span>
                 </div>
-                <div class="cb-label">Indeterminate</div>
               </div>
             </div>
           </div>
           <div class="state-cell">
-            <div class="state-cell-label">Disabled</div>
+            <div class="state-cell-label">Open (expanded)</div>
             <div class="state-cell-body">
-              <div class="cb-wrap disabled">
-                <div class="cb" aria-disabled="true"></div>
-                <div class="cb-label">Disabled</div>
-              </div>
-            </div>
-          </div>
-          <div class="state-cell">
-            <div class="state-cell-label">Disabled Checked</div>
-            <div class="state-cell-body">
-              <div class="cb-wrap disabled">
-                <div class="cb checked" aria-disabled="true">
-                  <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1,4 3.5,6.5 9,1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <div class="coll-root open">
+                <div class="coll-trigger" style="pointer-events:none;">
+                  <span class="coll-title">@peduarte starred 3 repositories</span>
+                  <span class="coll-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                  </span>
                 </div>
-                <div class="cb-label">Disabled checked</div>
+                <div class="coll-item">
+                  <span class="coll-item-text">@radix-ui/primitives</span>
+                </div>
+                <div class="coll-content" style="max-height:500px;opacity:1;">
+                  <div class="coll-item">
+                    <span class="coll-item-text">@radix-ui/colors</span>
+                  </div>
+                  <div class="coll-item">
+                    <span class="coll-item-text">@stitches/react</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ── SECTION: Card Variant ──────────────────────────────── -->
+      <!-- ── SECTION: Plain Variant ─────────────────────────────── -->
       <section class="section">
-        <h2 class="section-title">Card Variant</h2>
-        <p class="section-sub">The card wraps the checkbox and its label in a bordered container. When checked, the card background shifts to <code>var(--muted)</code> and the border becomes <code>var(--foreground)</code>.</p>
-
-        <div class="preview-card">
-          <div class="preview-label">Preview — interactive</div>
-          <div class="preview-body col" style="max-width:460px;">
-
-            <div class="cb-card" onclick="toggleCbCard(this)">
-              <div class="cb"></div>
-              <div>
-                <div class="cb-label">Enable notifications</div>
-                <div class="cb-desc">You can enable or disable notifications at any time.</div>
-              </div>
-            </div>
-
-            <div class="cb-card checked" onclick="toggleCbCard(this)">
-              <div class="cb checked">
-                <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1,4 3.5,6.5 9,1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </div>
-              <div>
-                <div class="cb-label">Marketing communications</div>
-                <div class="cb-desc">Receive updates about new products and features.</div>
-              </div>
-            </div>
-
-            <div class="cb-card" onclick="toggleCbCard(this)">
-              <div class="cb"></div>
-              <div>
-                <div class="cb-label">Security alerts</div>
-                <div class="cb-desc">Get notified about account activity and security events.</div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      <!-- ── SECTION: Group / Form Usage ───────────────────────── -->
-      <section class="section">
-        <h2 class="section-title">Group</h2>
-        <p class="section-sub">Checkboxes are commonly used in groups for multi-select filtering or preference lists.</p>
+        <h2 class="section-title">Plain Variant</h2>
+        <p class="section-sub">Without the card border — commonly used inside existing containers or sidebars. The chevron precedes the title.</p>
 
         <div class="preview-card">
           <div class="preview-label">Preview — interactive</div>
           <div class="preview-body">
-            <div class="cb-group">
-              <div class="cb-wrap" onclick="toggleCb(this)">
-                <div class="cb checked" role="checkbox" aria-checked="true" tabindex="0">
-                  <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1,4 3.5,6.5 9,1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+            <div class="coll-root plain" id="coll-plain1">
+              <button class="coll-trigger" onclick="toggleColl('coll-plain1')" aria-expanded="false">
+                <span class="coll-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+                <span class="coll-title">Show filters</span>
+              </button>
+              <div class="coll-content" id="coll-plain1-content" role="region">
+                <div class="coll-item">
+                  <span class="coll-item-text" style="font-family:var(--font-sans);">Filter by status</span>
                 </div>
-                <div class="cb-label">React</div>
-              </div>
-              <div class="cb-wrap" onclick="toggleCb(this)">
-                <div class="cb" role="checkbox" aria-checked="false" tabindex="0"></div>
-                <div class="cb-label">Vue</div>
-              </div>
-              <div class="cb-wrap" onclick="toggleCb(this)">
-                <div class="cb checked" role="checkbox" aria-checked="true" tabindex="0">
-                  <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1,4 3.5,6.5 9,1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div class="coll-item">
+                  <span class="coll-item-text" style="font-family:var(--font-sans);">Filter by date range</span>
                 </div>
-                <div class="cb-label">Svelte</div>
-              </div>
-              <div class="cb-wrap" onclick="toggleCb(this)">
-                <div class="cb" role="checkbox" aria-checked="false" tabindex="0"></div>
-                <div class="cb-label">Angular</div>
-              </div>
-              <div class="cb-wrap disabled">
-                <div class="cb" role="checkbox" aria-checked="false" aria-disabled="true" tabindex="-1"></div>
-                <div class="cb-label">Ember (deprecated)</div>
+                <div class="coll-item">
+                  <span class="coll-item-text" style="font-family:var(--font-sans);">Filter by assignee</span>
+                </div>
               </div>
             </div>
+
+            <div class="coll-root plain" id="coll-plain2">
+              <button class="coll-trigger" onclick="toggleColl('coll-plain2')" aria-expanded="false">
+                <span class="coll-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+                <span class="coll-title">Advanced settings</span>
+              </button>
+              <div class="coll-content" id="coll-plain2-content" role="region">
+                <div class="coll-item">
+                  <span class="coll-item-text" style="font-family:var(--font-sans);">Custom domain</span>
+                </div>
+                <div class="coll-item">
+                  <span class="coll-item-text" style="font-family:var(--font-sans);">API rate limiting</span>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
@@ -541,66 +474,76 @@
       <section class="section">
         <h2 class="section-title">API Reference</h2>
 
-        <p style="font-size:var(--text-sm);color:hsl(var(--muted-foreground));margin-bottom:1rem;">Checkbox</p>
+        <p style="font-size:var(--text-sm);color:hsl(var(--muted-foreground));margin-bottom:1rem;">Collapsible (Root)</p>
         <div class="table-wrap">
           <table>
-            <thead>
-              <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
-            </thead>
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
             <tbody>
               <tr>
-                <td>checked</td>
-                <td><code>boolean | 'indeterminate'</code></td>
+                <td>open</td>
+                <td><code>boolean</code></td>
                 <td>—</td>
-                <td>The controlled checked state. Use with <code>onCheckedChange</code>.</td>
+                <td>Controlled open state. Use with <code>onOpenChange</code>.</td>
               </tr>
               <tr>
-                <td>defaultChecked</td>
+                <td>defaultOpen</td>
                 <td><code>boolean</code></td>
                 <td><code>false</code></td>
-                <td>The uncontrolled default checked state.</td>
+                <td>Uncontrolled initial open state.</td>
               </tr>
               <tr>
-                <td>onCheckedChange</td>
-                <td><code>(checked: boolean | 'indeterminate') => void</code></td>
+                <td>onOpenChange</td>
+                <td><code>(open: boolean) => void</code></td>
                 <td>—</td>
-                <td>Callback fired when the checked state changes.</td>
+                <td>Callback when open state changes.</td>
               </tr>
               <tr>
                 <td>disabled</td>
                 <td><code>boolean</code></td>
                 <td><code>false</code></td>
-                <td>Prevents interaction and applies 0.5 opacity to the row.</td>
-              </tr>
-              <tr>
-                <td>required</td>
-                <td><code>boolean</code></td>
-                <td><code>false</code></td>
-                <td>Marks the checkbox as required in a form context.</td>
-              </tr>
-              <tr>
-                <td>name</td>
-                <td><code>string</code></td>
-                <td>—</td>
-                <td>The name submitted with form data.</td>
-              </tr>
-              <tr>
-                <td>value</td>
-                <td><code>string</code></td>
-                <td><code>"on"</code></td>
-                <td>The value submitted with form data when checked.</td>
-              </tr>
-              <tr>
-                <td>id</td>
-                <td><code>string</code></td>
-                <td>—</td>
-                <td>Links the checkbox to a <code>&lt;label&gt;</code> via <code>htmlFor</code>.</td>
+                <td>Prevents toggling when true.</td>
               </tr>
               <tr>
                 <td>asChild</td>
                 <td><code>boolean</code></td>
                 <td><code>false</code></td>
-                <td>Merge props onto the immediate child element (Radix UI pattern).</td>
+                <td>Merge props onto immediate child (Radix UI pattern).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p style="font-size:var(--text-sm);color:hsl(var(--muted-foreground));margin-bottom:1rem;">CollapsibleTrigger</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>asChild</td>
+                <td><code>boolean</code></td>
+                <td><code>false</code></td>
+                <td>Render trigger as a custom element instead of a <code>&lt;button&gt;</code>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p style="font-size:var(--text-sm);color:hsl(var(--muted-foreground));margin-bottom:1rem;">CollapsibleContent</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>forceMount</td>
+                <td><code>boolean</code></td>
+                <td>—</td>
+                <td>Keep content in the DOM even when closed (useful for animations).</td>
+              </tr>
+              <tr>
+                <td>asChild</td>
+                <td><code>boolean</code></td>
+                <td><code>false</code></td>
+                <td>Merge props onto immediate child.</td>
               </tr>
             </tbody>
           </table>
@@ -611,110 +554,116 @@
       <section class="section">
         <h2 class="section-title">Usage</h2>
 
-        <div class="code-block">import { Checkbox } from "@/components/ui/checkbox"
-import { Label }    from "@/components/ui/label"
+        <div class="code-block">import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import { ChevronsUpDown } from "lucide-react"
 
-// Basic
-&lt;div className="flex items-center gap-2"&gt;
-  &lt;Checkbox id="terms" /&gt;
-  &lt;Label htmlFor="terms"&gt;Accept terms and conditions&lt;/Label&gt;
-&lt;/div&gt;
+// Basic — with always-visible item and hidden items
+&lt;Collapsible&gt;
+  &lt;div className="flex items-center justify-between px-4"&gt;
+    &lt;h4&gt;@peduarte starred 3 repositories&lt;/h4&gt;
+    &lt;CollapsibleTrigger asChild&gt;
+      &lt;Button variant="ghost" size="sm"&gt;
+        &lt;ChevronsUpDown className="h-4 w-4" /&gt;
+      &lt;/Button&gt;
+    &lt;/CollapsibleTrigger&gt;
+  &lt;/div&gt;
+  &lt;div className="rounded-md border px-4 py-3 font-mono text-sm"&gt;
+    @radix-ui/primitives
+  &lt;/div&gt;
+  &lt;CollapsibleContent&gt;
+    &lt;div className="rounded-md border px-4 py-3 font-mono text-sm"&gt;
+      @radix-ui/colors
+    &lt;/div&gt;
+    &lt;div className="rounded-md border px-4 py-3 font-mono text-sm"&gt;
+      @stitches/react
+    &lt;/div&gt;
+  &lt;/CollapsibleContent&gt;
+&lt;/Collapsible&gt;
 
 // Controlled
-const [checked, setChecked] = React.useState(false)
-&lt;Checkbox
-  checked={checked}
-  onCheckedChange={setChecked}
-/&gt;
-
-// Indeterminate (partial selection)
-&lt;Checkbox checked="indeterminate" /&gt;
-
-// Disabled
-&lt;Checkbox disabled /&gt;
-&lt;Checkbox disabled defaultChecked /&gt;</div>
+const [isOpen, setIsOpen] = React.useState(false)
+&lt;Collapsible open={isOpen} onOpenChange={setIsOpen}&gt;
+  ...
+&lt;/Collapsible&gt;</div>
       </section>
 
       <!-- ── SECTION: Design Tokens ─────────────────────────────── -->
       <section class="section">
         <h2 class="section-title">Design Tokens</h2>
-        <p class="section-sub">Values measured directly from Figma Variables.</p>
+        <p class="section-sub">Values measured directly from Figma.</p>
 
         <div class="table-wrap">
           <table class="token-table">
-            <thead>
-              <tr><th>Token</th><th>Value</th><th>Usage</th></tr>
-            </thead>
+            <thead><tr><th>Token</th><th>Value</th><th>Usage</th></tr></thead>
             <tbody>
               <tr>
-                <td>--checkbox-size</td>
+                <td>Container border</td>
+                <td><span class="token-swatch" style="background:#e5e5e5;"></span>1px #e5e5e5</td>
+                <td>Outer card border, <code>var(--border)</code></td>
+              </tr>
+              <tr>
+                <td>Container radius</td>
+                <td>12px</td>
+                <td>Outer card border-radius, <code>var(--radius-lg)</code></td>
+              </tr>
+              <tr>
+                <td>Container padding</td>
+                <td>20px</td>
+                <td>All sides of the card container</td>
+              </tr>
+              <tr>
+                <td>Container gap</td>
                 <td>16px</td>
-                <td>Box width and height</td>
+                <td>Vertical gap between trigger, visible item, and content</td>
               </tr>
               <tr>
-                <td>--checkbox-radius</td>
-                <td>6px</td>
-                <td>Box border-radius (from Figma cornerRadius)</td>
+                <td>Item border</td>
+                <td><span class="token-swatch" style="background:#e5e5e5;"></span>1px #e5e5e5</td>
+                <td>Individual row border, <code>var(--border)</code></td>
               </tr>
               <tr>
-                <td>--background</td>
+                <td>Item radius</td>
+                <td>8px</td>
+                <td>Row border-radius (cornerRadius from Figma)</td>
+              </tr>
+              <tr>
+                <td>Item padding</td>
+                <td>8px 16px</td>
+                <td>Vertical/horizontal padding inside each row</td>
+              </tr>
+              <tr>
+                <td>Item background</td>
                 <td><span class="token-swatch" style="background:#ffffff;"></span>#ffffff</td>
-                <td>Unchecked box fill</td>
+                <td><code>var(--background)</code></td>
               </tr>
               <tr>
-                <td>--border</td>
-                <td><span class="token-swatch" style="background:#e5e5e5;"></span>#e5e5e5</td>
-                <td>Unchecked box border (1px)</td>
+                <td>Content gap</td>
+                <td>8px</td>
+                <td>Gap between rows inside CollapsibleContent</td>
               </tr>
               <tr>
-                <td>--foreground</td>
-                <td><span class="token-swatch" style="background:#171717;"></span>#171717</td>
-                <td>Checked box fill + border; card checked border</td>
+                <td>Title font</td>
+                <td>14px · Inter Semi Bold</td>
+                <td><code>var(--text-sm)</code> + <code>var(--font-semibold)</code></td>
               </tr>
               <tr>
-                <td>--foreground (text)</td>
-                <td><span class="token-swatch" style="background:#0a0a0a;"></span>#0a0a0a</td>
-                <td>Label text colour</td>
+                <td>Item font</td>
+                <td>14px · Geist Mono Regular</td>
+                <td><code>var(--text-sm)</code> + <code>var(--font-mono)</code></td>
               </tr>
               <tr>
-                <td>--muted-foreground</td>
-                <td><span class="token-swatch" style="background:#737373;"></span>#737373</td>
-                <td>Description / subtext colour</td>
+                <td>Toggle icon size</td>
+                <td>32×32px button, 16px icon</td>
+                <td>Trigger button and chevron icon</td>
               </tr>
               <tr>
-                <td>--muted</td>
-                <td><span class="token-swatch" style="background:#f5f5f5;"></span>#f5f5f5</td>
-                <td>Card checked background</td>
-              </tr>
-              <tr>
-                <td>--radius-lg</td>
-                <td>12px</td>
-                <td>Card border-radius</td>
-              </tr>
-              <tr>
-                <td>Disabled opacity</td>
-                <td>0.5</td>
-                <td>Applied to entire row wrapper when disabled</td>
-              </tr>
-              <tr>
-                <td>Label font-size</td>
-                <td>14px · Inter Medium</td>
-                <td>Primary label text</td>
-              </tr>
-              <tr>
-                <td>Subtext font-size</td>
-                <td>14px · Inter Regular</td>
-                <td>Description beneath label</td>
-              </tr>
-              <tr>
-                <td>Row gap</td>
-                <td>12px</td>
-                <td>Space between box and label column</td>
-              </tr>
-              <tr>
-                <td>Card padding</td>
-                <td>12px</td>
-                <td>All sides of the card variant</td>
+                <td>Animation</td>
+                <td><code>var(--duration-300)</code> ease-out</td>
+                <td>Content height expansion / collapse</td>
               </tr>
             </tbody>
           </table>
@@ -726,15 +675,15 @@ const [checked, setChecked] = React.useState(false)
         <h2 class="section-title">Accessibility</h2>
 
         <div class="a11y-box">
-          <h4>Keyboard &amp; Screen Reader</h4>
+          <h4>Keyboard &amp; ARIA</h4>
           <ul>
-            <li><strong><span class="kbd">Space</span></strong> — toggles the checkbox between checked and unchecked</li>
-            <li><strong><span class="kbd">Tab</span> / <span class="kbd">Shift+Tab</span></strong> — moves focus to / from the checkbox</li>
-            <li>The Radix UI primitive renders a visually hidden <code>&lt;input type="checkbox"&gt;</code>, ensuring native form submission and screen reader compatibility</li>
-            <li><code>aria-checked="true"</code>, <code>aria-checked="false"</code>, or <code>aria-checked="mixed"</code> for the three states</li>
-            <li><code>aria-disabled="true"</code> on the input when <code>disabled</code> is set</li>
-            <li>Always pair with a visible <code>&lt;Label&gt;</code> or <code>aria-label</code> — never leave a checkbox without an accessible name</li>
-            <li>Focus ring uses <code>var(--ring)</code> with a 2px outline and 2px offset, meeting WCAG 2.4.11</li>
+            <li><strong><span class="kbd">Enter</span> / <span class="kbd">Space</span></strong> — toggle the collapsible open or closed when focus is on the trigger</li>
+            <li><strong><span class="kbd">Tab</span></strong> — move focus into and through the collapsible content when open</li>
+            <li>The trigger is a native <code>&lt;button&gt;</code> — <code>aria-expanded="true"</code> / <code>aria-expanded="false"</code> reflects open state</li>
+            <li><code>aria-controls</code> on the trigger links to the content region's <code>id</code></li>
+            <li>The content region uses <code>role="region"</code> with an accessible label (linked via <code>aria-labelledby</code> on the trigger)</li>
+            <li>Content remains interactive when open — focus is not trapped</li>
+            <li>Use <code>forceMount</code> if you need the content indexed by search engines or assistive tech even when closed</li>
           </ul>
         </div>
       </section>
@@ -752,62 +701,13 @@ const [checked, setChecked] = React.useState(false)
       document.getElementById('sidebarOverlay').classList.remove('open');
     }
 
-    const CHECK_SVG = '<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1,4 3.5,6.5 9,1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-    const DASH_SVG  = '<svg width="8" height="2" viewBox="0 0 8 2" fill="none"><line x1="0" y1="1" x2="8" y2="1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>';
-
-    function toggleCb(wrap) {
-      const box = wrap.querySelector('.cb');
-      if (box.classList.contains('checked')) {
-        box.classList.remove('checked');
-        box.setAttribute('aria-checked', 'false');
-        box.innerHTML = '';
-      } else {
-        box.classList.remove('indeterminate');
-        box.classList.add('checked');
-        box.setAttribute('aria-checked', 'true');
-        box.innerHTML = CHECK_SVG;
-      }
+    function toggleColl(id) {
+      const root = document.getElementById(id);
+      const trigger = root.querySelector('.coll-trigger');
+      const isOpen = root.classList.contains('open');
+      root.classList.toggle('open');
+      trigger.setAttribute('aria-expanded', String(!isOpen));
     }
-
-    function toggleCbIndeterminate(wrap) {
-      const box = wrap.querySelector('.cb');
-      if (box.classList.contains('indeterminate')) {
-        box.classList.remove('indeterminate');
-        box.classList.add('checked');
-        box.setAttribute('aria-checked', 'true');
-        box.innerHTML = CHECK_SVG;
-      } else if (box.classList.contains('checked')) {
-        box.classList.remove('checked');
-        box.setAttribute('aria-checked', 'false');
-        box.innerHTML = '';
-      } else {
-        box.classList.add('indeterminate');
-        box.setAttribute('aria-checked', 'mixed');
-        box.innerHTML = DASH_SVG;
-      }
-    }
-
-    function toggleCbCard(card) {
-      const box = card.querySelector('.cb');
-      if (card.classList.contains('checked')) {
-        card.classList.remove('checked');
-        box.classList.remove('checked');
-        box.setAttribute('aria-checked', 'false');
-        box.innerHTML = '';
-      } else {
-        card.classList.add('checked');
-        box.classList.add('checked');
-        box.setAttribute('aria-checked', 'true');
-        box.innerHTML = CHECK_SVG;
-      }
-    }
-
-    // Keyboard support for standalone checkboxes
-    document.querySelectorAll('.cb[tabindex="0"]').forEach(box => {
-      box.addEventListener('keydown', e => {
-        if (e.key === ' ') { e.preventDefault(); box.closest('.cb-wrap').click(); }
-      });
-    });
   </script>
 </body>
 </html>
