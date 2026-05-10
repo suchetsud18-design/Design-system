@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Avatar — Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../src/tokens/design-tokens.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: var(--font-sans);
+      background: hsl(var(--background));
+      color: hsl(var(--foreground));
+      font-size: var(--text-base);
+      line-height: var(--leading-6);
+      display: flex; min-height: 100vh;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       SIDEBAR
+    ═══════════════════════════════════════════════════════════ */
+    .sidebar { width: 16rem; flex-shrink: 0; background: hsl(var(--sidebar)); border-right: 1px solid hsl(var(--sidebar-border)); display: flex; flex-direction: column; height: 100vh; position: sticky; top: 0; overflow-y: auto; }
+    .sidebar-header { display: flex; align-items: center; gap: 0.625rem; padding: 1rem; border-bottom: 1px solid hsl(var(--sidebar-border)); flex-shrink: 0; }
+    .sidebar-logo { width: 28px; height: 28px; background: hsl(var(--sidebar-primary)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sidebar-logo svg { color: hsl(var(--sidebar-primary-foreground)); }
+    .sidebar-brand { display: flex; flex-direction: column; }
+    .sidebar-brand-name { font-size: var(--text-sm); font-weight: var(--font-semibold); color: hsl(var(--sidebar-foreground)); line-height: var(--leading-5); }
+    .sidebar-brand-sub { font-size: var(--text-xs); color: hsl(var(--sidebar-accent-foreground)); line-height: var(--leading-4); }
+    .sidebar-nav { flex: 1; padding: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem; }
+    .sidebar-group { display: flex; flex-direction: column; gap: 0.125rem; }
+    .sidebar-group-label { font-size: var(--text-xs); font-weight: var(--font-medium); color: hsl(var(--sidebar-accent-foreground)); letter-spacing: var(--tracking-wide); text-transform: uppercase; padding: 0.75rem 0.75rem 0.25rem; }
+    .sidebar-item { display: flex; align-items: center; gap: 0.625rem; padding: 0.375rem 0.75rem; border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: var(--font-medium); color: hsl(var(--sidebar-foreground)); text-decoration: none; cursor: pointer; border: none; background: none; width: 100%; text-align: left; transition: background var(--duration-150) var(--easing-out); }
+    .sidebar-item:hover { background: hsl(var(--sidebar-accent)); color: hsl(var(--sidebar-accent-foreground)); }
+    .sidebar-item.active { background: hsl(var(--sidebar-primary)); color: hsl(var(--sidebar-primary-foreground)); }
+    .sidebar-item svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.8; }
+    .sidebar-item.active svg { opacity: 1; }
+    .sidebar-item-badge { margin-left: auto; font-size: var(--text-xs); font-weight: var(--font-medium); background: hsl(var(--sidebar-accent)); color: hsl(var(--sidebar-accent-foreground)); padding: 0.1rem 0.4rem; border-radius: var(--radius-full); line-height: var(--leading-5); }
+    .sidebar-item.active .sidebar-item-badge { background: hsl(var(--sidebar-primary-foreground) / 0.2); color: hsl(var(--sidebar-primary-foreground)); }
+    .sidebar-separator { height: 1px; background: hsl(var(--sidebar-border)); margin: 0.25rem 0.75rem; }
+    .sidebar-footer { padding: 0.75rem; border-top: 1px solid hsl(var(--sidebar-border)); flex-shrink: 0; }
+    .sidebar-footer-item { display: flex; align-items: center; gap: 0.625rem; padding: 0.375rem 0.75rem; border-radius: var(--radius-md); font-size: var(--text-sm); color: hsl(var(--sidebar-foreground)); text-decoration: none; }
+    .sidebar-footer-item:hover { background: hsl(var(--sidebar-accent)); }
+    .sidebar-footer-item svg { width: 16px; height: 16px; opacity: 0.7; }
+    .sidebar-toggle { display: none; position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 50; width: 44px; height: 44px; background: hsl(var(--foreground)); color: hsl(var(--background)); border: none; border-radius: var(--radius-full); cursor: pointer; align-items: center; justify-content: center; box-shadow: var(--shadow-lg); }
+    @media (max-width: 768px) {
+      .sidebar { position: fixed; top: 0; left: 0; z-index: 40; transform: translateX(-100%); transition: transform var(--duration-300) var(--easing-out); box-shadow: var(--shadow-xl); }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-toggle { display: flex; }
+      .sidebar-overlay { display: none; position: fixed; inset: 0; z-index: 30; background: rgba(0,0,0,0.5); }
+      .sidebar-overlay.open { display: block; }
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       MAIN
+    ═══════════════════════════════════════════════════════════ */
+    .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .topbar { height: 56px; flex-shrink: 0; border-bottom: 1px solid hsl(var(--border)); display: flex; align-items: center; padding: 0 2rem; gap: 1rem; position: sticky; top: 0; background: hsl(var(--background) / 0.9); backdrop-filter: blur(8px); z-index: 20; }
+    .topbar-breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: var(--text-sm); color: hsl(var(--muted-foreground)); }
+    .topbar-breadcrumb span { color: hsl(var(--foreground)); font-weight: var(--font-medium); }
+    .topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; }
+    .topbar-btn { display: inline-flex; align-items: center; gap: 0.375rem; font-size: var(--text-sm); padding: 0.375rem 0.75rem; border: 1px solid hsl(var(--border)); border-radius: var(--radius-md); background: none; cursor: pointer; color: hsl(var(--foreground)); font-family: var(--font-sans); text-decoration: none; transition: background var(--duration-150) var(--easing-out); }
+    .topbar-btn:hover { background: hsl(var(--muted)); }
+    .topbar-btn svg { width: 14px; height: 14px; }
+
+    .content { flex: 1; padding: 3rem 2rem; max-width: 860px; }
+
+    .page-header { margin-bottom: 3rem; border-bottom: 1px solid hsl(var(--border)); padding-bottom: 2rem; }
+    .page-header .lbl { display: inline-flex; font-size: var(--text-xs); font-weight: var(--font-medium); color: hsl(var(--muted-foreground)); letter-spacing: var(--tracking-wide); text-transform: uppercase; margin-bottom: 0.5rem; }
+    .page-header h1 { font-size: var(--text-4xl); font-weight: var(--font-bold); line-height: var(--leading-10); letter-spacing: var(--tracking-tight); margin-bottom: 0.5rem; }
+    .page-header p { color: hsl(var(--muted-foreground)); max-width: 48rem; }
+
+    .section { margin-bottom: 3rem; }
+    .section-title { font-size: var(--text-xl); font-weight: var(--font-semibold); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid hsl(var(--border)); }
+    .section-sub { font-size: var(--text-sm); color: hsl(var(--muted-foreground)); margin-bottom: 1.5rem; }
+
+    .preview-card { border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.5rem; }
+    .preview-label { font-size: var(--text-xs); font-weight: var(--font-medium); color: hsl(var(--muted-foreground)); letter-spacing: var(--tracking-wide); text-transform: uppercase; padding: 0.75rem 1rem; background: hsl(var(--muted)); border-bottom: 1px solid hsl(var(--border)); }
+    .preview-body { padding: 2rem; background: hsl(var(--background)); display: flex; align-items: center; justify-content: center; }
+    .preview-body.start { justify-content: flex-start; }
+    .preview-body.gap { gap: 1.5rem; flex-wrap: wrap; }
+
+    /* ═══════════════════════════════════════════════════════════
+       AVATAR COMPONENT
+    ═══════════════════════════════════════════════════════════ */
+
+    /* Base avatar */
+    .avatar {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: hsl(var(--muted));
+      color: hsl(var(--muted-foreground));
+      font-weight: var(--font-semibold);
+      user-select: none;
+      vertical-align: middle;
+    }
+
+    /* Shapes */
+    .avatar-circle  { border-radius: var(--radius-full); }
+    .avatar-square  { border-radius: var(--radius-lg); }
+
+    /* Sizes */
+    .avatar-xs  { width: 20px;  height: 20px;  font-size: 9px;  }
+    .avatar-sm  { width: 24px;  height: 24px;  font-size: 10px; }
+    .avatar     { width: 32px;  height: 32px;  font-size: 13px; }
+    .avatar-md  { width: 40px;  height: 40px;  font-size: 15px; }
+    .avatar-lg  { width: 48px;  height: 48px;  font-size: 18px; }
+    .avatar-xl  { width: 64px;  height: 64px;  font-size: 24px; }
+    .avatar-2xl { width: 80px;  height: 80px;  font-size: 28px; }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Fallback colour palette (initials) */
+    .av-violet { background: #ede9fe; color: #6d28d9; }
+    .av-blue   { background: #dbeafe; color: #1d4ed8; }
+    .av-green  { background: #dcfce7; color: #15803d; }
+    .av-amber  { background: #fef3c7; color: #b45309; }
+    .av-rose   { background: #ffe4e6; color: #be123c; }
+    .av-cyan   { background: #cffafe; color: #0e7490; }
+    .av-slate  { background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); }
+
+    /* Icon fallback */
+    .avatar-icon svg { width: 55%; height: 55%; opacity: 0.6; }
+
+    /* Status indicator */
+    .avatar-wrap { position: relative; display: inline-flex; }
+    .av-status {
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 25%; height: 25%;
+      min-width: 8px; min-height: 8px;
+      border-radius: 50%;
+      border: 2px solid hsl(var(--background));
+    }
+    .av-online  { background: #22c55e; }
+    .av-offline { background: hsl(var(--muted-foreground)); }
+    .av-busy    { background: #ef4444; }
+    .av-away    { background: #f59e0b; }
+
+    /* Avatar group */
+    .avatar-group { display: flex; align-items: center; }
+    .avatar-group .avatar {
+      border: 2px solid hsl(var(--background));
+      margin-right: -8px;
+      transition: transform var(--duration-150) var(--easing-out);
+    }
+    .avatar-group .avatar:last-child { margin-right: 0; }
+    .avatar-group .avatar:hover { transform: translateY(-2px); z-index: 1; }
+    .avatar-group .av-count {
+      background: hsl(var(--muted));
+      color: hsl(var(--muted-foreground));
+      border: 2px solid hsl(var(--background));
+      font-size: 11px;
+    }
+
+    /* Variant grid */
+    .av-grid { display: flex; flex-wrap: wrap; gap: 2rem; }
+    .av-cell { display: flex; flex-direction: column; align-items: center; gap: 0.625rem; }
+    .av-cell-label { font-size: var(--text-xs); color: hsl(var(--muted-foreground)); text-align: center; }
+
+    /* Size row */
+    .av-size-row { display: flex; align-items: flex-end; gap: 1.5rem; flex-wrap: wrap; }
+
+    /* States grid */
+    .states-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .state-card { border: 1px solid hsl(var(--border)); border-radius: var(--radius-md); padding: 1.25rem 1rem; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
+    .state-card-label { font-size: var(--text-xs); color: hsl(var(--muted-foreground)); }
+
+    /* ── Code block ───────────────────────────────────────────── */
+    .code-block { background: hsl(var(--muted)); border: 1px solid hsl(var(--border)); border-radius: var(--radius-md); padding: 1rem 1.25rem; overflow-x: auto; margin-bottom: 1.5rem; }
+    .code-block pre { font-family: var(--font-mono); font-size: var(--text-sm); line-height: var(--leading-6); white-space: pre; color: hsl(var(--foreground)); }
+    .code-kw { color: #7c3aed; } .code-str { color: #059669; }
+    .code-cmt { color: hsl(var(--muted-foreground)); font-style: italic; }
+    .code-tag { color: #0284c7; } .code-attr { color: #b45309; }
+
+    /* ── Meta tables ──────────────────────────────────────────── */
+    .data-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); margin-bottom: 1.5rem; }
+    .data-table th { text-align: left; font-weight: var(--font-semibold); padding: 0.5rem 0.75rem; border-bottom: 2px solid hsl(var(--border)); }
+    .data-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid hsl(var(--border)); vertical-align: top; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table code { font-family: var(--font-mono); font-size: var(--text-xs); background: hsl(var(--muted)); padding: 0.1rem 0.4rem; border-radius: var(--radius-sm); }
+    .swatch { display: inline-flex; align-items: center; gap: 0.5rem; }
+    .swatch-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid hsl(var(--border)); flex-shrink: 0; }
+    .type-badge { color: #7c3aed; font-family: var(--font-mono); font-size: var(--text-xs); }
+    .muted-text { color: hsl(var(--muted-foreground)); }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SIDEBAR
+  ══════════════════════════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="sidebar-brand">
+        <span class="sidebar-brand-name">Design System</span>
+        <span class="sidebar-brand-sub">v1.0.0</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-group">
+        <div class="sidebar-group-label">Getting Started</div>
+        <a class="sidebar-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Introduction</a>
+        <a class="sidebar-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/></svg>Installation</a>
+        <a class="sidebar-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 1 0 4.93 19.07"/></svg>Theming</a>
+      </div>
+      <div class="sidebar-separator"></div>
+      <div class="sidebar-group">
+        <div class="sidebar-group-label">Tokens</div>
+        <a class="sidebar-item" href="colors.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>Colors</a>
+        <a class="sidebar-item" href="typography.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>Typography</a>
+        <a class="sidebar-item" href="spacing.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Spacing</a>
+        <a class="sidebar-item" href="effects.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Effects</a>
+      </div>
+      <div class="sidebar-separator"></div>
+      <div class="sidebar-group">
+        <div class="sidebar-group-label">Components</div>
+        <a class="sidebar-item" href="accordion.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>Accordion</a>
+        <a class="sidebar-item" href="alert.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Alert</a>
+        <a class="sidebar-item" href="alert-dialog.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Alert Dialog</a>
+        <a class="sidebar-item active" href="avatar.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Avatar <span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="badge.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="2" y1="9" x2="22" y2="9"/><path d="M8 3v6M16 3v6"/></svg>Badge</a>
+        <a class="sidebar-item" href="button.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="16 2 12 7 8 2"/></svg>Button</a>
+        <a class="sidebar-item" href="card.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Card</a>
+        <a class="sidebar-item" href="dialog.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15h0M2 9h20"/></svg>Dialog</a>
+        <a class="sidebar-item" href="input.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Input</a>
+        <a class="sidebar-item" href="select.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Select</a>
+        <a class="sidebar-item" href="table.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 3H3v7h18V3zM21 14H3v7h18v-7z"/></svg>Table</a>
+        <a class="sidebar-item" href="toast.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Toast</a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <a class="sidebar-footer-item" href="https://www.figma.com/design/NN6Wp4Hgsug3OKhiQdL27d/" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 38 57" fill="none"><path d="M19 28.5A9.5 9.5 0 0 1 28.5 19H19V9.5A9.5 9.5 0 1 0 9.5 19H19v9.5A9.5 9.5 0 1 0 28.5 38H19v-9.5Z" fill="#1ABCFE"/><path d="M28.5 28.5a9.5 9.5 0 1 1 0-19 9.5 9.5 0 0 1 0 19Z" fill="#FF7262"/></svg>
+        Figma Source
+      </a>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       MAIN
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-breadcrumb">
+        Components / <span>Avatar</span>
+      </div>
+      <div class="topbar-actions">
+        <a class="topbar-btn" href="https://ui.shadcn.com/docs/components/avatar" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Shadcn/ui Docs
+        </a>
+        <a class="topbar-btn" href="https://www.figma.com/design/NN6Wp4Hgsug3OKhiQdL27d/?node-id=72-2717" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 38 57" fill="none"><path d="M19 28.5A9.5 9.5 0 0 1 28.5 19H19V9.5A9.5 9.5 0 1 0 9.5 19H19v9.5A9.5 9.5 0 1 0 28.5 38H19v-9.5Z" fill="#1ABCFE"/><path d="M28.5 28.5a9.5 9.5 0 1 1 0-19 9.5 9.5 0 0 1 0 19Z" fill="#FF7262"/></svg>
+          Figma
+        </a>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="page-header">
+        <div class="lbl">Component</div>
+        <h1>Avatar</h1>
+        <p>An image element with a fallback for representing a user. Supports circular and square shapes, multiple sizes, initials/icon fallbacks, status indicators, and grouped stacking.</p>
+      </div>
+
+      <!-- ─────────────────────────────────────────────
+           PREVIEW
+      ──────────────────────────────────────────────── -->
+      <div class="section">
+        <div class="section-title">Preview</div>
+        <div class="preview-card">
+          <div class="preview-label">Live preview</div>
+          <div class="preview-body gap">
+            <!-- Circle with image -->
+            <div class="av-cell">
+              <div class="avatar avatar-circle avatar-lg">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' fill='%23818cf8'/%3E%3Ccircle cx='24' cy='18' r='9' fill='%23fff' opacity='.9'/%3E%3Cellipse cx='24' cy='38' rx='14' ry='10' fill='%23fff' opacity='.9'/%3E%3C/svg%3E" alt="Alex Kim" />
+              </div>
+              <span class="av-cell-label">Image</span>
+            </div>
+            <!-- Initials fallback -->
+            <div class="av-cell">
+              <div class="avatar avatar-circle avatar-lg av-violet">JD</div>
+              <span class="av-cell-label">Initials</span>
+            </div>
+            <!-- Icon fallback -->
+            <div class="av-cell">
+              <div class="avatar avatar-circle avatar-lg av-slate avatar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+              </div>
+              <span class="av-cell-label">Icon</span>
+            </div>
+            <!-- Square -->
+            <div class="av-cell">
+              <div class="avatar avatar-square avatar-lg av-blue">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' fill='%2338bdf8'/%3E%3Ccircle cx='24' cy='18' r='9' fill='%23fff' opacity='.9'/%3E%3Cellipse cx='24' cy='38' rx='14' ry='10' fill='%23fff' opacity='.9'/%3E%3C/svg%3E" alt="Team workspace" />
+              </div>
+              <span class="av-cell-label">Square</span>
+            </div>
+            <!-- With status -->
+            <div class="av-cell">
+              <div class="avatar-wrap">
+                <div class="avatar avatar-circle avatar-lg av-green">MR</div>
+                <span class="av-status av-online"></span>
+              </div>
+              <span class="av-cell-label">With status</span>
+            </div>
+            <!-- Group -->
+            <div class="av-cell">
+              <div class="avatar-group">
+                <div class="avatar avatar-circle av-violet">JD</div>
+                <div class="avatar avatar-circle">
+                  <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23818cf8'/%3E%3Ccircle cx='16' cy='11' r='6' fill='%23fff' opacity='.9'/%3E%3Cellipse cx='16' cy='26' rx='10' ry='7' fill='%23fff' opacity='.9'/%3E%3C/svg%3E" alt="User" />
+                </div>
+                <div class="avatar avatar-circle av-rose">KL</div>
+                <div class="avatar avatar-circle av-count av-slate">+4</div>
+              </div>
+              <span class="av-cell-label">Group</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─────────────────────────────────────────────
+           SHAPES
+      ──────────────────────────────────────────────── -->
+      <div class="section">
+        <div class="section-title">Shapes</div>
+        <p class="section-sub">Two shape variants as seen in the Figma file: <code>circle</code> (default, fully rounded) and <code>square</code> (rounded-lg corners).</p>
+        <div class="preview-card">
+          <div class="preview-label">Circle vs Square</div>
+          <div class="preview-body gap">
+            <div class="av-cell">
+              <div class="avatar avatar-circle avatar-xl av-violet">JD</div>
+              <span class="av-cell-label">Circle (default)</span>
+            </div>
+            <div class="av-cell">
+              <div class="avatar avatar-square avatar-xl av-blue">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2393c5fd'/%3E%3Ccircle cx='32' cy='22' r='13' fill='%231d4ed8' opacity='.7'/%3E%3Cellipse cx='32' cy='52' rx='20' ry='13' fill='%231d4ed8' opacity='.7'/%3E%3C/svg%3E" alt="Workspace" />
+              </div>
+              <span class="av-cell-label">Square</span>
+            </div>
+          </div>
+        </div>
+        <div class="code-block"><pre><span class="code-cmt">&lt;!-- Circle (default) --&gt;</span>
+<span class="code-tag">&lt;Avatar&gt;</span>
+  <span class="code-tag">&lt;AvatarImage</span> <span class="code-attr">src</span>=<span class="code-str">"/user.jpg"</span> <span class="code-attr">alt</span>=<span class="code-str">"Jane Doe"</span> <span class="code-tag">/&gt;</span>
+  <span class="code-tag">&lt;AvatarFallback&gt;</span>JD<span class="code-tag">&lt;/AvatarFallback&gt;</span>
+<span class="code-tag">&lt;/Avatar&gt;</span>
+
+<span class="code-cmt">&lt;!-- Square --&gt;</span>
+<span class="code-tag">&lt;Avatar</span> <span class="code-attr">className</span>=<span class="code-str">"rounded-lg"</span><span class="code-tag">&gt;</span>
+  <span class="code-tag">&lt;AvatarImage</span> <span class="code-attr">src</span>=<span class="code-str">"/workspace.jpg"</span> <span class="code-attr">alt</span>=<span class="code-str">"Workspace"</span> <span class="code-tag">/&gt;</span>
+  <span class="code-tag">&lt;AvatarFallback</span> <span class="code-attr">className</span>=<span class="code-str">"rounded-lg"</span><span class="code-tag">&gt;</span>WS<span class="code-tag">&lt;/AvatarFallback&gt;</span>
+<span class="code-tag">&lt;/Avatar&gt;</span></pre></div>
+      </div>
+
+      <!-- ─────────────────────────────────────────────
+           SIZES
+      ──────────────────────────────────────────────── -->
+      <div class="section">
+        <div class="section-title">Sizes</div>
+        <p class="section-sub">Seven size steps. The Figma default is 32px. Use <code>className</code> or a size prop to override.</p>
+        <div class="preview-card">
+          <div class="preview-label">Size scale</div>
+          <div class="preview-body">
+            <div class="av-size-row">
+              <div class="av-cell">
+                <div class="avatar avatar-circle avatar-xs av-violet">J</div>
+                <span class="av-cell-label">xs<br>20px</span>
+              </div>
+              <div class="av-cell">
+                <div class="avatar avatar-circle avatar-sm av-blue">JD</div>
+                <span class="av-cell-label">sm<br>24px</span>
+              </div>
+              <div class="av-cell">
+                <div class="avatar avatar-circle av-green">JD</div>
+                <span class="av-cell-label">default<br>32px</span>
+              </div>
+              <div class="av-cell">
+                <div class="avatar avatar-circle avatar-md av-amber">JD</div>
+                <span class="av-cell-label">md<br>40px</span>
+              </div>
+              <div class="av-cell">
+                <div class="avatar avatar-circle avatar-lg av-rose">JD</div>
+                <span class="av-cell-label">lg<br>48px</span>
+              </div>
+              <div class="av-cell">
+                <div class="avatar avatar-circle avatar-xl av-cyan">JD</div>
+                <span class="av-cell-label">xl<br>64px</span>
+              </div>
+              <div class="av-cell">
+                <div class="avatar avatar-circle avatar-2xl av-violet">JD</div>
+                <span class="av-cell-label">2xl<br>80px</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─────────────────────────────────────────────
+           FALLBACK STATES
+      ──────────────────────────────────────────────── -->
+      <div class="section">
+        <div class="section-title">Fallback States</div>
+        <p class="section-sub"><code>AvatarImage</code> loads asynchronously. <code>AvatarFallback</code> renders while the image loads or if the src is missing/broken — either initials text or an icon.</p>
+        <div class="states-grid">
+          <div class="state-card">
+            <div class="avatar avatar-circle avatar-lg">
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' fill='%23818cf8'/%3E%3Ccircle cx='24' cy='17' r='9' fill='%23fff' opacity='.9'/%3E%3Cellipse cx='24' cy='38' rx='14' ry='10' fill='%23fff' opacity='.9'/%3E%3C/svg%3E" alt="User" />
+            </div>
+            <span class="av-cell-label">Image loaded</span>
+          </div>
+          <div class="state-card">
+            <div class="avatar avatar-circle avatar-lg av-violet">JD</div>
+            <span class="av-cell-label">Initials fallback</span>
+          </div>
+          <div class="state-card">
+            <div class="avatar avatar-circle avatar-lg av-slate avatar-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            </div>
+            <span class="av-cell-label">Icon fallback</span>
+          </div>
+          <div class="state-card">
+            <div class="avatar avatar-circle avatar-lg av-rose">KL</div>
+            <span class="av-cell-label">Custom colour</span>
+          </div>
+          <div class="state-card">
+            <div class="avatar avatar-square avatar-lg av-blue">AB</div>
+            <span class="av-cell-label">Square + initials</span>
+          </div>
+          <div class="state-card">
+            <div class="avatar avatar-square avatar-lg av-slate avatar-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            </div>
+            <span class="av-cell-label">Square + icon</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─────────────────────────────────────────────
+           AVATAR GROUP
+      ──────────────────────────────────────────────── -->
+      <div class="section">
+        <div class="section-title">Avatar Group</div>
+        <p class="section-sub">Stack multiple avatars with <code>-8px</code> negative margin and a border to separate them. Add an overflow counter for groups larger than 4–5.</p>
+        <div class="preview-card">
+          <div class="preview-label">Stacked group — default size</div>
+          <div class="preview-body start" style="padding-left:2.5rem;">
+            <div class="avatar-group">
+              <div class="avatar avatar-circle av-violet">JD</div>
+              <div class="avatar avatar-circle">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Crect width='32' height='32' fill='%23818cf8'/%3E%3Ccircle cx='16' cy='11' r='6' fill='%23fff' opacity='.85'/%3E%3Cellipse cx='16' cy='26' rx='9' ry='7' fill='%23fff' opacity='.85'/%3E%3C/svg%3E" alt="User 2" />
+              </div>
+              <div class="avatar avatar-circle av-green">MR</div>
+              <div class="avatar avatar-circle av-amber">SK</div>
+              <div class="avatar avatar-circle av-count av-slate">+3</div>
+            </div>
+          </div>
+        </div>
+        <div class="preview-card">
+          <div class="preview-label">Stacked group — lg size</div>
+          <div class="preview-body start" style="padding-left:2.5rem;">
+            <div class="avatar-group">
+              <div class="avatar avatar-circle avatar-lg av-cyan">AK</div>
+              <div class="avatar avatar-circle avatar-lg av-rose">PL</div>
+              <div class="avatar avatar-circle avatar-lg av-blue">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Crect width='48' height='48' fill='%2338bdf8'/%3E%3Ccircle cx='24' cy='17' r='9' fill='%23fff' opacity='.85'/%3E%3Cellipse cx='24' cy='37' rx='13' ry='9' fill='%23fff' opacity='.85'/%3E%3C/svg%3E" alt="User" />
+              </div>
+              <div class="avatar avatar-circle avatar-lg av-violet">JD</div>
+              <div class="avatar avatar-circle avatar-lg av-count av-slate" style="font-size:15px;">+8</div>
+            </div>
+          </div>
+        </div>
+        <div class="code-block"><pre><span class="code-tag">&lt;div</span> <span class="code-attr">className</span>=<span class="code-str">"flex items-center"</span><span class="code-tag">&gt;</span>
+  <span class="code-tag">&lt;Avatar</span> <span class="code-attr">className</span>=<span class="code-str">"-mr-2 border-2 border-background"</span><span class="code-tag">&gt;</span>
+    <span class="code-tag">&lt;AvatarImage</span> <span class="code-attr">src</span>=<span class="code-str">"/u1.jpg"</span> <span class="code-tag">/&gt;</span>
+    <span class="code-tag">&lt;AvatarFallback&gt;</span>JD<span class="code-tag">&lt;/AvatarFallback&gt;</span>
+  <span class="code-tag">&lt;/Avatar&gt;</span>
+  <span class="code-tag">&lt;Avatar</span> <span class="code-attr">className</span>=<span class="code-str">"-mr-2 border-2 border-background"</span><span class="code-tag">&gt;</span>
+    <span class="code-tag">&lt;AvatarImage</span> <span class="code-attr">src</span>=<span class="code-str">"/u2.jpg"</span> <span class="code-tag">/&gt;</span>
+    <span class="code-tag">&lt;AvatarFallback&gt;</span>MR<span class="code-tag">&lt;/AvatarFallback&gt;</span>
+  <span class="code-tag">&lt;/Avatar&gt;</span>
+  <span class="code-tag">&lt;Avatar</span> <span class="code-attr">className</span>=<span class="code-str">"border-2 border-background bg-muted text-muted-foreground"</span><span class="code-tag">&gt;</span>
+    <span class="code-tag">&lt;AvatarFallback&gt;</span>+4<span class="code-tag">&lt;/AvatarFallback&gt;</span>
+  <span class="code-tag">&lt;/Avatar&gt;</span>
+<span class="code-tag">&lt;/div&gt;</span></pre></div>
+      </div>
+
+      <!-- ─────────────────────────────────────────────
+           STATUS INDICATORS
+      ──────────────────────────────────────────────── -->
+      <div class="section">
+        <div class="section-title">With Status Indicator</div>
+        <p class="section-sub">Wrap the avatar in a relative container and position a coloured dot to show presence state.</p>
+        <div class="preview-card">
+          <div class="preview-label">Presence states</div>
+          <div class="preview-body gap">
+            <div class="av-cell">
+              <div class="avatar-wrap">
+                <div class="avatar avatar-circle avatar-md av-green">MR</div>
+                <span class="av-status av-online"></span>
+              </div>
+              <span class="av-cell-label">Online</span>
+            </div>
+            <div class="av-cell">
+              <div class="avatar-wrap">
+                <div class="avatar avatar-circle avatar-md av-slate">PL</div>
+                <span class="av-status av-offline"></span>
+              </div>
+              <span class="av-cell-label">Offline</span>
+            </div>
+            <div class="av-cell">
+              <div class="avatar-wrap">
+                <div class="avatar avatar-circle avatar-md av-violet">JD</div>
+                <span class="av-status av-busy"></span>
+              </div>
+              <span class="av-cell-label">Busy</span>
+            </div>
+            <div class="av-cell">
+              <div class="avatar-wrap">
+                <div class="avatar avatar-circle avatar-md av-amber">SK</div>
+                <span class="av-status av-away"></span>
+              </div>
+              <span class="av-cell-label">Away</span>
+            </div>
+          </div>
+        </div>
+        <div class="code-block"><pre><span class="code-tag">&lt;div</span> <span class="code-attr">className</span>=<span class="code-str">"relative inline-flex"</span><span class="code-tag">&gt;</span>
+  <span class="code-tag">&lt;Avatar&gt;</span>
+    <span class="code-tag">&lt;AvatarImage</span> <span class="code-attr">src</span>=<span class="code-str">"/user.jpg"</span> <span class="code-tag">/&gt;</span>
+    <span class="code-tag">&lt;AvatarFallback&gt;</span>MR<span class="code-tag">&lt;/AvatarFallback&gt;</span>
+  <span class="code-tag">&lt;/Avatar&gt;</span>
+  <span class="code-tag">&lt;span</span> <span class="code-attr">className</span>=<span class="code-str">"absolute bottom-0 right-0 size-2.5 rounded-full bg-green-500 border-2 border-background"</span> <span class="code-tag">/&gt;</span>
+<span class="code-tag">&lt;/div&gt;</span></pre></div>
+      </div>
+
+      <!-- ─────────────────────────────────────────────
+           USAGE
+      ──────────────────────────────────────────────── -->
+      <div class="section">
+        <div class="section-title">Usage</div>
+        <div class="code-block"><pre><span class="code-kw">import</span> { Avatar, AvatarImage, AvatarFallback } <span class="code-kw">from</span> <span class="code-str">"@/components/ui/avatar"</span>
+
+<span class="code-cmt">// Basic with image + initials fallback</span>
+<span class="code-tag">&lt;Avatar&gt;</span>
+  <span class="code-tag">&lt;AvatarImage</span> <span class="code-attr">src</span>=<span class="code-str">"/avatars/jane.jpg"</span> <span class="code-attr">alt</span>=<span class="code-str">"Jane Doe"</span> <span class="code-tag">/&gt;</span>
+  <span class="code-tag">&lt;AvatarFallback&gt;</span>JD<span class="code-tag">&lt;/AvatarFallback&gt;</span>
+<span class="code-tag">&lt;/Avatar&gt;</span>
+
+<span class="code-cmt">// Larger size</span>
+<span class="code-tag">&lt;Avatar</span> <span class="code-attr">className</span>=<span class="code-str">"size-16"</span><span class="code-tag">&gt;</span>
+  <span class="code-tag">&lt;AvatarImage</span> <span class="code-attr">src</span>=<span class="code-str">"/avatars/jane.jpg"</span> <span class="code-attr">alt</span>=<span class="code-str">"Jane Doe"</span> <span class="code-tag">/&gt;</span>
+  <span class="code-tag">&lt;AvatarFallback</span> <span class="code-attr">className</span>=<span class="code-str">"text-xl"</span><span class="code-tag">&gt;</span>JD<span class="code-tag">&lt;/AvatarFallback&gt;</span>
+<span class="code-tag">&lt;/Avatar&gt;</span>
+
+<span class="code-cmt">// Square (workspace / team logos)</span>
+<span class="code-tag">&lt;Avatar</span> <span class="code-attr">className</span>=<span class="code-str">"rounded-lg"</span><span class="code-tag">&gt;</span>
+  <span class="code-tag">&lt;AvatarImage</span> <span class="code-attr">src</span>=<span class="code-str">"/team.jpg"</span> <span class="code-attr">alt</span>=<span class="code-str">"Team"</span> <span class="code-tag">/&gt;</span>
+  <span class="code-tag">&lt;AvatarFallback</span> <span class="code-attr">className</span>=<span class="code-str">"rounded-lg"</span><span class="code-tag">&gt;</span>TM<span class="code-tag">&lt;/AvatarFallback&gt;</span>
+<span class="code-tag">&lt;/Avatar&gt;</span></pre></div>
+      </div>
+
+      <!-- ─────────────────────────────────────────────
+           PROPS
+      ──────────────────────────────────────────────── -->
+      <div class="section">
+        <div class="section-title">Props</div>
+
+        <p class="section-sub" style="margin-bottom:0.5rem;"><strong>Avatar</strong> — root container (built on Radix UI <code>Avatar.Root</code>)</p>
+        <table class="data-table">
+          <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>className</code></td><td class="type-badge">string</td><td class="muted-text">—</td><td>Additional Tailwind classes. Use <code>size-*</code> to override dimensions, <code>rounded-lg</code> for square variant.</td></tr>
+            <tr><td><code>asChild</code></td><td class="type-badge">boolean</td><td class="muted-text">false</td><td>Merge props onto a child element instead of rendering a <code>&lt;span&gt;</code>.</td></tr>
+          </tbody>
+        </table>
+
+        <p class="section-sub" style="margin-bottom:0.5rem;"><strong>AvatarImage</strong> — the <code>&lt;img&gt;</code> element (Radix UI <code>Avatar.Image</code>)</p>
+        <table class="data-table">
+          <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>src</code></td><td class="type-badge">string</td><td class="muted-text">—</td><td>Image URL. Triggers fallback if empty, broken, or still loading.</td></tr>
+            <tr><td><code>alt</code></td><td class="type-badge">string</td><td class="muted-text">—</td><td>Required for accessibility. Describe the person or entity shown.</td></tr>
+            <tr><td><code>onLoadingStatusChange</code></td><td class="type-badge">function</td><td class="muted-text">—</td><td>Callback fired with <code>"loading" | "loaded" | "error"</code>.</td></tr>
+          </tbody>
+        </table>
+
+        <p class="section-sub" style="margin-bottom:0.5rem;"><strong>AvatarFallback</strong> — shown when image is absent or broken (Radix UI <code>Avatar.Fallback</code>)</p>
+        <table class="data-table">
+          <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>className</code></td><td class="type-badge">string</td><td class="muted-text">—</td><td>Override fallback background, text colour, or border-radius.</td></tr>
+            <tr><td><code>delayMs</code></td><td class="type-badge">number</td><td class="muted-text">0</td><td>Delay (ms) before fallback renders — prevents flash on fast networks.</td></tr>
+            <tr><td><code>asChild</code></td><td class="type-badge">boolean</td><td class="muted-text">false</td><td>Merge props onto a child element.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ─────────────────────────────────────────────
+           DESIGN TOKENS
+      ──────────────────────────────────────────────── -->
+      <div class="section">
+        <div class="section-title">Design Tokens</div>
+        <table class="data-table">
+          <thead><tr><th>Token</th><th>Value</th><th>Usage</th></tr></thead>
+          <tbody>
+            <tr><td><code>--radius-full</code></td><td>9999px</td><td>Circle shape border-radius</td></tr>
+            <tr><td><code>--radius-lg</code></td><td>8px</td><td>Square shape border-radius</td></tr>
+            <tr><td><code>--background</code></td><td>hsl(0 0% 100%)</td><td>Border colour on grouped avatars</td></tr>
+            <tr><td><code>--muted</code></td><td>hsl(0 0% 96%)</td><td>Default fallback background</td></tr>
+            <tr><td><code>--muted-foreground</code></td><td>hsl(0 0% 45%)</td><td>Default fallback text / icon colour</td></tr>
+            <tr><td><code>--foreground</code></td><td>hsl(0 0% 4%)</td><td>High-contrast fallback text</td></tr>
+            <tr><td><code>--duration-150</code></td><td>150ms</td><td>Hover lift transition in groups</td></tr>
+            <tr><td><code>--easing-out</code></td><td>cubic-bezier(0,0,0.2,1)</td><td>Hover lift easing</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ─────────────────────────────────────────────
+           ACCESSIBILITY
+      ──────────────────────────────────────────────── -->
+      <div class="section">
+        <div class="section-title">Accessibility</div>
+        <table class="data-table">
+          <thead><tr><th>Concern</th><th>Guidance</th></tr></thead>
+          <tbody>
+            <tr><td>Alt text</td><td>Always provide a descriptive <code>alt</code> on <code>AvatarImage</code> — e.g. the person's name. If purely decorative, use <code>alt=""</code>.</td></tr>
+            <tr><td>Fallback content</td><td>Initials must be visible text (not icon-only) for screen readers. Icon-only fallbacks should include a visually-hidden label or <code>aria-label</code>.</td></tr>
+            <tr><td>Status indicators</td><td>Status dots are purely visual. Pair with a visually-hidden <code>&lt;span&gt;</code> or <code>title</code> attribute describing the presence state.</td></tr>
+            <tr><td>Avatar group</td><td>Wrap in a <code>role="list"</code> element and give each avatar <code>role="listitem"</code> for coherent screen-reader enumeration.</td></tr>
+            <tr><td>Contrast</td><td>Initials text must meet WCAG AA (4.5:1) against the fallback background. Use the token-based palette which is pre-validated.</td></tr>
+            <tr><td>Interactive avatars</td><td>If clicking navigates to a profile, wrap in <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code> and ensure a visible focus ring via <code>focus-visible:ring-2</code>.</td></tr>
+            <tr><td>Image load flash</td><td>Use <code>delayMs</code> on <code>AvatarFallback</code> (e.g. <code>600</code>) so the fallback doesn't flash on fast connections.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+
+  <button class="sidebar-toggle" id="toggleBtn" onclick="toggleSidebar()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('overlay').classList.toggle('open');
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('overlay').classList.remove('open');
+    }
+  </script>
+</body>
+</html>
