@@ -91,7 +91,7 @@
     .pop-trigger { height: 36px; padding: 0 16px; border: 1px solid hsl(var(--border)); border-radius: 6px; font-family: var(--font-sans); font-size: 14px; font-weight: 500; background: hsl(var(--background)); color: hsl(var(--foreground)); cursor: pointer; transition: background var(--duration-150) var(--easing-out); }
     .pop-trigger:hover { background: hsl(var(--muted)); }
     .preview-card:has(.pop-wrap) { overflow: visible; }
-    .pop-panel {
+    .pop-panel { z-index: 999; left: 0;
       position: absolute;
       top: calc(100% + 8px);
       left: 50%;
