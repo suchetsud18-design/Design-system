@@ -87,13 +87,68 @@
     /* ── Dark mode demo ──────────────────────────────────────── */
     .mode-demo { border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.5rem; }
     .mode-demo-tabs { display: flex; border-bottom: 1px solid hsl(var(--border)); background: hsl(var(--muted)); }
-    .mode-tab { padding: .5rem 1rem; font-size: var(--text-sm); font-weight: var(--font-medium); cursor: pointer; border: none; background: none; color: hsl(var(--muted-foreground)); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color var(--duration-150) var(--easing-out); }
+    .mode-tab { padding: .5rem 1rem; font-size: var(--text-sm); font-weight: var(--font-medium); cursor: pointer; border: none; background: none; color: hsl(var(--muted-foreground)); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color var(--duration-150) var(--easing-out); font-family: var(--font-sans); }
     .mode-tab.active { color: hsl(var(--foreground)); border-bottom-color: hsl(var(--foreground)); background: hsl(var(--background)); }
-    .mode-panel { padding: 1.5rem; }
-    .mode-panel.hidden { display: none; }
-    .mini-card { border-radius: var(--radius-lg); padding: 1rem 1.25rem; display: flex; align-items: center; gap: .75rem; }
-    .mini-avatar { width: 36px; height: 36px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; font-size: var(--text-sm); font-weight: var(--font-bold); flex-shrink: 0; }
-    .mini-btn { display: inline-flex; align-items: center; padding: .375rem .875rem; border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: var(--font-medium); cursor: pointer; border: none; }
+
+    /* Single card with scoped token variables — light defaults */
+    .demo-wrap {
+      padding: 1.5rem;
+      --d-bg:         hsl(var(--background));
+      --d-border:     hsl(var(--border));
+      --d-fg:         hsl(var(--foreground));
+      --d-fg-muted:   hsl(var(--muted-foreground));
+      --d-primary:    hsl(var(--primary));
+      --d-primary-fg: hsl(var(--primary-foreground));
+      transition: background var(--duration-300) var(--easing-out);
+    }
+    /* Dark overrides — hardcoded to the actual dark token values */
+    .demo-wrap.is-dark {
+      background: #0a0a0a;
+      --d-bg:         #0a0a0a;
+      --d-border:     #262626;
+      --d-fg:         #fafafa;
+      --d-fg-muted:   #a3a3a3;
+      --d-primary:    #fafafa;
+      --d-primary-fg: #171717;
+    }
+    .demo-card {
+      display: flex; align-items: center; gap: .75rem;
+      padding: 1rem 1.25rem;
+      background: var(--d-bg);
+      border: 1px solid var(--d-border);
+      border-radius: var(--radius-lg);
+      transition: background var(--duration-300) var(--easing-out), border-color var(--duration-300) var(--easing-out);
+    }
+    .demo-avatar {
+      width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: var(--text-sm); font-weight: var(--font-bold);
+      background: var(--d-primary);
+      color: var(--d-primary-fg);
+      transition: background var(--duration-300) var(--easing-out), color var(--duration-300) var(--easing-out);
+    }
+    .demo-info { flex: 1; min-width: 0; }
+    .demo-name {
+      font-size: var(--text-sm); font-weight: var(--font-semibold);
+      color: var(--d-fg);
+      transition: color var(--duration-300) var(--easing-out);
+    }
+    .demo-role {
+      font-size: var(--text-xs);
+      color: var(--d-fg-muted);
+      transition: color var(--duration-300) var(--easing-out);
+    }
+    .demo-btn {
+      display: inline-flex; align-items: center;
+      padding: .375rem .875rem; flex-shrink: 0;
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm); font-weight: var(--font-medium);
+      font-family: var(--font-sans);
+      background: var(--d-primary);
+      color: var(--d-primary-fg);
+      border: none; cursor: pointer;
+      transition: background var(--duration-300) var(--easing-out), color var(--duration-300) var(--easing-out);
+    }
 
     /* ── Callout ─────────────────────────────────────────────── */
     .callout { border: 1px solid hsl(var(--border)); border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-bottom: 1rem; display: flex; gap: .75rem; background: hsl(var(--muted) / .5); }
@@ -322,32 +377,20 @@ background: hsl(<span class="code-fn">var(--primary)</span> / 0.1);
         <h2 class="section-title">Dark mode</h2>
         <p class="section-sub">Dark mode values are defined in <code>design-tokens.css</code> under <code>:root.dark</code> and <code>:root[data-theme="dark"]</code>. There are two ways to activate them.</p>
 
-        <!-- Live demo -->
-        <div class="mode-demo" id="modeDemo">
+        <!-- Live demo — single card, scoped CSS variables drive both modes -->
+        <div class="mode-demo">
           <div class="mode-demo-tabs">
-            <button class="mode-tab active" onclick="setMode('light')">Light</button>
-            <button class="mode-tab" onclick="setMode('dark')">Dark</button>
+            <button class="mode-tab active" id="demoTabLight" onclick="setMode('light')">Light</button>
+            <button class="mode-tab"        id="demoTabDark"  onclick="setMode('dark')">Dark</button>
           </div>
-          <div class="mode-panel" id="lightPanel">
-            <div class="mini-card" style="border:1px solid hsl(var(--border));background:hsl(var(--background));gap:.75rem;">
-              <div class="mini-avatar" style="background:hsl(var(--primary));color:hsl(var(--primary-foreground));">JD</div>
-              <div style="flex:1;">
-                <div style="font-size:var(--text-sm);font-weight:var(--font-semibold);color:hsl(var(--foreground));">Jane Doe</div>
-                <div style="font-size:var(--text-xs);color:hsl(var(--muted-foreground));">Product designer</div>
+          <div class="demo-wrap" id="demoWrap">
+            <div class="demo-card">
+              <div class="demo-avatar">JD</div>
+              <div class="demo-info">
+                <div class="demo-name">Jane Doe</div>
+                <div class="demo-role">Product designer</div>
               </div>
-              <button class="mini-btn" style="background:hsl(var(--primary));color:hsl(var(--primary-foreground));">Follow</button>
-            </div>
-          </div>
-          <div class="mode-panel hidden" id="darkPanel">
-            <div style="border-radius:var(--radius-lg);padding:1.5rem;background:#0a0a0a;">
-              <div class="mini-card" style="border:1px solid hsl(0 0% 14.9%);background:#0a0a0a;gap:.75rem;">
-                <div class="mini-avatar" style="background:hsl(0 0% 98%);color:hsl(0 0% 9%);">JD</div>
-                <div style="flex:1;">
-                  <div style="font-size:var(--text-sm);font-weight:var(--font-semibold);color:hsl(0 0% 98%);">Jane Doe</div>
-                  <div style="font-size:var(--text-xs);color:hsl(0 0% 63.9%);">Product designer</div>
-                </div>
-                <button class="mini-btn" style="background:hsl(0 0% 98%);color:hsl(0 0% 9%);">Follow</button>
-              </div>
+              <button class="demo-btn">Follow</button>
             </div>
           </div>
         </div>
@@ -539,10 +582,10 @@ document.documentElement.classList.toggle(<span class="code-str">'dark'</span>)<
 
   <script>
     function setMode(mode) {
-      document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.mode-panel').forEach(p => p.classList.add('hidden'));
-      event.target.classList.add('active');
-      document.getElementById(mode + 'Panel').classList.remove('hidden');
+      var isDark = mode === 'dark';
+      document.getElementById('demoTabLight').classList.toggle('active', !isDark);
+      document.getElementById('demoTabDark').classList.toggle('active',  isDark);
+      document.getElementById('demoWrap').classList.toggle('is-dark', isDark);
     }
   </script>
   <script src="sidebar.js"></script>
