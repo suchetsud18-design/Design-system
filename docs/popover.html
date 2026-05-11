@@ -242,17 +242,29 @@
   </main>
 
   <script>
+    function onOutsideClick(e) {
+      if (!e.target.closest('#pop1-wrap')) closePopover('pop1');
+    }
 
     function togglePopover(id) {
       const panel = document.getElementById(id);
+      const willOpen = !panel.classList.contains('open');
       panel.classList.toggle('open');
+      if (willOpen) {
+        // Defer arming the listener so the opening click finishes bubbling first
+        setTimeout(function () {
+          document.addEventListener('click', onOutsideClick);
+        }, 0);
+      } else {
+        document.removeEventListener('click', onOutsideClick);
+      }
     }
+
     function closePopover(id) {
       document.getElementById(id).classList.remove('open');
+      document.removeEventListener('click', onOutsideClick);
     }
-    document.addEventListener('click', function(e) {
-      if (!e.target.closest('#pop1-wrap')) closePopover('pop1');
-    });
+
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closePopover('pop1');
     });
