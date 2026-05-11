@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Colors — Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../src/tokens/design-tokens.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: var(--font-sans); background: hsl(var(--background));
+      color: hsl(var(--foreground)); font-size: var(--text-base);
+      line-height: var(--leading-6); display: flex; min-height: 100vh;
+    }
+
+    /* ── Sidebar ──────────────────────────────────────────────── */
+    .sidebar {
+      width: 16rem; flex-shrink: 0; background: hsl(var(--sidebar));
+      border-right: 1px solid hsl(var(--sidebar-border));
+      display: flex; flex-direction: column; height: 100vh;
+      position: sticky; top: 0; overflow-y: auto;
+    }
+    .sidebar-header { display: flex; align-items: center; gap: .625rem; padding: 1rem; border-bottom: 1px solid hsl(var(--sidebar-border)); flex-shrink: 0; }
+    .sidebar-logo { width: 28px; height: 28px; background: hsl(var(--sidebar-primary)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sidebar-logo svg { color: hsl(var(--sidebar-primary-foreground)); }
+    .sidebar-brand { display: flex; flex-direction: column; }
+    .sidebar-brand-name { font-size: var(--text-sm); font-weight: var(--font-semibold); color: hsl(var(--sidebar-foreground)); line-height: var(--leading-5); }
+    .sidebar-brand-sub { font-size: var(--text-xs); color: hsl(var(--sidebar-accent-foreground)); line-height: var(--leading-4); }
+    .sidebar-nav { flex: 1; padding: .5rem; display: flex; flex-direction: column; gap: .25rem; }
+    .sidebar-group { display: flex; flex-direction: column; gap: .125rem; }
+    .sidebar-group-label { font-size: var(--text-xs); font-weight: var(--font-medium); color: hsl(var(--sidebar-accent-foreground)); letter-spacing: var(--tracking-wide); text-transform: uppercase; padding: .75rem .75rem .25rem; }
+    .sidebar-item { display: flex; align-items: center; gap: .625rem; padding: .375rem .75rem; border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: var(--font-medium); color: hsl(var(--sidebar-foreground)); text-decoration: none; cursor: pointer; border: none; background: none; width: 100%; text-align: left; transition: background var(--duration-150) var(--easing-out); }
+    .sidebar-item:hover { background: hsl(var(--sidebar-accent)); color: hsl(var(--sidebar-accent-foreground)); }
+    .sidebar-item.active { background: hsl(var(--sidebar-primary)); color: hsl(var(--sidebar-primary-foreground)); }
+    .sidebar-item svg { width: 16px; height: 16px; flex-shrink: 0; opacity: .8; }
+    .sidebar-item.active svg { opacity: 1; }
+    .sidebar-separator { height: 1px; background: hsl(var(--sidebar-border)); margin: .25rem .75rem; }
+    .sidebar-footer { padding: .75rem; border-top: 1px solid hsl(var(--sidebar-border)); flex-shrink: 0; }
+    .sidebar-footer-item { display: flex; align-items: center; gap: .625rem; padding: .375rem .75rem; border-radius: var(--radius-md); font-size: var(--text-sm); color: hsl(var(--sidebar-foreground)); text-decoration: none; }
+    .sidebar-footer-item:hover { background: hsl(var(--sidebar-accent)); }
+    .sidebar-footer-item svg { width: 16px; height: 16px; opacity: .7; }
+    .sidebar-toggle { display: none; position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 50; width: 44px; height: 44px; background: hsl(var(--foreground)); color: hsl(var(--background)); border: none; border-radius: var(--radius-full); cursor: pointer; align-items: center; justify-content: center; box-shadow: var(--shadow-lg); }
+    @media (max-width: 768px) {
+      .sidebar { position: fixed; top: 0; left: 0; z-index: 40; transform: translateX(-100%); transition: transform var(--duration-300) var(--easing-out); box-shadow: var(--shadow-xl); }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-toggle { display: flex; }
+      .sidebar-overlay { display: none; position: fixed; inset: 0; z-index: 30; background: rgba(0,0,0,.5); }
+      .sidebar-overlay.open { display: block; }
+    }
+
+    /* ── Main ─────────────────────────────────────────────────── */
+    .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .topbar { height: 56px; flex-shrink: 0; border-bottom: 1px solid hsl(var(--border)); display: flex; align-items: center; padding: 0 2rem; gap: 1rem; position: sticky; top: 0; background: hsl(var(--background) / .9); backdrop-filter: blur(8px); z-index: 20; }
+    .topbar-breadcrumb { display: flex; align-items: center; gap: .5rem; font-size: var(--text-sm); color: hsl(var(--muted-foreground)); }
+    .topbar-breadcrumb span { color: hsl(var(--foreground)); font-weight: var(--font-medium); }
+    .content { flex: 1; padding: 3rem 2rem; max-width: 860px; }
+
+    /* ── Page header ──────────────────────────────────────────── */
+    .page-header { margin-bottom: 3rem; border-bottom: 1px solid hsl(var(--border)); padding-bottom: 2rem; }
+    .page-header .badge { display: inline-flex; align-items: center; font-size: var(--text-xs); font-weight: var(--font-medium); color: hsl(var(--muted-foreground)); letter-spacing: var(--tracking-wide); text-transform: uppercase; margin-bottom: .5rem; }
+    .page-header h1 { font-size: var(--text-4xl); font-weight: var(--font-bold); line-height: var(--leading-10); letter-spacing: var(--tracking-tight); margin-bottom: .5rem; }
+    .page-header p { color: hsl(var(--muted-foreground)); max-width: 48rem; }
+    .section { margin-bottom: 3rem; }
+    .section-title { font-size: var(--text-xl); font-weight: var(--font-semibold); margin-bottom: 1rem; padding-bottom: .5rem; border-bottom: 1px solid hsl(var(--border)); }
+    .section-sub { font-size: var(--text-sm); color: hsl(var(--muted-foreground)); margin-bottom: 1.5rem; }
+
+    /* ── Color swatch grid ────────────────────────────────────── */
+    .swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .swatch-card { border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg); overflow: hidden; }
+    .swatch-color { height: 80px; }
+    .swatch-info { padding: .625rem .75rem; background: hsl(var(--background)); }
+    .swatch-name { font-size: var(--text-xs); font-weight: var(--font-semibold); line-height: var(--leading-5); }
+    .swatch-hex { font-family: var(--font-mono); font-size: var(--text-xs); color: hsl(var(--muted-foreground)); }
+    .swatch-var { font-family: var(--font-mono); font-size: 10px; color: hsl(var(--muted-foreground)); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* ── Neutral scale ────────────────────────────────────────── */
+    .neutral-scale { display: grid; grid-template-columns: repeat(11, 1fr); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid hsl(var(--border)); margin-bottom: 1.5rem; }
+    .neutral-step { aspect-ratio: 1; display: flex; align-items: flex-end; padding: .375rem; min-width: 0; }
+    .neutral-label { font-size: 9px; font-weight: 600; white-space: nowrap; }
+
+    /* ── State row ────────────────────────────────────────────── */
+    .state-row { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .state-chip { display: flex; align-items: center; gap: .5rem; padding: .5rem .75rem; border: 1px solid hsl(var(--border)); border-radius: var(--radius-md); font-size: var(--text-xs); }
+    .state-dot { width: 20px; height: 20px; border-radius: var(--radius-sm); flex-shrink: 0; }
+
+    /* ── Tables ───────────────────────────────────────────────── */
+    .data-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); margin-bottom: 1.5rem; }
+    .data-table th { text-align: left; font-weight: var(--font-semibold); padding: .5rem .75rem; border-bottom: 2px solid hsl(var(--border)); }
+    .data-table td { padding: .5rem .75rem; border-bottom: 1px solid hsl(var(--border)); vertical-align: middle; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table code { font-family: var(--font-mono); font-size: var(--text-xs); background: hsl(var(--muted)); padding: .1rem .4rem; border-radius: var(--radius-sm); }
+    .dot { width: 24px; height: 24px; border-radius: var(--radius-sm); border: 1px solid hsl(var(--border)); display: inline-block; vertical-align: middle; }
+    .muted-text { color: hsl(var(--muted-foreground)); }
+
+    /* ── Chart palette ────────────────────────────────────────── */
+    .chart-palette { display: flex; gap: 0; border-radius: var(--radius-lg); overflow: hidden; height: 64px; border: 1px solid hsl(var(--border)); margin-bottom: 1rem; }
+    .chart-swatch { flex: 1; display: flex; align-items: center; justify-content: center; }
+    .chart-swatch span { font-size: 10px; font-weight: 600; color: white; text-shadow: 0 1px 2px rgba(0,0,0,.5); }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar"></aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-breadcrumb">
+        Tokens <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span>Colors</span>
+      </div>
+    </header>
+
+    <main class="content">
+      <header class="page-header">
+        <span class="badge">Tokens</span>
+        <h1>Colors</h1>
+        <p>Semantic color tokens sourced from Figma Variables → shadcn/ui neutral theme. All values are CSS custom properties consumed as <code>hsl(var(--token))</code> for Tailwind compatibility and opacity modifier support.</p>
+      </header>
+
+      <!-- ── Semantic colors ─────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Semantic Colors</h2>
+        <p class="section-sub">Core UI surface and text tokens — named by role, not appearance.</p>
+        <table class="data-table">
+          <thead><tr><th>Token</th><th>Preview</th><th>Hex</th><th>CSS Variable</th><th>Usage</th></tr></thead>
+          <tbody>
+            <tr><td><code>background</code></td><td><span class="dot" style="background:#ffffff;"></span></td><td>#ffffff</td><td><code>--background</code></td><td>Page and card backgrounds</td></tr>
+            <tr><td><code>foreground</code></td><td><span class="dot" style="background:#0a0a0a;"></span></td><td>#0a0a0a</td><td><code>--foreground</code></td><td>Primary text</td></tr>
+            <tr><td><code>muted</code></td><td><span class="dot" style="background:#f5f5f5; border-color:#e5e5e5;"></span></td><td>#f5f5f5</td><td><code>--muted</code></td><td>Subtled backgrounds (tabs, code blocks)</td></tr>
+            <tr><td><code>muted-foreground</code></td><td><span class="dot" style="background:#737373;"></span></td><td>#737373</td><td><code>--muted-foreground</code></td><td>Secondary / placeholder text</td></tr>
+            <tr><td><code>border</code></td><td><span class="dot" style="background:#e5e5e5;"></span></td><td>#e5e5e5</td><td><code>--border</code></td><td>Dividers, card borders, input borders</td></tr>
+            <tr><td><code>input</code></td><td><span class="dot" style="background:#e5e5e5;"></span></td><td>#e5e5e5</td><td><code>--input</code></td><td>Input border color</td></tr>
+            <tr><td><code>ring</code></td><td><span class="dot" style="background:#737373;"></span></td><td>#737373</td><td><code>--ring</code></td><td>Focus ring / outline</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ── Primary ─────────────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Primary</h2>
+        <p class="section-sub">Neutral/900 (#171717) — used for primary buttons and high-emphasis actions. WCAG AAA (14.7:1 on white).</p>
+        <div class="swatch-grid">
+          <div class="swatch-card"><div class="swatch-color" style="background:#171717;"></div><div class="swatch-info"><div class="swatch-name">primary</div><div class="swatch-hex">#171717</div><div class="swatch-var">--primary</div></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background:#fafafa; border-bottom:1px solid #e5e5e5;"></div><div class="swatch-info"><div class="swatch-name">primary-foreground</div><div class="swatch-hex">#fafafa</div><div class="swatch-var">--primary-foreground</div></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background:hsl(0 0% 15%);"></div><div class="swatch-info"><div class="swatch-name">primary-hover</div><div class="swatch-hex">hsl(0 0% 15%)</div><div class="swatch-var">--primary-hover</div></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background:hsl(0 0% 20%);"></div><div class="swatch-info"><div class="swatch-name">primary-active</div><div class="swatch-hex">hsl(0 0% 20%)</div><div class="swatch-var">--primary-active</div></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background:hsl(0 0% 55%);"></div><div class="swatch-info"><div class="swatch-name">primary-disabled</div><div class="swatch-hex">hsl(0 0% 55%)</div><div class="swatch-var">--primary-disabled</div></div></div>
+        </div>
+      </section>
+
+      <!-- ── Secondary ──────────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Secondary</h2>
+        <p class="section-sub">Neutral/100 (#f5f5f5) — ghost / secondary button style.</p>
+        <div class="swatch-grid">
+          <div class="swatch-card"><div class="swatch-color" style="background:#f5f5f5; border-bottom:1px solid #e5e5e5;"></div><div class="swatch-info"><div class="swatch-name">secondary</div><div class="swatch-hex">#f5f5f5</div><div class="swatch-var">--secondary</div></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background:#0a0a0a;"></div><div class="swatch-info"><div class="swatch-name">secondary-foreground</div><div class="swatch-hex">#0a0a0a</div><div class="swatch-var">--secondary-foreground</div></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background:hsl(0 0% 90%);"></div><div class="swatch-info"><div class="swatch-name">secondary-hover</div><div class="swatch-hex">hsl(0 0% 90%)</div><div class="swatch-var">--secondary-hover</div></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background:hsl(0 0% 84%);"></div><div class="swatch-info"><div class="swatch-name">secondary-active</div><div class="swatch-hex">hsl(0 0% 84%)</div><div class="swatch-var">--secondary-active</div></div></div>
+        </div>
+      </section>
+
+      <!-- ── Accent ──────────────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Accent</h2>
+        <p class="section-sub">Neutral/100 (#f5f5f5) — hover states on nav items, ghost hover backgrounds.</p>
+        <div class="swatch-grid">
+          <div class="swatch-card"><div class="swatch-color" style="background:#f5f5f5; border-bottom:1px solid #e5e5e5;"></div><div class="swatch-info"><div class="swatch-name">accent</div><div class="swatch-hex">#f5f5f5</div><div class="swatch-var">--accent</div></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background:#171717;"></div><div class="swatch-info"><div class="swatch-name">accent-foreground</div><div class="swatch-hex">#171717</div><div class="swatch-var">--accent-foreground</div></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background:hsl(0 0% 89%);"></div><div class="swatch-info"><div class="swatch-name">accent-hover</div><div class="swatch-hex">hsl(0 0% 89%)</div><div class="swatch-var">--accent-hover</div></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background:hsl(0 0% 82%);"></div><div class="swatch-info"><div class="swatch-name">accent-active</div><div class="swatch-hex">hsl(0 0% 82%)</div><div class="swatch-var">--accent-active</div></div></div>
+        </div>
+      </section>
+
+      <!-- ── Destructive ────────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Destructive</h2>
+        <p class="section-sub">Red/600 (#dc2626) — errors, warnings, delete actions. WCAG AA (4.58:1 on white).</p>
+        <div class="swatch-grid">
+          <div class="swatch-card"><div class="swatch-color" style="background:#dc2626;"></div><div class="swatch-info"><div class="swatch-name">destructive</div><div class="swatch-hex">#dc2626</div><div class="swatch-var">--destructive</div></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background:#fafafa; border-bottom:1px solid #e5e5e5;"></div><div class="swatch-info"><div class="swatch-name">destructive-foreground</div><div class="swatch-hex">#fafafa</div><div class="swatch-var">--destructive-foreground</div></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background:hsl(0 72.2% 43%);"></div><div class="swatch-info"><div class="swatch-name">destructive-hover</div><div class="swatch-hex">hsl(0 72% 43%)</div><div class="swatch-var">--destructive-hover</div></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background:hsl(0 72.2% 36%);"></div><div class="swatch-info"><div class="swatch-name">destructive-active</div><div class="swatch-hex">hsl(0 72% 36%)</div><div class="swatch-var">--destructive-active</div></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background:hsl(0 72.2% 75%);"></div><div class="swatch-info"><div class="swatch-name">destructive-disabled</div><div class="swatch-hex">hsl(0 72% 75%)</div><div class="swatch-var">--destructive-disabled</div></div></div>
+        </div>
+      </section>
+
+      <!-- ── Neutral scale ──────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Neutral Scale</h2>
+        <p class="section-sub">Full 11-step neutral ramp from 50 (near-white) to 950 (near-black). Sourced from Tailwind's neutral palette.</p>
+        <div class="neutral-scale">
+          <div class="neutral-step" style="background:#fafafa;"><span class="neutral-label" style="color:#737373;">50</span></div>
+          <div class="neutral-step" style="background:#f5f5f5;"><span class="neutral-label" style="color:#737373;">100</span></div>
+          <div class="neutral-step" style="background:#e5e5e5;"><span class="neutral-label" style="color:#737373;">200</span></div>
+          <div class="neutral-step" style="background:#d4d4d4;"><span class="neutral-label" style="color:#737373;">300</span></div>
+          <div class="neutral-step" style="background:#a3a3a3;"><span class="neutral-label" style="color:#737373;">400</span></div>
+          <div class="neutral-step" style="background:#737373;"><span class="neutral-label" style="color:#fafafa;">500</span></div>
+          <div class="neutral-step" style="background:#525252;"><span class="neutral-label" style="color:#fafafa;">600</span></div>
+          <div class="neutral-step" style="background:#404040;"><span class="neutral-label" style="color:#fafafa;">700</span></div>
+          <div class="neutral-step" style="background:#262626;"><span class="neutral-label" style="color:#fafafa;">800</span></div>
+          <div class="neutral-step" style="background:#171717;"><span class="neutral-label" style="color:#fafafa;">900</span></div>
+          <div class="neutral-step" style="background:#0a0a0a;"><span class="neutral-label" style="color:#fafafa;">950</span></div>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>Step</th><th>Preview</th><th>Hex</th><th>HSL</th><th>CSS Variable</th></tr></thead>
+          <tbody>
+            <tr><td><code>neutral-50</code></td><td><span class="dot" style="background:#fafafa; border-color:#e5e5e5;"></span></td><td>#fafafa</td><td>0 0% 98%</td><td><code>--neutral-50</code></td></tr>
+            <tr><td><code>neutral-100</code></td><td><span class="dot" style="background:#f5f5f5; border-color:#e5e5e5;"></span></td><td>#f5f5f5</td><td>0 0% 96.1%</td><td><code>--neutral-100</code></td></tr>
+            <tr><td><code>neutral-200</code></td><td><span class="dot" style="background:#e5e5e5;"></span></td><td>#e5e5e5</td><td>0 0% 89.8%</td><td><code>--neutral-200</code></td></tr>
+            <tr><td><code>neutral-300</code></td><td><span class="dot" style="background:#d4d4d4;"></span></td><td>#d4d4d4</td><td>0 0% 83.1%</td><td><code>--neutral-300</code></td></tr>
+            <tr><td><code>neutral-400</code></td><td><span class="dot" style="background:#a3a3a3;"></span></td><td>#a3a3a3</td><td>0 0% 63.9%</td><td><code>--neutral-400</code></td></tr>
+            <tr><td><code>neutral-500</code></td><td><span class="dot" style="background:#737373;"></span></td><td>#737373</td><td>0 0% 45.1%</td><td><code>--neutral-500</code></td></tr>
+            <tr><td><code>neutral-600</code></td><td><span class="dot" style="background:#525252;"></span></td><td>#525252</td><td>0 0% 32.2%</td><td><code>--neutral-600</code></td></tr>
+            <tr><td><code>neutral-700</code></td><td><span class="dot" style="background:#404040;"></span></td><td>#404040</td><td>0 0% 25.1%</td><td><code>--neutral-700</code></td></tr>
+            <tr><td><code>neutral-800</code></td><td><span class="dot" style="background:#262626;"></span></td><td>#262626</td><td>0 0% 14.9%</td><td><code>--neutral-800</code></td></tr>
+            <tr><td><code>neutral-900</code></td><td><span class="dot" style="background:#171717;"></span></td><td>#171717</td><td>0 0% 9%</td><td><code>--neutral-900</code></td></tr>
+            <tr><td><code>neutral-950</code></td><td><span class="dot" style="background:#0a0a0a;"></span></td><td>#0a0a0a</td><td>0 0% 3.9%</td><td><code>--neutral-950</code></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ── Chart colors ───────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Chart Colors</h2>
+        <p class="section-sub">Radix blue scale — used for data visualizations, charts, and graphs.</p>
+        <div class="chart-palette">
+          <div class="chart-swatch" style="background:#5eb1ef;"><span>chart-1</span></div>
+          <div class="chart-swatch" style="background:#0090ff;"><span>chart-2</span></div>
+          <div class="chart-swatch" style="background:#0588f0;"><span>chart-3</span></div>
+          <div class="chart-swatch" style="background:#0d74ce;"><span>chart-4</span></div>
+          <div class="chart-swatch" style="background:#113264;"><span>chart-5</span></div>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>Token</th><th>Preview</th><th>Hex</th><th>Usage</th></tr></thead>
+          <tbody>
+            <tr><td><code>chart-1</code></td><td><span class="dot" style="background:#5eb1ef; border-color:#5eb1ef;"></span></td><td>#5eb1ef</td><td>Radix blue/8 — lightest data series</td></tr>
+            <tr><td><code>chart-2</code></td><td><span class="dot" style="background:#0090ff; border-color:#0090ff;"></span></td><td>#0090ff</td><td>Radix blue/9</td></tr>
+            <tr><td><code>chart-3</code></td><td><span class="dot" style="background:#0588f0; border-color:#0588f0;"></span></td><td>#0588f0</td><td>Radix blue/10</td></tr>
+            <tr><td><code>chart-4</code></td><td><span class="dot" style="background:#0d74ce; border-color:#0d74ce;"></span></td><td>#0d74ce</td><td>Radix blue/11</td></tr>
+            <tr><td><code>chart-5</code></td><td><span class="dot" style="background:#113264; border-color:#113264;"></span></td><td>#113264</td><td>Radix blue/12 — darkest data series</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ── Sidebar colors ─────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Sidebar</h2>
+        <p class="section-sub">Dedicated token set for the navigation sidebar component.</p>
+        <div class="swatch-grid">
+          <div class="swatch-card"><div class="swatch-color" style="background:#fafafa; border-bottom:1px solid #e5e5e5;"></div><div class="swatch-info"><div class="swatch-name">sidebar</div><div class="swatch-hex">#fafafa</div><div class="swatch-var">--sidebar</div></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background:#0a0a0a;"></div><div class="swatch-info"><div class="swatch-name">sidebar-foreground</div><div class="swatch-hex">#0a0a0a</div><div class="swatch-var">--sidebar-foreground</div></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background:#171717;"></div><div class="swatch-info"><div class="swatch-name">sidebar-primary</div><div class="swatch-hex">#171717</div><div class="swatch-var">--sidebar-primary</div></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background:#fafafa; border-bottom:1px solid #e5e5e5;"></div><div class="swatch-info"><div class="swatch-name">sidebar-primary-fg</div><div class="swatch-hex">#fafafa</div><div class="swatch-var">--sidebar-primary-foreground</div></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background:#f5f5f5; border-bottom:1px solid #e5e5e5;"></div><div class="swatch-info"><div class="swatch-name">sidebar-accent</div><div class="swatch-hex">#f5f5f5</div><div class="swatch-var">--sidebar-accent</div></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background:#e5e5e5;"></div><div class="swatch-info"><div class="swatch-name">sidebar-border</div><div class="swatch-hex">#e5e5e5</div><div class="swatch-var">--sidebar-border</div></div></div>
+        </div>
+      </section>
+
+      <!-- ── Semantic ────────────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Semantic Custom</h2>
+        <p class="section-sub">Warm gray tone for supplementary semantic UI surfaces.</p>
+        <div class="swatch-grid">
+          <div class="swatch-card"><div class="swatch-color" style="background:#696867;"></div><div class="swatch-info"><div class="swatch-name">semantic-background</div><div class="swatch-hex">#696867</div><div class="swatch-var">--semantic-background</div></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background:#898887;"></div><div class="swatch-info"><div class="swatch-name">semantic-border</div><div class="swatch-hex">#898887</div><div class="swatch-var">--semantic-border</div></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background:#ffffff; border-bottom:1px solid #e5e5e5;"></div><div class="swatch-info"><div class="swatch-name">semantic-foreground</div><div class="swatch-hex">#ffffff</div><div class="swatch-var">--semantic-foreground</div></div></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="sidebar.js"></script>
+</body>
+</html>
