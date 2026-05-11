@@ -17,6 +17,7 @@ export const button = {
     lg: "var(--button-padding-x-lg)",
   },
   fontSize: {
+    
     sm: "var(--button-font-size-sm)",
     md: "var(--button-font-size-md)",
     lg: "var(--button-font-size-lg)",

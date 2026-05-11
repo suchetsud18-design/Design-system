@@ -214,6 +214,22 @@
     '.state-cell-body,',
     '.state-card-body{border-radius:0 0 var(--radius-lg) var(--radius-lg);}',
 
+    /* Full-width content area */
+    '.content{max-width:none;}',
+
+    /* Preview body: let height follow content, not fixed min-heights */
+    '.preview-body{min-height:0!important;}',
+
+    /* Props tables (exactly 4 columns): fixed layout with consistent column widths */
+    '.data-table:has(>thead>tr>th:nth-child(4)):not(:has(>thead>tr>th:nth-child(5)))',
+    '{table-layout:fixed;}',
+    '.data-table:has(>thead>tr>th:nth-child(4)):not(:has(>thead>tr>th:nth-child(5)))',
+    ' th:nth-child(1){width:22%;}',
+    '.data-table:has(>thead>tr>th:nth-child(4)):not(:has(>thead>tr>th:nth-child(5)))',
+    ' th:nth-child(2){width:26%;}',
+    '.data-table:has(>thead>tr>th:nth-child(4)):not(:has(>thead>tr>th:nth-child(5)))',
+    ' th:nth-child(3){width:14%;}',
+
   ].join('');
   document.head.appendChild(style);
 
