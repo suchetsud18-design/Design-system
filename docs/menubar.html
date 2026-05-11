@@ -237,9 +237,13 @@
 
     const menuIds = ['mb-file', 'mb-edit', 'mb-view', 'mb-help'];
     const triggerIds = ['mb-file-t', 'mb-edit-t', 'mb-view-t', 'mb-help-t'];
+    function onMbOutsideClick(e) {
+      if (!e.target.closest('.mb-root')) closeAllMenus();
+    }
     function closeAllMenus() {
       menuIds.forEach(id => document.getElementById(id).classList.remove('open'));
       triggerIds.forEach(id => document.getElementById(id).classList.remove('active'));
+      document.removeEventListener('click', onMbOutsideClick);
     }
     function toggleMenu(menuId, triggerId) {
       const isOpen = document.getElementById(menuId).classList.contains('open');
@@ -247,6 +251,7 @@
       if (!isOpen) {
         document.getElementById(menuId).classList.add('open');
         document.getElementById(triggerId).classList.add('active');
+        setTimeout(function() { document.addEventListener('click', onMbOutsideClick); }, 0);
       }
     }
     function toggleMbCheck(id) {
@@ -257,9 +262,6 @@
       if (checkEl) checkEl.textContent = isChecked ? '' : '✓';
       closeAllMenus();
     }
-    document.addEventListener('click', function(e) {
-      if (!e.target.closest('.mb-root')) closeAllMenus();
-    });
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closeAllMenus();
     });

@@ -277,13 +277,21 @@ export function DatePickerDemo() {
       closeCalendar();
     }
 
+    function onDpOutsideClick(e) {
+      if (!e.target.closest('#dp-wrap')) closeCalendar();
+    }
     function toggleCalendar() {
       const cal = document.getElementById('dp-calendar');
       if (cal.classList.contains('open')) closeCalendar();
-      else { cal.classList.add('open'); renderCalendar(); }
+      else {
+        cal.classList.add('open');
+        renderCalendar();
+        setTimeout(function() { document.addEventListener('click', onDpOutsideClick); }, 0);
+      }
     }
     function closeCalendar() {
       document.getElementById('dp-calendar').classList.remove('open');
+      document.removeEventListener('click', onDpOutsideClick);
     }
     function prevMonth() {
       dpMonth--;
@@ -295,9 +303,6 @@ export function DatePickerDemo() {
       if (dpMonth > 11) { dpMonth = 0; dpYear++; }
       renderCalendar();
     }
-    document.addEventListener('click', function(e) {
-      if (!e.target.closest('#dp-wrap')) closeCalendar();
-    });
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closeCalendar();
     });

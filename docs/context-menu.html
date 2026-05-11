@@ -219,22 +219,24 @@
 
   <script>
 
+    function onCtxOutsideClick(e) {
+      if (!e.target.closest('.ctx-menu')) closeCtxMenu();
+    }
     function openCtxMenu(e) {
       e.preventDefault();
       const menu = document.getElementById('ctx-menu');
       menu.style.top = e.clientY + 'px';
       menu.style.left = e.clientX + 'px';
       menu.classList.add('open');
+      setTimeout(function() { document.addEventListener('click', onCtxOutsideClick); }, 0);
     }
     function closeCtxMenu() {
       document.getElementById('ctx-menu').classList.remove('open');
+      document.removeEventListener('click', onCtxOutsideClick);
     }
     function toggleCtxCheck(id) {
       document.getElementById(id).classList.toggle('checked');
     }
-    document.addEventListener('click', function(e) {
-      if (!e.target.closest('.ctx-menu')) closeCtxMenu();
-    });
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closeCtxMenu();
     });

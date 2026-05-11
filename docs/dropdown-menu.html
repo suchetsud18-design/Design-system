@@ -280,21 +280,27 @@
 
   <script>
 
+    function onDmOutsideClick(e) {
+      if (!e.target.closest('#dm1-wrap')) closeDropdown('dm1');
+    }
     function toggleDropdown(id) {
       const menu = document.getElementById(id);
       const trigger = document.getElementById(id + '-trigger');
       const isOpen = menu.classList.contains('open');
       menu.classList.toggle('open', !isOpen);
       if (trigger) trigger.classList.toggle('open', !isOpen);
+      if (!isOpen) {
+        setTimeout(function() { document.addEventListener('click', onDmOutsideClick); }, 0);
+      } else {
+        document.removeEventListener('click', onDmOutsideClick);
+      }
     }
     function closeDropdown(id) {
       document.getElementById(id).classList.remove('open');
       const trigger = document.getElementById(id + '-trigger');
       if (trigger) trigger.classList.remove('open');
+      document.removeEventListener('click', onDmOutsideClick);
     }
-    document.addEventListener('click', function(e) {
-      if (!e.target.closest('#dm1-wrap')) closeDropdown('dm1');
-    });
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closeDropdown('dm1');
     });
