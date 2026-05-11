@@ -186,6 +186,34 @@
     'background:rgba(0,0,0,.45);backdrop-filter:blur(2px);}',
     '.sidebar-overlay.open{display:block;}',
     '}',
+
+    /* ── Preview container overflow fix ─────────────────────── */
+    /*                                                           */
+    /* All preview/variant/state card containers previously had  */
+    /* overflow:hidden to clip children to their border-radius.  */
+    /* This also clips any absolutely-positioned overlays        */
+    /* (dropdowns, popovers, selects) that open inside them.     */
+    /*                                                           */
+    /* Fix: switch those containers to overflow:visible and      */
+    /* compensate for lost corner clipping by adding matching    */
+    /* border-radius to each container's top and bottom child.   */
+
+    /* Containers: unlock overflow */
+    '.preview-card,.preview-card-wrap,.variant-card,',
+    '.state-cell,.state-card{overflow:visible;}',
+
+    /* Top children: round top-left + top-right corners */
+    '.preview-label,',
+    '.variant-card-label,',
+    '.state-cell-label,',
+    '.state-card-label{border-radius:var(--radius-lg) var(--radius-lg) 0 0;}',
+
+    /* Bottom children: round bottom-left + bottom-right corners */
+    '.preview-body,.preview-body-col,',
+    '.variant-card-body,',
+    '.state-cell-body,',
+    '.state-card-body{border-radius:0 0 var(--radius-lg) var(--radius-lg);}',
+
   ].join('');
   document.head.appendChild(style);
 
