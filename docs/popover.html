@@ -87,9 +87,10 @@
     .type-badge { font-family: var(--font-mono); font-size: var(--text-xs); background: hsl(var(--muted)); padding: 0.1em 0.4em; border-radius: var(--radius-sm); color: hsl(var(--foreground)); }
     .muted-text { color: hsl(var(--muted-foreground)); font-family: var(--font-mono); font-size: var(--text-xs); }
 
-    .pop-wrap { position: relative; display: inline-block; }
+    .pop-wrap { position: relative; display: inline-block; z-index: 200; }
     .pop-trigger { height: 36px; padding: 0 16px; border: 1px solid hsl(var(--border)); border-radius: 6px; font-family: var(--font-sans); font-size: 14px; font-weight: 500; background: hsl(var(--background)); color: hsl(var(--foreground)); cursor: pointer; transition: background var(--duration-150) var(--easing-out); }
     .pop-trigger:hover { background: hsl(var(--muted)); }
+    .preview-card:has(.pop-wrap) { overflow: visible; }
     .pop-panel {
       position: absolute;
       top: calc(100% + 8px);
@@ -101,7 +102,7 @@
       border-radius: 8px;
       box-shadow: 0 8px 24px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.06);
       padding: 16px;
-      z-index: 50;
+      z-index: 200;
       display: none;
     }
     .pop-panel.open { display: block; }
