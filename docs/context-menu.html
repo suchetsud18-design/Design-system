@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Context Menu — Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../src/tokens/design-tokens.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { font-family: var(--font-sans); background: hsl(var(--background)); color: hsl(var(--foreground)); font-size: var(--text-base); line-height: var(--leading-6); display: flex; min-height: 100vh; }
+    .sidebar { width: 16rem; flex-shrink: 0; background: hsl(var(--sidebar)); border-right: 1px solid hsl(var(--sidebar-border)); display: flex; flex-direction: column; height: 100vh; position: sticky; top: 0; overflow-y: auto; }
+    .sidebar-header { display: flex; align-items: center; gap: 0.625rem; padding: 1rem; border-bottom: 1px solid hsl(var(--sidebar-border)); flex-shrink: 0; }
+    .sidebar-logo { width: 28px; height: 28px; background: hsl(var(--sidebar-primary)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sidebar-logo svg { color: hsl(var(--sidebar-primary-foreground)); }
+    .sidebar-brand { display: flex; flex-direction: column; }
+    .sidebar-brand-name { font-size: var(--text-sm); font-weight: var(--font-semibold); color: hsl(var(--sidebar-foreground)); line-height: var(--leading-5); }
+    .sidebar-brand-sub { font-size: var(--text-xs); color: hsl(var(--sidebar-accent-foreground)); line-height: var(--leading-4); }
+    .sidebar-nav { flex: 1; padding: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem; }
+    .sidebar-group { display: flex; flex-direction: column; gap: 0.125rem; }
+    .sidebar-group-label { font-size: var(--text-xs); font-weight: var(--font-medium); color: hsl(var(--sidebar-accent-foreground)); letter-spacing: var(--tracking-wide); text-transform: uppercase; padding: 0.75rem 0.75rem 0.25rem; }
+    .sidebar-item { display: flex; align-items: center; gap: 0.625rem; padding: 0.375rem 0.75rem; border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: var(--font-medium); color: hsl(var(--sidebar-foreground)); text-decoration: none; cursor: pointer; border: none; background: none; width: 100%; text-align: left; transition: background var(--duration-150) var(--easing-out); }
+    .sidebar-item:hover { background: hsl(var(--sidebar-accent)); color: hsl(var(--sidebar-accent-foreground)); }
+    .sidebar-item.active { background: hsl(var(--sidebar-primary)); color: hsl(var(--sidebar-primary-foreground)); }
+    .sidebar-item svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.8; }
+    .sidebar-item.active svg { opacity: 1; }
+    .sidebar-item-badge { margin-left: auto; font-size: var(--text-xs); font-weight: var(--font-medium); background: hsl(var(--sidebar-accent)); color: hsl(var(--sidebar-accent-foreground)); padding: 0.1rem 0.4rem; border-radius: var(--radius-full); line-height: var(--leading-5); }
+    .sidebar-item.active .sidebar-item-badge { background: hsl(var(--sidebar-primary-foreground) / 0.2); color: hsl(var(--sidebar-primary-foreground)); }
+    .sidebar-separator { height: 1px; background: hsl(var(--sidebar-border)); margin: 0.25rem 0.75rem; }
+    .sidebar-footer { padding: 0.75rem; border-top: 1px solid hsl(var(--sidebar-border)); flex-shrink: 0; }
+    .sidebar-footer-item { display: flex; align-items: center; gap: 0.625rem; padding: 0.375rem 0.75rem; border-radius: var(--radius-md); font-size: var(--text-sm); color: hsl(var(--sidebar-foreground)); text-decoration: none; }
+    .sidebar-footer-item:hover { background: hsl(var(--sidebar-accent)); }
+    .sidebar-footer-item svg { width: 16px; height: 16px; opacity: 0.7; }
+    .sidebar-toggle { display: none; position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 50; width: 44px; height: 44px; background: hsl(var(--foreground)); color: hsl(var(--background)); border: none; border-radius: var(--radius-full); cursor: pointer; align-items: center; justify-content: center; box-shadow: var(--shadow-lg); }
+    @media (max-width: 768px) {
+      .sidebar { position: fixed; top: 0; left: 0; z-index: 40; transform: translateX(-100%); transition: transform var(--duration-300) var(--easing-out); box-shadow: var(--shadow-xl); }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-toggle { display: flex; }
+      .sidebar-overlay { display: none; position: fixed; inset: 0; z-index: 30; background: rgba(0,0,0,0.5); }
+      .sidebar-overlay.open { display: block; }
+    }
+    .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .topbar { height: 56px; flex-shrink: 0; border-bottom: 1px solid hsl(var(--border)); display: flex; align-items: center; padding: 0 2rem; gap: 1rem; position: sticky; top: 0; background: hsl(var(--background) / 0.9); backdrop-filter: blur(8px); z-index: 20; }
+    .topbar-breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: var(--text-sm); color: hsl(var(--muted-foreground)); }
+    .topbar-breadcrumb span { color: hsl(var(--foreground)); font-weight: var(--font-medium); }
+    .topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; }
+    .topbar-btn { display: inline-flex; align-items: center; gap: 0.375rem; font-size: var(--text-sm); padding: 0.375rem 0.75rem; border: 1px solid hsl(var(--border)); border-radius: var(--radius-md); background: none; cursor: pointer; color: hsl(var(--foreground)); font-family: var(--font-sans); text-decoration: none; transition: background var(--duration-150) var(--easing-out); }
+    .topbar-btn:hover { background: hsl(var(--muted)); }
+    .topbar-btn svg { width: 14px; height: 14px; }
+    .content { flex: 1; padding: 3rem 2rem; max-width: 860px; }
+    .page-header { margin-bottom: 3rem; border-bottom: 1px solid hsl(var(--border)); padding-bottom: 2rem; }
+    .page-header .lbl { display: inline-flex; font-size: var(--text-xs); font-weight: var(--font-medium); color: hsl(var(--muted-foreground)); letter-spacing: var(--tracking-wide); text-transform: uppercase; margin-bottom: 0.5rem; }
+    .page-header h1 { font-size: var(--text-4xl); font-weight: var(--font-bold); line-height: var(--leading-10); letter-spacing: var(--tracking-tight); margin-bottom: 0.5rem; }
+    .page-header p { color: hsl(var(--muted-foreground)); max-width: 48rem; }
+    .section { margin-bottom: 3rem; }
+    .section-title { font-size: var(--text-xl); font-weight: var(--font-semibold); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid hsl(var(--border)); }
+    .section-sub { font-size: var(--text-sm); color: hsl(var(--muted-foreground)); margin-bottom: 1.5rem; }
+    .preview-card { border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.5rem; }
+    .preview-label { font-size: var(--text-xs); font-weight: var(--font-medium); color: hsl(var(--muted-foreground)); letter-spacing: var(--tracking-wide); text-transform: uppercase; padding: 0.75rem 1rem; background: hsl(var(--muted)); border-bottom: 1px solid hsl(var(--border)); }
+    .preview-body { padding: 2rem; background: hsl(var(--background)); display: flex; flex-direction: column; gap: 1.5rem; align-items: flex-start; }
+    .preview-body.center { align-items: center; }
+    .table-wrap { overflow-x: auto; margin-bottom: 1.5rem; }
+    table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+    thead tr { border-bottom: 2px solid hsl(var(--border)); }
+    tbody tr { border-bottom: 1px solid hsl(var(--border)); }
+    tbody tr:last-child { border-bottom: none; }
+    th { text-align: left; padding: 0.625rem 0.875rem; font-weight: var(--font-semibold); color: hsl(var(--foreground)); white-space: nowrap; }
+    td { padding: 0.625rem 0.875rem; color: hsl(var(--muted-foreground)); vertical-align: top; }
+    td:first-child { font-family: var(--font-mono); font-size: var(--text-xs); color: hsl(var(--foreground)); white-space: nowrap; }
+    td code { font-family: var(--font-mono); font-size: var(--text-xs); background: hsl(var(--muted)); padding: 0.1em 0.35em; border-radius: var(--radius-sm); color: hsl(var(--foreground)); }
+    .token-table td:first-child { color: hsl(var(--muted-foreground)); font-family: inherit; font-size: var(--text-sm); }
+    .token-swatch { display: inline-block; width: 14px; height: 14px; border-radius: var(--radius-sm); border: 1px solid hsl(var(--border)); vertical-align: middle; margin-right: 6px; }
+    .code-block { background: hsl(var(--muted)); border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; font-family: var(--font-mono); font-size: var(--text-xs); line-height: var(--leading-6); overflow-x: auto; margin-bottom: 1.5rem; white-space: pre; }
+    .a11y-box { background: hsl(var(--muted)); border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; }
+    .a11y-box h4 { font-size: var(--text-sm); font-weight: var(--font-semibold); margin-bottom: 0.75rem; }
+    .a11y-box ul { padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.375rem; }
+    .a11y-box li { font-size: var(--text-sm); color: hsl(var(--muted-foreground)); }
+    .a11y-box li strong { color: hsl(var(--foreground)); }
+    .kbd { display: inline-flex; align-items: center; font-family: var(--font-mono); font-size: var(--text-xs); background: hsl(var(--background)); border: 1px solid hsl(var(--border)); border-radius: var(--radius-sm); padding: 0.1em 0.4em; box-shadow: 0 1px 0 hsl(var(--border)); }
+    .states-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .state-cell { border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg); overflow: hidden; }
+    .state-cell-label { font-size: var(--text-xs); font-weight: var(--font-medium); color: hsl(var(--muted-foreground)); letter-spacing: var(--tracking-wide); text-transform: uppercase; padding: 0.5rem 0.75rem; background: hsl(var(--muted)); border-bottom: 1px solid hsl(var(--border)); }
+    .state-cell-body { padding: 1.25rem 1rem; display: flex; align-items: flex-start; justify-content: center; }
+    .type-badge { font-family: var(--font-mono); font-size: var(--text-xs); background: hsl(var(--muted)); padding: 0.1em 0.4em; border-radius: var(--radius-sm); color: hsl(var(--foreground)); }
+    .muted-text { color: hsl(var(--muted-foreground)); font-family: var(--font-mono); font-size: var(--text-xs); }
+
+    .ctx-trigger-area { width: 300px; height: 150px; border: 2px dashed hsl(var(--border)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: hsl(var(--muted-foreground)); cursor: context-menu; user-select: none; }
+    .ctx-menu { position: fixed; min-width: 200px; background: hsl(var(--background)); border: 1px solid hsl(var(--border)); border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.06); padding: 4px; z-index: 200; display: none; }
+    .ctx-menu.open { display: block; }
+    .ctx-item { display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; border-radius: 5px; font-size: 13px; color: hsl(var(--foreground)); cursor: pointer; }
+    .ctx-item:hover { background: hsl(var(--foreground)); color: hsl(var(--background)); }
+    .ctx-item.disabled { opacity: 0.5; pointer-events: none; }
+    .ctx-separator { height: 1px; background: hsl(var(--border)); margin: 4px 0; }
+    .ctx-label { padding: 6px 10px 2px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+    .ctx-kbd { font-family: var(--font-mono); font-size: 11px; color: hsl(var(--muted-foreground)); }
+    .ctx-item:hover .ctx-kbd { color: hsl(var(--background)/0.7); }
+    .ctx-check-item { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 5px; font-size: 13px; color: hsl(var(--foreground)); cursor: pointer; }
+    .ctx-check-item:hover { background: hsl(var(--foreground)); color: hsl(var(--background)); }
+    .ctx-check-box { width: 12px; height: 12px; border: 1px solid hsl(var(--border)); border-radius: 2px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .ctx-check-item.checked .ctx-check-box { background: hsl(var(--foreground)); border-color: hsl(var(--foreground)); }
+    .ctx-check-item.checked .ctx-check-box::after { content: ""; display: block; width: 5px; height: 5px; border-right: 1.5px solid hsl(var(--background)); border-bottom: 1.5px solid hsl(var(--background)); transform: rotate(45deg) translate(-1px,-1px); }
+    .ctx-check-item:hover .ctx-check-box { border-color: hsl(var(--background)); }
+  </style>
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="sidebar-brand">
+        <span class="sidebar-brand-name">Design System</span>
+        <span class="sidebar-brand-sub">v1.0.0</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-group">
+        <span class="sidebar-group-label">Getting Started</span>
+        <a class="sidebar-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Introduction</a>
+        <a class="sidebar-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/></svg>Installation</a>
+        <a class="sidebar-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 1 0 4.93 19.07"/></svg>Theming</a>
+      </div>
+      <div class="sidebar-separator"></div>
+      <div class="sidebar-group">
+        <span class="sidebar-group-label">Foundations</span>
+        <a class="sidebar-item" href="colors.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>Colors</a>
+        <a class="sidebar-item" href="typography.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>Typography</a>
+        <a class="sidebar-item" href="spacing.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Spacing</a>
+        <a class="sidebar-item" href="effects.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Effects</a>
+      </div>
+      <div class="sidebar-separator"></div>
+      <div class="sidebar-group">
+        <span class="sidebar-group-label">Components</span>
+        <a class="sidebar-item" href="accordion.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>Accordion</a>
+        <a class="sidebar-item" href="alert.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Alert<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="alert-dialog.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Alert Dialog<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="avatar.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Avatar<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="badge.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="2" y1="9" x2="22" y2="9"/><path d="M8 3v6M16 3v6"/></svg>Badge<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="breadcrumb.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>Breadcrumb<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="button.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="16 2 12 7 8 2"/></svg>Button<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="card.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Card<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="checkbox.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12l2 2 4-4"/></svg>Checkbox<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="collapsible.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M2 9h20"/><polyline points="8 13 12 17 16 13"/></svg>Collapsible<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="combobox.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Combobox<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="command.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3h12"/></svg>Command<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item active" href="context-menu.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>Context Menu<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="data-table.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>Data Table<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="date-picker.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Date Picker<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="dialog.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15h0M2 9h20"/></svg>Dialog<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="drawer.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M2 15h20"/></svg>Drawer<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="dropdown-menu.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Dropdown Menu<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="form.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Form<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="hover-card.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>Hover Card<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="input.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Input<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="label.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>Label<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="menubar.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="8" width="20" height="8" rx="1"/><line x1="6" y1="12" x2="6.01" y2="12"/><line x1="10" y1="12" x2="10.01" y2="12"/><line x1="14" y1="12" x2="14.01" y2="12"/></svg>Menubar<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="navigation-menu.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>Navigation Menu<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="pagination.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/><polyline points="20 18 14 12 20 6"/></svg>Pagination<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="popover.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>Popover<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="progress.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="2" y1="12" x2="22" y2="12"/><circle cx="9" cy="12" r="3"/></svg>Progress<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="radio-group.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>Radio Group<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="resizable.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>Resizable<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="scroll-area.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><line x1="18" y1="6" x2="18" y2="18"/></svg>Scroll Area<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="select.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Select<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="separator.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="2" y1="12" x2="22" y2="12"/></svg>Separator<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="sheet.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M16 3v18"/></svg>Sheet<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="skeleton.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="4" rx="2"/><rect x="3" y="12" width="12" height="4" rx="2"/><rect x="3" y="20" width="8" height="4" rx="2"/></svg>Skeleton<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="slider.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="2" y1="12" x2="22" y2="12"/><circle cx="8" cy="12" r="3"/></svg>Slider<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="switch.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="8" width="20" height="8" rx="4"/><circle cx="8" cy="12" r="3"/></svg>Switch<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="table.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 3H3v7h18V3zM21 14H3v7h18v-7z"/></svg>Table<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="tabs.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="16" rx="2"/><path d="M2 10h20M6 6V3M12 6V3"/></svg>Tabs<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="textarea.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="7" y1="16" x2="12" y2="16"/></svg>Textarea<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="toast.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Toast<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="toggle.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="8" width="18" height="8" rx="2"/><path d="M21 12H3"/></svg>Toggle<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="toggle-group.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="8" width="6" height="8" rx="1"/><rect x="10" y="8" width="6" height="8" rx="1"/><rect x="18" y="8" width="6" height="8" rx="1"/></svg>Toggle Group<span class="sidebar-item-badge">New</span></a>
+        <a class="sidebar-item" href="tooltip.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22C6.48 22 2 17.52 2 12S6.48 2 12 2s10 4.48 10 10-4.48 10-10 10z"/><path d="M12 8v4M12 16h.01"/></svg>Tooltip<span class="sidebar-item-badge">New</span></a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <a class="sidebar-footer-item" href="https://ui.shadcn.com" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        shadcn/ui Docs
+      </a>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+  <button class="sidebar-toggle" onclick="toggleSidebar()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-breadcrumb">
+        Components
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span>Context Menu</span>
+      </div>
+      <div class="topbar-actions">
+        <a class="topbar-btn" href="https://ui.shadcn.com/docs/components/context-menu" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Shadcn Docs
+        </a>
+      </div>
+    </header>
+    <div class="content">
+
+      <div class="page-header">
+        <div class="lbl">Component</div>
+        <h1>Context Menu</h1>
+        <p>Displays a menu to the user — such as a set of actions or functions — triggered by a right-click or long press. Built on Radix UI Context Menu.</p>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Preview</div>
+        <div class="preview-card">
+          <div class="preview-label">Right-click the area below</div>
+          <div class="preview-body center">
+            <div class="ctx-trigger-area" id="ctx-area" oncontextmenu="openCtxMenu(event)">
+              Right click here
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Context menu portal -->
+      <div class="ctx-menu" id="ctx-menu">
+        <div class="ctx-item" onclick="closeCtxMenu()"><span>Back</span><span class="ctx-kbd">⌘[</span></div>
+        <div class="ctx-item" onclick="closeCtxMenu()"><span>Forward</span><span class="ctx-kbd">⌘]</span></div>
+        <div class="ctx-item" onclick="closeCtxMenu()"><span>Reload</span><span class="ctx-kbd">⌘R</span></div>
+        <div class="ctx-separator"></div>
+        <div class="ctx-item" onclick="closeCtxMenu()"><span>More Tools</span><span style="font-size:12px;color:hsl(var(--muted-foreground))">›</span></div>
+        <div class="ctx-separator"></div>
+        <div class="ctx-check-item checked" id="ctx-bookmarks" onclick="toggleCtxCheck('ctx-bookmarks');closeCtxMenu()">
+          <div class="ctx-check-box"></div>
+          <span>Show Bookmarks Bar</span>
+        </div>
+        <div class="ctx-check-item" id="ctx-fullurls" onclick="toggleCtxCheck('ctx-fullurls');closeCtxMenu()">
+          <div class="ctx-check-box"></div>
+          <span>Show Full URLs</span>
+        </div>
+        <div class="ctx-separator"></div>
+        <div class="ctx-label">People</div>
+        <div class="ctx-item" onclick="closeCtxMenu()"><span>Profile</span><span class="ctx-kbd">⌘P</span></div>
+        <div class="ctx-item" onclick="closeCtxMenu()"><span>Billing</span><span class="ctx-kbd">⌘B</span></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Usage</div>
+        <div class="code-block">import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu"
+
+&lt;ContextMenu&gt;
+  &lt;ContextMenuTrigger&gt;Right click&lt;/ContextMenuTrigger&gt;
+  &lt;ContextMenuContent&gt;
+    &lt;ContextMenuItem&gt;Back&lt;/ContextMenuItem&gt;
+    &lt;ContextMenuSeparator /&gt;
+    &lt;ContextMenuItem&gt;Reload&lt;/ContextMenuItem&gt;
+  &lt;/ContextMenuContent&gt;
+&lt;/ContextMenu&gt;</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Props</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Component</th><th>Prop</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td>ContextMenuContent</td><td>className</td><td><span class="type-badge">string</span></td><td>Additional CSS classes for the menu panel.</td></tr>
+              <tr><td>ContextMenuItem</td><td>inset</td><td><span class="type-badge">boolean</span></td><td>Add padding-left to align with items that have icons.</td></tr>
+              <tr><td>ContextMenuItem</td><td>disabled</td><td><span class="type-badge">boolean</span></td><td>Prevents interaction with the item.</td></tr>
+              <tr><td>ContextMenuCheckboxItem</td><td>checked</td><td><span class="type-badge">boolean</span></td><td>Controlled checked state.</td></tr>
+              <tr><td>ContextMenuSub</td><td>—</td><td>—</td><td>Container for sub-menus.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Accessibility</div>
+        <div class="a11y-box">
+          <h4>Keyboard &amp; ARIA</h4>
+          <ul>
+            <li><strong><span class="kbd">↑</span> / <span class="kbd">↓</span></strong> — Move focus between menu items.</li>
+            <li><strong><span class="kbd">Enter</span> / <span class="kbd">Space</span></strong> — Activate the focused item.</li>
+            <li><strong><span class="kbd">Escape</span></strong> — Close the context menu.</li>
+            <li><strong><span class="kbd">→</span></strong> — Open a submenu.</li>
+            <li>Menu uses <code>role="menu"</code>; items use <code>role="menuitem"</code>, <code>role="menuitemcheckbox"</code>, or <code>role="menuitemradio"</code>.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('open');
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('open');
+    }
+
+    function openCtxMenu(e) {
+      e.preventDefault();
+      const menu = document.getElementById('ctx-menu');
+      menu.style.top = e.clientY + 'px';
+      menu.style.left = e.clientX + 'px';
+      menu.classList.add('open');
+    }
+    function closeCtxMenu() {
+      document.getElementById('ctx-menu').classList.remove('open');
+    }
+    function toggleCtxCheck(id) {
+      document.getElementById(id).classList.toggle('checked');
+    }
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.ctx-menu')) closeCtxMenu();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeCtxMenu();
+    });
+  </script>
+</body>
+</html>
