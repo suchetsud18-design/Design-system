@@ -523,12 +523,6 @@ npx shadcn@latest add accordion</pre></div>
     </main>
   </div>
 
-  <!-- Mobile toggle -->
-  <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
-    </svg>
-  </button>
 
   <script>
     function toggleAccordion(trigger) {
@@ -536,14 +530,6 @@ npx shadcn@latest add accordion</pre></div>
       const isOpen = item.hasAttribute('data-open');
       item.closest('.accordion').querySelectorAll('.accordion-item[data-open]').forEach(el => el.removeAttribute('data-open'));
       if (!isOpen) item.setAttribute('data-open', '');
-    }
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('open');
-      document.getElementById('overlay').classList.toggle('open');
-    }
-    function closeSidebar() {
-      document.getElementById('sidebar').classList.remove('open');
-      document.getElementById('overlay').classList.remove('open');
     }
   </script>
   <script src="sidebar.js"></script>

@@ -1,4 +1,5 @@
 (function () {
+  /* ── Data ─────────────────────────────────────────────────────── */
   const page = window.location.pathname.split('/').pop() || '';
 
   const foundations = [
@@ -60,7 +61,9 @@
     return `<a class="sidebar-item${active}" href="${href}">${svg}${label}</a>`;
   }
 
-  const html = `
+  /* ── Inject sidebar HTML ───────────────────────────────────────── */
+  const sidebar = document.getElementById('sidebar');
+  sidebar.innerHTML = `
     <div class="sidebar-header">
       <div class="sidebar-logo">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
@@ -95,5 +98,110 @@
       </a>
     </div>`;
 
-  document.getElementById('sidebar').innerHTML = html;
+  /* ── Toggle / close ────────────────────────────────────────────── */
+  var hamburgerBtn = null;
+
+  function toggleSidebar() {
+    var isOpen = sidebar.classList.toggle('open');
+    var overlay = document.getElementById('overlay');
+    if (overlay) overlay.classList.toggle('open', isOpen);
+    if (hamburgerBtn) hamburgerBtn.setAttribute('aria-expanded', String(isOpen));
+  }
+
+  function closeSidebar() {
+    sidebar.classList.remove('open');
+    var overlay = document.getElementById('overlay');
+    if (overlay) overlay.classList.remove('open');
+    if (hamburgerBtn) hamburgerBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  window.toggleSidebar = toggleSidebar;
+  window.closeSidebar  = closeSidebar;
+
+  /* Close on Escape */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeSidebar();
+  });
+
+  /* Close sidebar after link tap on mobile */
+  sidebar.addEventListener('click', function (e) {
+    var link = e.target.closest('a[href]');
+    if (link && window.matchMedia('(max-width: 768px)').matches) {
+      closeSidebar();
+    }
+  });
+
+  /* ── Hamburger button (injected into topbar on mobile) ─────────── */
+  var topbar = document.querySelector('.topbar');
+  if (topbar) {
+    hamburgerBtn = document.createElement('button');
+    hamburgerBtn.className = 'topbar-hamburger';
+    hamburgerBtn.setAttribute('aria-label', 'Toggle navigation');
+    hamburgerBtn.setAttribute('aria-expanded', 'false');
+    hamburgerBtn.setAttribute('aria-controls', 'sidebar');
+    hamburgerBtn.innerHTML =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">' +
+        '<line x1="3" y1="6" x2="21" y2="6"/>' +
+        '<line x1="3" y1="12" x2="21" y2="12"/>' +
+        '<line x1="3" y1="18" x2="21" y2="18"/>' +
+      '</svg>';
+    hamburgerBtn.addEventListener('click', toggleSidebar);
+    topbar.insertBefore(hamburgerBtn, topbar.firstChild);
+  }
+
+  /* ── Inject responsive CSS ─────────────────────────────────────── */
+  var style = document.createElement('style');
+  style.textContent = [
+    /* Hamburger button — hidden on desktop, shown on mobile */
+    '.topbar-hamburger{display:none;align-items:center;justify-content:center;',
+    'width:36px;height:36px;flex-shrink:0;border:none;background:none;cursor:pointer;',
+    'color:hsl(var(--foreground));border-radius:var(--radius-md);}',
+    '.topbar-hamburger:hover{background:hsl(var(--muted));}',
+    '.topbar-hamburger svg{width:20px;height:20px;}',
+
+    /* Desktop: sidebar already sticky via existing CSS.               */
+    /* Guarantee main area doesn't clip the sticky sidebar.            */
+    '@media(min-width:769px){',
+    'body{overflow:hidden;}',
+    '.main{overflow-y:auto;height:100vh;}',
+    '}',
+
+    /* Mobile: drawer */
+    '@media(max-width:768px){',
+    '.topbar-hamburger{display:flex;}',
+    /* Push topbar actions so breadcrumb doesn't collide with buttons */
+    '.topbar{padding:0 1rem;}',
+    /* Sidebar slides in as a drawer */
+    '.sidebar{position:fixed;top:0;left:0;height:100vh;z-index:40;',
+    'transform:translateX(-100%);',
+    'transition:transform var(--duration-300,300ms) var(--easing-out,ease-out);',
+    'box-shadow:var(--shadow-xl,0 20px 60px rgba(0,0,0,.3));}',
+    '.sidebar.open{transform:translateX(0);}',
+    /* Overlay behind drawer */
+    '.sidebar-overlay{display:none;position:fixed;inset:0;z-index:30;',
+    'background:rgba(0,0,0,.45);backdrop-filter:blur(2px);}',
+    '.sidebar-overlay.open{display:block;}',
+    '}',
+  ].join('');
+  document.head.appendChild(style);
+
+  /* ── Scroll-position preservation ─────────────────────────────── */
+  var SCROLL_KEY = 'ds-sidebar-scroll';
+
+  /* Restore saved scroll, or scroll active item into view */
+  var saved = sessionStorage.getItem(SCROLL_KEY);
+  if (saved !== null) {
+    sidebar.scrollTop = parseInt(saved, 10) || 0;
+  } else {
+    var activeItem = sidebar.querySelector('.sidebar-item.active');
+    if (activeItem) {
+      activeItem.scrollIntoView({ block: 'nearest' });
+    }
+  }
+
+  /* Save scroll before leaving page */
+  window.addEventListener('beforeunload', function () {
+    sessionStorage.setItem(SCROLL_KEY, String(sidebar.scrollTop));
+  });
+
 })();

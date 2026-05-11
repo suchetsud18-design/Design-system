@@ -245,9 +245,6 @@
   ═══════════════════════════════════════════════════════════ -->
   <aside class="sidebar" id="sidebar"></aside>
   <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
-  <button class="sidebar-toggle" onclick="toggleSidebar()">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-  </button>
 
   <!-- ═══════════════════════════════════════════════════════════
        MAIN CONTENT
@@ -692,14 +689,6 @@ const [checked, setChecked] = React.useState(false)
   </main>
 
   <script>
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('open');
-      document.getElementById('sidebarOverlay').classList.toggle('open');
-    }
-    function closeSidebar() {
-      document.getElementById('sidebar').classList.remove('open');
-      document.getElementById('sidebarOverlay').classList.remove('open');
-    }
 
     const CHECK_SVG = '<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1,4 3.5,6.5 9,1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     const DASH_SVG  = '<svg width="8" height="2" viewBox="0 0 8 2" fill="none"><line x1="0" y1="1" x2="8" y2="1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>';
