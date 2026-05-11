@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Theming — Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../src/tokens/design-tokens.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { font-family: var(--font-sans); background: hsl(var(--background)); color: hsl(var(--foreground)); font-size: var(--text-base); line-height: var(--leading-6); display: flex; min-height: 100vh; }
+
+    /* ── Sidebar ─────────────────────────────────────────────── */
+    .sidebar { width: 16rem; flex-shrink: 0; background: hsl(var(--sidebar)); border-right: 1px solid hsl(var(--sidebar-border)); display: flex; flex-direction: column; height: 100vh; position: sticky; top: 0; overflow-y: auto; }
+    .sidebar-header { display: flex; align-items: center; gap: .625rem; padding: 1rem; border-bottom: 1px solid hsl(var(--sidebar-border)); flex-shrink: 0; }
+    .sidebar-logo { width: 28px; height: 28px; background: hsl(var(--sidebar-primary)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sidebar-logo svg { color: hsl(var(--sidebar-primary-foreground)); }
+    .sidebar-brand { display: flex; flex-direction: column; }
+    .sidebar-brand-name { font-size: var(--text-sm); font-weight: var(--font-semibold); color: hsl(var(--sidebar-foreground)); line-height: var(--leading-5); }
+    .sidebar-brand-sub { font-size: var(--text-xs); color: hsl(var(--sidebar-accent-foreground)); line-height: var(--leading-4); }
+    .sidebar-nav { flex: 1; padding: .5rem; display: flex; flex-direction: column; gap: .25rem; }
+    .sidebar-group { display: flex; flex-direction: column; gap: .125rem; }
+    .sidebar-group-label { font-size: var(--text-xs); font-weight: var(--font-medium); color: hsl(var(--sidebar-accent-foreground)); letter-spacing: var(--tracking-wide); text-transform: uppercase; padding: .75rem .75rem .25rem; }
+    .sidebar-item { display: flex; align-items: center; gap: .625rem; padding: .375rem .75rem; border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: var(--font-medium); color: hsl(var(--sidebar-foreground)); text-decoration: none; cursor: pointer; border: none; background: none; width: 100%; text-align: left; transition: background var(--duration-150) var(--easing-out); }
+    .sidebar-item:hover { background: hsl(var(--sidebar-accent)); color: hsl(var(--sidebar-accent-foreground)); }
+    .sidebar-item.active { background: hsl(var(--sidebar-primary)); color: hsl(var(--sidebar-primary-foreground)); }
+    .sidebar-item svg { width: 16px; height: 16px; flex-shrink: 0; opacity: .8; }
+    .sidebar-item.active svg { opacity: 1; }
+    .sidebar-separator { height: 1px; background: hsl(var(--sidebar-border)); margin: .25rem .75rem; }
+    .sidebar-footer { padding: .75rem; border-top: 1px solid hsl(var(--sidebar-border)); flex-shrink: 0; }
+    .sidebar-footer-item { display: flex; align-items: center; gap: .625rem; padding: .375rem .75rem; border-radius: var(--radius-md); font-size: var(--text-sm); color: hsl(var(--sidebar-foreground)); text-decoration: none; }
+    .sidebar-footer-item:hover { background: hsl(var(--sidebar-accent)); }
+    .sidebar-footer-item svg { width: 16px; height: 16px; opacity: .7; }
+    .sidebar-toggle { display: none; }
+
+    /* ── Main ────────────────────────────────────────────────── */
+    .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .topbar { height: 56px; flex-shrink: 0; border-bottom: 1px solid hsl(var(--border)); display: flex; align-items: center; padding: 0 2rem; gap: 1rem; position: sticky; top: 0; background: hsl(var(--background) / .9); backdrop-filter: blur(8px); z-index: 20; }
+    .topbar-breadcrumb { display: flex; align-items: center; gap: .5rem; font-size: var(--text-sm); color: hsl(var(--muted-foreground)); }
+    .topbar-breadcrumb span { color: hsl(var(--foreground)); font-weight: var(--font-medium); }
+    .topbar-actions { margin-left: auto; display: flex; align-items: center; gap: .5rem; }
+    .topbar-btn { display: inline-flex; align-items: center; gap: .375rem; font-size: var(--text-sm); padding: .375rem .75rem; border: 1px solid hsl(var(--border)); border-radius: var(--radius-md); background: none; cursor: pointer; color: hsl(var(--foreground)); font-family: var(--font-sans); text-decoration: none; transition: background var(--duration-150) var(--easing-out); }
+    .topbar-btn:hover { background: hsl(var(--muted)); }
+    .topbar-btn svg { width: 14px; height: 14px; }
+    .content { flex: 1; padding: 3rem 2rem; max-width: 800px; }
+
+    /* ── Page structure ──────────────────────────────────────── */
+    .page-header { margin-bottom: 3rem; border-bottom: 1px solid hsl(var(--border)); padding-bottom: 2rem; }
+    .page-header .lbl { display: inline-flex; align-items: center; font-size: var(--text-xs); font-weight: var(--font-medium); color: hsl(var(--muted-foreground)); letter-spacing: var(--tracking-wide); text-transform: uppercase; margin-bottom: .5rem; }
+    .page-header h1 { font-size: var(--text-4xl); font-weight: var(--font-bold); line-height: var(--leading-10); letter-spacing: var(--tracking-tight); margin-bottom: .5rem; }
+    .page-header p { color: hsl(var(--muted-foreground)); max-width: 48rem; font-size: var(--text-lg); line-height: var(--leading-7); }
+    .section { margin-bottom: 3rem; }
+    .section-title { font-size: var(--text-xl); font-weight: var(--font-semibold); margin-bottom: 1rem; padding-bottom: .5rem; border-bottom: 1px solid hsl(var(--border)); }
+    .section-sub { font-size: var(--text-sm); color: hsl(var(--muted-foreground)); margin-bottom: 1.5rem; }
+    .prose p { color: hsl(var(--muted-foreground)); margin-bottom: 1rem; line-height: var(--leading-7); }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose code { font-family: var(--font-mono); font-size: var(--text-xs); background: hsl(var(--muted)); padding: .1rem .35rem; border-radius: var(--radius-sm); border: 1px solid hsl(var(--border)); color: hsl(var(--foreground)); }
+
+    /* ── Code blocks ─────────────────────────────────────────── */
+    .code-block { background: hsl(var(--muted)); border: 1px solid hsl(var(--border)); border-radius: var(--radius-md); overflow: hidden; margin-bottom: 1rem; }
+    .code-header { display: flex; align-items: center; gap: .5rem; padding: .5rem .875rem; border-bottom: 1px solid hsl(var(--border)); background: hsl(var(--background)); }
+    .code-lang { font-family: var(--font-mono); font-size: var(--text-xs); color: hsl(var(--muted-foreground)); }
+    .code-filename { font-family: var(--font-mono); font-size: var(--text-xs); color: hsl(var(--muted-foreground)); margin-left: auto; }
+    .code-body { padding: 1rem 1.25rem; overflow-x: auto; }
+    .code-body pre { font-family: var(--font-mono); font-size: var(--text-sm); line-height: var(--leading-6); white-space: pre; color: hsl(var(--foreground)); }
+    .code-kw  { color: #7c3aed; }
+    .code-str { color: #059669; }
+    .code-cmt { color: hsl(var(--muted-foreground)); font-style: italic; }
+    .code-fn  { color: #0284c7; }
+    .code-val { color: #b45309; }
+
+    /* ── Token swatch table ──────────────────────────────────── */
+    .token-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); margin-bottom: 1.5rem; }
+    .token-table th { text-align: left; font-weight: var(--font-semibold); padding: .5rem .75rem; border-bottom: 2px solid hsl(var(--border)); font-size: var(--text-xs); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+    .token-table td { padding: .5rem .75rem; border-bottom: 1px solid hsl(var(--border)); vertical-align: middle; }
+    .token-table tr:last-child td { border-bottom: none; }
+    .token-table code { font-family: var(--font-mono); font-size: var(--text-xs); }
+    .tok-swatch { width: 28px; height: 28px; border-radius: var(--radius-sm); border: 1px solid hsl(var(--border)); flex-shrink: 0; }
+    .tok-name { font-family: var(--font-mono); font-size: var(--text-xs); font-weight: var(--font-medium); }
+    .tok-value { font-family: var(--font-mono); font-size: var(--text-xs); color: hsl(var(--muted-foreground)); }
+    .tok-usage { font-size: var(--text-xs); color: hsl(var(--muted-foreground)); }
+    .swatch-pair { display: flex; align-items: center; gap: .375rem; }
+
+    /* ── Dark mode demo ──────────────────────────────────────── */
+    .mode-demo { border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.5rem; }
+    .mode-demo-tabs { display: flex; border-bottom: 1px solid hsl(var(--border)); background: hsl(var(--muted)); }
+    .mode-tab { padding: .5rem 1rem; font-size: var(--text-sm); font-weight: var(--font-medium); cursor: pointer; border: none; background: none; color: hsl(var(--muted-foreground)); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color var(--duration-150) var(--easing-out); }
+    .mode-tab.active { color: hsl(var(--foreground)); border-bottom-color: hsl(var(--foreground)); background: hsl(var(--background)); }
+    .mode-panel { padding: 1.5rem; }
+    .mode-panel.hidden { display: none; }
+    .mini-card { border-radius: var(--radius-lg); padding: 1rem 1.25rem; display: flex; align-items: center; gap: .75rem; }
+    .mini-avatar { width: 36px; height: 36px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; font-size: var(--text-sm); font-weight: var(--font-bold); flex-shrink: 0; }
+    .mini-btn { display: inline-flex; align-items: center; padding: .375rem .875rem; border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: var(--font-medium); cursor: pointer; border: none; }
+
+    /* ── Callout ─────────────────────────────────────────────── */
+    .callout { border: 1px solid hsl(var(--border)); border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-bottom: 1rem; display: flex; gap: .75rem; background: hsl(var(--muted) / .5); }
+    .callout-icon { width: 18px; height: 18px; flex-shrink: 0; margin-top: .125rem; color: hsl(var(--muted-foreground)); }
+    .callout-body { font-size: var(--text-sm); color: hsl(var(--muted-foreground)); line-height: var(--leading-6); }
+    .callout-body strong { color: hsl(var(--foreground)); }
+    .callout-body code { font-family: var(--font-mono); font-size: var(--text-xs); background: hsl(var(--background)); padding: .1rem .35rem; border-radius: var(--radius-sm); border: 1px solid hsl(var(--border)); color: hsl(var(--foreground)); }
+
+    /* ── Token group cards ───────────────────────────────────── */
+    .token-group-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+    @media (max-width: 600px) { .token-group-grid { grid-template-columns: 1fr; } }
+    .token-group-card { border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg); padding: 1.25rem; }
+    .tg-title { font-size: var(--text-sm); font-weight: var(--font-semibold); margin-bottom: .25rem; }
+    .tg-desc  { font-size: var(--text-xs); color: hsl(var(--muted-foreground)); margin-bottom: .875rem; line-height: var(--leading-5); }
+    .tg-vars  { display: flex; flex-direction: column; gap: .25rem; }
+    .tg-var   { font-family: var(--font-mono); font-size: 11px; color: hsl(var(--muted-foreground)); display: flex; align-items: center; gap: .5rem; }
+    .tg-dot   { width: 10px; height: 10px; border-radius: 50%; border: 1px solid hsl(var(--border)); flex-shrink: 0; }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar"></aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-breadcrumb">
+        Getting Started
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span>Theming</span>
+      </div>
+      <div class="topbar-actions">
+        <a class="topbar-btn" href="https://ui.shadcn.com/docs/theming" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          shadcn/ui Theming
+        </a>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <header class="page-header">
+        <span class="lbl">Getting Started</span>
+        <h1>Theming</h1>
+        <p>How CSS custom properties, Figma tokens, and dark mode fit together — and how to override anything.</p>
+      </header>
+
+      <!-- ── CSS variable format ──────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">How CSS variables work</h2>
+        <p class="section-sub">All color tokens are stored as bare HSL triplets — three numbers separated by spaces, with no <code>hsl()</code> wrapper.</p>
+
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">css</span><span class="code-filename">design-tokens.css</span></div>
+          <div class="code-body"><pre><span class="code-cmt">/* Figma Variable: Shadcn/ui/primary → neutral/900 → #171717 */</span>
+--primary: <span class="code-val">0 0% 9%</span>;             <span class="code-cmt">/* H S% L% — no hsl() wrapper */</span>
+--primary-foreground: <span class="code-val">0 0% 98%</span>;  <span class="code-cmt">/* #fafafa */</span></pre></div>
+        </div>
+
+        <div class="prose">
+          <p>Separating the triplet from the <code>hsl()</code> function is what makes arbitrary opacity composition possible anywhere in your CSS and Tailwind classes — no extra token needed for each opacity step:</p>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">css</span></div>
+          <div class="code-body"><pre><span class="code-cmt">/* Full opacity — standard use */</span>
+color: hsl(<span class="code-fn">var(--primary)</span>);
+
+<span class="code-cmt">/* 50% opacity — no extra token needed */</span>
+color: hsl(<span class="code-fn">var(--primary)</span> / 0.5);
+
+<span class="code-cmt">/* 10% opacity overlay */</span>
+background: hsl(<span class="code-fn">var(--primary)</span> / 0.1);
+
+<span class="code-cmt">/* Tailwind — same syntax via tw arbitrary values */</span>
+&lt;div className=<span class="code-str">"bg-[hsl(var(--primary)/0.1)]"</span> /&gt;</pre></div>
+        </div>
+      </section>
+
+      <!-- ── Token groups ─────────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Semantic token groups</h2>
+        <p class="section-sub">Tokens are organized by purpose, not by raw value. This is what makes a rebrand possible without touching component code.</p>
+
+        <div class="token-group-grid">
+          <div class="token-group-card">
+            <div class="tg-title">Background &amp; Foreground</div>
+            <div class="tg-desc">Page-level surface and text colors. Every component inherits from these.</div>
+            <div class="tg-vars">
+              <div class="tg-var"><span class="tg-dot" style="background:#fff;"></span>--background</div>
+              <div class="tg-var"><span class="tg-dot" style="background:#0a0a0a;"></span>--foreground</div>
+            </div>
+          </div>
+          <div class="token-group-card">
+            <div class="tg-title">Primary</div>
+            <div class="tg-desc">The main action color. Used on default buttons, active states, and focus rings.</div>
+            <div class="tg-vars">
+              <div class="tg-var"><span class="tg-dot" style="background:#171717;"></span>--primary</div>
+              <div class="tg-var"><span class="tg-dot" style="background:#fafafa;border-color:#e5e5e5;"></span>--primary-foreground</div>
+              <div class="tg-var"><span class="tg-dot" style="background:#262626;"></span>--primary-hover</div>
+              <div class="tg-var"><span class="tg-dot" style="background:#333;"></span>--primary-active</div>
+              <div class="tg-var"><span class="tg-dot" style="background:#8c8c8c;"></span>--primary-disabled</div>
+            </div>
+          </div>
+          <div class="token-group-card">
+            <div class="tg-title">Secondary &amp; Muted</div>
+            <div class="tg-desc">Lower-emphasis surfaces. Secondary for ghost-like buttons; muted for backgrounds and helper text.</div>
+            <div class="tg-vars">
+              <div class="tg-var"><span class="tg-dot" style="background:#f5f5f5;"></span>--secondary</div>
+              <div class="tg-var"><span class="tg-dot" style="background:#0a0a0a;"></span>--secondary-foreground</div>
+              <div class="tg-var"><span class="tg-dot" style="background:#f5f5f5;"></span>--muted</div>
+              <div class="tg-var"><span class="tg-dot" style="background:#737373;"></span>--muted-foreground</div>
+            </div>
+          </div>
+          <div class="token-group-card">
+            <div class="tg-title">Destructive</div>
+            <div class="tg-desc">Error and danger actions. Used on destructive buttons, form errors, and toast alerts.</div>
+            <div class="tg-vars">
+              <div class="tg-var"><span class="tg-dot" style="background:#dc2626;"></span>--destructive</div>
+              <div class="tg-var"><span class="tg-dot" style="background:#fafafa;border-color:#e5e5e5;"></span>--destructive-foreground</div>
+              <div class="tg-var"><span class="tg-dot" style="background:#b91c1c;"></span>--destructive-hover</div>
+            </div>
+          </div>
+          <div class="token-group-card">
+            <div class="tg-title">Border, Input &amp; Ring</div>
+            <div class="tg-desc">Structural tokens for dividers, form field borders, and keyboard focus rings.</div>
+            <div class="tg-vars">
+              <div class="tg-var"><span class="tg-dot" style="background:#e5e5e5;"></span>--border</div>
+              <div class="tg-var"><span class="tg-dot" style="background:#e5e5e5;"></span>--input</div>
+              <div class="tg-var"><span class="tg-dot" style="background:#737373;"></span>--ring</div>
+            </div>
+          </div>
+          <div class="token-group-card">
+            <div class="tg-title">Accent</div>
+            <div class="tg-desc">Hover and selection states for interactive items that aren't primary actions — dropdown items, menu rows, sidebar links.</div>
+            <div class="tg-vars">
+              <div class="tg-var"><span class="tg-dot" style="background:#f5f5f5;"></span>--accent</div>
+              <div class="tg-var"><span class="tg-dot" style="background:#171717;"></span>--accent-foreground</div>
+              <div class="tg-var"><span class="tg-dot" style="background:#e3e3e3;"></span>--accent-hover</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Semantic token reference table -->
+        <table class="token-table">
+          <thead>
+            <tr>
+              <th style="width:28px;"></th>
+              <th>Token</th>
+              <th>Light value</th>
+              <th>Dark value</th>
+              <th>Used for</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="tok-swatch" style="background:#fff;"></div></td>
+              <td class="tok-name">--background</td>
+              <td class="tok-value">0 0% 100%</td>
+              <td class="tok-value">0 0% 3.9%</td>
+              <td class="tok-usage">Page background</td>
+            </tr>
+            <tr>
+              <td><div class="tok-swatch" style="background:#0a0a0a;"></div></td>
+              <td class="tok-name">--foreground</td>
+              <td class="tok-value">0 0% 3.9%</td>
+              <td class="tok-value">0 0% 98%</td>
+              <td class="tok-usage">Body text</td>
+            </tr>
+            <tr>
+              <td><div class="tok-swatch" style="background:#171717;"></div></td>
+              <td class="tok-name">--primary</td>
+              <td class="tok-value">0 0% 9%</td>
+              <td class="tok-value">0 0% 98%</td>
+              <td class="tok-usage">CTA buttons, active items</td>
+            </tr>
+            <tr>
+              <td><div class="tok-swatch" style="background:#f5f5f5;"></div></td>
+              <td class="tok-name">--secondary</td>
+              <td class="tok-value">0 0% 96.1%</td>
+              <td class="tok-value">0 0% 14.9%</td>
+              <td class="tok-usage">Secondary buttons</td>
+            </tr>
+            <tr>
+              <td><div class="tok-swatch" style="background:#f5f5f5;"></div></td>
+              <td class="tok-name">--muted</td>
+              <td class="tok-value">0 0% 96.1%</td>
+              <td class="tok-value">0 0% 14.9%</td>
+              <td class="tok-usage">Subtle backgrounds</td>
+            </tr>
+            <tr>
+              <td><div class="tok-swatch" style="background:#737373;"></div></td>
+              <td class="tok-name">--muted-foreground</td>
+              <td class="tok-value">0 0% 45.1%</td>
+              <td class="tok-value">0 0% 63.9%</td>
+              <td class="tok-usage">Helper text, captions</td>
+            </tr>
+            <tr>
+              <td><div class="tok-swatch" style="background:#dc2626;"></div></td>
+              <td class="tok-name">--destructive</td>
+              <td class="tok-value">0 72.2% 50.6%</td>
+              <td class="tok-value">0 62.8% 30.6%</td>
+              <td class="tok-usage">Error states, delete actions</td>
+            </tr>
+            <tr>
+              <td><div class="tok-swatch" style="background:#e5e5e5;"></div></td>
+              <td class="tok-name">--border</td>
+              <td class="tok-value">0 0% 89.8%</td>
+              <td class="tok-value">0 0% 14.9%</td>
+              <td class="tok-usage">Dividers, card edges</td>
+            </tr>
+            <tr>
+              <td><div class="tok-swatch" style="background:#737373;"></div></td>
+              <td class="tok-name">--ring</td>
+              <td class="tok-value">0 0% 45.1%</td>
+              <td class="tok-value">0 0% 83.1%</td>
+              <td class="tok-usage">Focus ring (keyboard nav)</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ── Dark mode ────────────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Dark mode</h2>
+        <p class="section-sub">Dark mode values are defined in <code>design-tokens.css</code> under <code>:root.dark</code> and <code>:root[data-theme="dark"]</code>. There are two ways to activate them.</p>
+
+        <!-- Live demo -->
+        <div class="mode-demo" id="modeDemo">
+          <div class="mode-demo-tabs">
+            <button class="mode-tab active" onclick="setMode('light')">Light</button>
+            <button class="mode-tab" onclick="setMode('dark')">Dark</button>
+          </div>
+          <div class="mode-panel" id="lightPanel">
+            <div class="mini-card" style="border:1px solid hsl(var(--border));background:hsl(var(--background));gap:.75rem;">
+              <div class="mini-avatar" style="background:hsl(var(--primary));color:hsl(var(--primary-foreground));">JD</div>
+              <div style="flex:1;">
+                <div style="font-size:var(--text-sm);font-weight:var(--font-semibold);color:hsl(var(--foreground));">Jane Doe</div>
+                <div style="font-size:var(--text-xs);color:hsl(var(--muted-foreground));">Product designer</div>
+              </div>
+              <button class="mini-btn" style="background:hsl(var(--primary));color:hsl(var(--primary-foreground));">Follow</button>
+            </div>
+          </div>
+          <div class="mode-panel hidden" id="darkPanel">
+            <div style="border-radius:var(--radius-lg);padding:1.5rem;background:#0a0a0a;">
+              <div class="mini-card" style="border:1px solid hsl(0 0% 14.9%);background:#0a0a0a;gap:.75rem;">
+                <div class="mini-avatar" style="background:hsl(0 0% 98%);color:hsl(0 0% 9%);">JD</div>
+                <div style="flex:1;">
+                  <div style="font-size:var(--text-sm);font-weight:var(--font-semibold);color:hsl(0 0% 98%);">Jane Doe</div>
+                  <div style="font-size:var(--text-xs);color:hsl(0 0% 63.9%);">Product designer</div>
+                </div>
+                <button class="mini-btn" style="background:hsl(0 0% 98%);color:hsl(0 0% 9%);">Follow</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="section-sub">The card above shows the same component with light and dark token values — no code changes, only the active token set changes.</p>
+
+        <h3 style="font-size:var(--text-base);font-weight:var(--font-semibold);margin-bottom:.75rem;margin-top:1.5rem;">Option A — next-themes (recommended)</h3>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">bash</span></div>
+          <div class="code-body"><pre>npm install next-themes</pre></div>
+        </div>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">tsx</span><span class="code-filename">src/app/layout.tsx</span></div>
+          <div class="code-body"><pre><span class="code-kw">import</span> { ThemeProvider } <span class="code-kw">from</span> <span class="code-str">'next-themes'</span>
+
+<span class="code-kw">export default function</span> <span class="code-fn">RootLayout</span>({
+  children,
+}: { children: React.ReactNode }) {
+  <span class="code-kw">return</span> (
+    &lt;html lang=<span class="code-str">"en"</span> suppressHydrationWarning&gt;
+      &lt;body&gt;
+        &lt;ThemeProvider
+          attribute=<span class="code-str">"class"</span>
+          defaultTheme=<span class="code-str">"system"</span>
+          enableSystem
+        &gt;
+          {children}
+        &lt;/ThemeProvider&gt;
+      &lt;/body&gt;
+    &lt;/html&gt;
+  )
+}</pre></div>
+        </div>
+        <div class="callout">
+          <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div class="callout-body"><strong>Why <code>attribute="class"</code>?</strong> next-themes adds a class (<code>dark</code>) to <code>&lt;html&gt;</code>. Our token file uses <code>:root.dark</code> to match this — so no extra configuration is needed.</div>
+        </div>
+
+        <h3 style="font-size:var(--text-base);font-weight:var(--font-semibold);margin-bottom:.75rem;margin-top:1.5rem;">Option B — manual data attribute</h3>
+        <p class="section-sub">If you prefer not to use a library, toggle the attribute directly on the <code>&lt;html&gt;</code> element.</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">typescript</span></div>
+          <div class="code-body"><pre><span class="code-cmt">// Toggle dark mode</span>
+document.documentElement.setAttribute(<span class="code-str">'data-theme'</span>, <span class="code-str">'dark'</span>)
+
+<span class="code-cmt">// Toggle light mode</span>
+document.documentElement.setAttribute(<span class="code-str">'data-theme'</span>, <span class="code-str">'light'</span>)
+
+<span class="code-cmt">// Or use the class</span>
+document.documentElement.classList.toggle(<span class="code-str">'dark'</span>)</pre></div>
+        </div>
+      </section>
+
+      <!-- ── Customizing tokens ───────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Customizing tokens</h2>
+        <p class="section-sub">Override any token by re-declaring it in your <code>globals.css</code> after the import. You never need to edit <code>design-tokens.css</code> directly — it should be treated as a generated file.</p>
+
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">css</span><span class="code-filename">src/app/globals.css</span></div>
+          <div class="code-body"><pre><span class="code-str">@import</span> <span class="code-fn">'../styles/design-tokens.css'</span>;
+
+<span class="code-kw">@tailwind</span> base;
+<span class="code-kw">@tailwind</span> components;
+<span class="code-kw">@tailwind</span> utilities;
+
+<span class="code-cmt">/* Brand overrides — applied after the token file */</span>
+:root {
+  <span class="code-cmt">/* Swap primary to a brand blue */</span>
+  --primary:            <span class="code-val">221 83% 53%</span>;
+  --primary-foreground: <span class="code-val">0 0% 100%</span>;
+  --primary-hover:      <span class="code-val">221 83% 45%</span>;
+  --primary-active:     <span class="code-val">221 83% 38%</span>;
+
+  <span class="code-cmt">/* Sharper border radius */</span>
+  --radius-sm: <span class="code-val">0.125rem</span>;
+  --radius-md: <span class="code-val">0.25rem</span>;
+  --radius-lg: <span class="code-val">0.375rem</span>;
+
+  <span class="code-cmt">/* Custom brand font */</span>
+  --font-sans: <span class="code-val">"DM Sans"</span>, ui-sans-serif, system-ui, sans-serif;
+}
+
+<span class="code-cmt">/* Dark mode overrides */</span>
+:root.dark {
+  --primary:            <span class="code-val">213 94% 68%</span>;
+  --primary-foreground: <span class="code-val">0 0% 9%</span>;
+}</pre></div>
+        </div>
+
+        <div class="callout">
+          <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <div class="callout-body"><strong>Keep both modes in sync.</strong> When you override a light mode token, always add a matching dark mode override. A <code>--primary</code> that looks great at <code>221 83% 53%</code> in light mode is likely too bright in dark mode without adjustment.</div>
+        </div>
+      </section>
+
+      <!-- ── Component tokens ─────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Component-level tokens</h2>
+        <p class="section-sub">Some components expose their own tokens that alias the global ones. These let you tune individual components without touching global values.</p>
+
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">css</span><span class="code-filename">design-tokens.css (excerpt)</span></div>
+          <div class="code-body"><pre><span class="code-cmt">/* Button component tokens */</span>
+--button-height-sm:     <span class="code-val">2rem</span>;
+--button-height-md:     <span class="code-val">2.5rem</span>;
+--button-height-lg:     <span class="code-val">2.75rem</span>;
+--button-padding-x-md:  <span class="code-val">1rem</span>;
+--button-font-weight:   <span class="code-val">var(--font-medium)</span>;
+--button-radius:        <span class="code-val">var(--radius-md)</span>;
+
+<span class="code-cmt">/* Input component tokens */</span>
+--input-height-md:      <span class="code-val">2.5rem</span>;
+--input-padding-x:      <span class="code-val">0.75rem</span>;
+--input-radius:         <span class="code-val">var(--radius-md)</span>;
+
+<span class="code-cmt">/* Card component tokens */</span>
+--card-padding:         <span class="code-val">var(--space-6)</span>;
+--card-radius:          <span class="code-val">var(--radius-lg)</span>;
+--card-shadow:          <span class="code-val">var(--shadow-sm)</span>;</pre></div>
+        </div>
+
+        <p class="section-sub">To make all buttons taller with rounded corners without changing any other component, override only the button tokens:</p>
+
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">css</span></div>
+          <div class="code-body"><pre>:root {
+  --button-height-md: <span class="code-val">3rem</span>;
+  --button-radius:    <span class="code-val">var(--radius-full)</span>;   <span class="code-cmt">/* pill shape */</span>
+}</pre></div>
+        </div>
+      </section>
+
+      <!-- ── Non-color tokens ─────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Beyond color</h2>
+        <p class="section-sub">The token file covers far more than color. Every spatial and typographic decision in the system is a token.</p>
+
+        <div class="token-group-grid">
+          <div class="token-group-card">
+            <div class="tg-title">Typography</div>
+            <div class="tg-desc">Font family, size (xs–9xl), weight (100–900), line height, and letter spacing — all from Figma.</div>
+            <div class="tg-vars">
+              <div class="tg-var">--font-sans, --font-mono</div>
+              <div class="tg-var">--text-xs → --text-9xl</div>
+              <div class="tg-var">--font-normal → --font-bold</div>
+              <div class="tg-var">--leading-3 → --leading-10</div>
+              <div class="tg-var">--tracking-tighter → --tracking-widest</div>
+            </div>
+          </div>
+          <div class="token-group-card">
+            <div class="tg-title">Spacing</div>
+            <div class="tg-desc">A 4px-base scale from 0 to 96 (384px). Used for padding, margin, and gap throughout.</div>
+            <div class="tg-vars">
+              <div class="tg-var">--space-0 (0px)</div>
+              <div class="tg-var">--space-4 (16px)</div>
+              <div class="tg-var">--space-8 (32px)</div>
+              <div class="tg-var">--space-16 (64px)</div>
+              <div class="tg-var">--space-96 (384px)</div>
+            </div>
+          </div>
+          <div class="token-group-card">
+            <div class="tg-title">Border Radius</div>
+            <div class="tg-desc">Ten steps from none (0) to full (9999px), matching Tailwind's scale exactly.</div>
+            <div class="tg-vars">
+              <div class="tg-var">--radius-none (0px)</div>
+              <div class="tg-var">--radius-sm (4px)</div>
+              <div class="tg-var">--radius-md (6px)</div>
+              <div class="tg-var">--radius-lg (8px)</div>
+              <div class="tg-var">--radius-full (9999px)</div>
+            </div>
+          </div>
+          <div class="token-group-card">
+            <div class="tg-title">Animation</div>
+            <div class="tg-desc">Duration (75ms–1000ms) and easing functions for all transitions and animations.</div>
+            <div class="tg-vars">
+              <div class="tg-var">--duration-150 (150ms)</div>
+              <div class="tg-var">--duration-300 (300ms)</div>
+              <div class="tg-var">--easing-out</div>
+              <div class="tg-var">--easing-in-out</div>
+              <div class="tg-var">--easing-bounce</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    function setMode(mode) {
+      document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.mode-panel').forEach(p => p.classList.add('hidden'));
+      event.target.classList.add('active');
+      document.getElementById(mode + 'Panel').classList.remove('hidden');
+    }
+  </script>
+  <script src="sidebar.js"></script>
+</body>
+</html>

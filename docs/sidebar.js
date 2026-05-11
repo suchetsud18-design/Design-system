@@ -55,6 +55,12 @@
     { href: 'tooltip.html',          icon: '<path d="M12 22C6.48 22 2 17.52 2 12S6.48 2 12 2s10 4.48 10 10-4.48 10-10 10z"/><path d="M12 8v4M12 16h.01"/>',                                                                                              label: 'Tooltip' },
   ];
 
+  const gettingStarted = [
+    { href: 'introduction.html', icon: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',                                                                                         label: 'Introduction' },
+    { href: 'installation.html', icon: '<polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>',                                                                                                                                             label: 'Installation' },
+    { href: 'theming.html',      icon: '<circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 1 0 4.93 19.07"/>',                                                                                                                                         label: 'Theming' },
+  ];
+
   function item(href, icon, label) {
     const active = href === page ? ' active' : '';
     const svg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${icon}</svg>`;
@@ -76,9 +82,7 @@
     <nav class="sidebar-nav">
       <div class="sidebar-group">
         <span class="sidebar-group-label">Getting Started</span>
-        <a class="sidebar-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Introduction</a>
-        <a class="sidebar-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/></svg>Installation</a>
-        <a class="sidebar-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 1 0 4.93 19.07"/></svg>Theming</a>
+        ${gettingStarted.map(g => item(g.href, g.icon, g.label)).join('\n        ')}
       </div>
       <div class="sidebar-separator"></div>
       <div class="sidebar-group">

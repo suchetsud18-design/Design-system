@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction — Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../src/tokens/design-tokens.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { font-family: var(--font-sans); background: hsl(var(--background)); color: hsl(var(--foreground)); font-size: var(--text-base); line-height: var(--leading-6); display: flex; min-height: 100vh; }
+
+    /* ── Sidebar ─────────────────────────────────────────────── */
+    .sidebar { width: 16rem; flex-shrink: 0; background: hsl(var(--sidebar)); border-right: 1px solid hsl(var(--sidebar-border)); display: flex; flex-direction: column; height: 100vh; position: sticky; top: 0; overflow-y: auto; }
+    .sidebar-header { display: flex; align-items: center; gap: .625rem; padding: 1rem; border-bottom: 1px solid hsl(var(--sidebar-border)); flex-shrink: 0; }
+    .sidebar-logo { width: 28px; height: 28px; background: hsl(var(--sidebar-primary)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sidebar-logo svg { color: hsl(var(--sidebar-primary-foreground)); }
+    .sidebar-brand { display: flex; flex-direction: column; }
+    .sidebar-brand-name { font-size: var(--text-sm); font-weight: var(--font-semibold); color: hsl(var(--sidebar-foreground)); line-height: var(--leading-5); }
+    .sidebar-brand-sub { font-size: var(--text-xs); color: hsl(var(--sidebar-accent-foreground)); line-height: var(--leading-4); }
+    .sidebar-nav { flex: 1; padding: .5rem; display: flex; flex-direction: column; gap: .25rem; }
+    .sidebar-group { display: flex; flex-direction: column; gap: .125rem; }
+    .sidebar-group-label { font-size: var(--text-xs); font-weight: var(--font-medium); color: hsl(var(--sidebar-accent-foreground)); letter-spacing: var(--tracking-wide); text-transform: uppercase; padding: .75rem .75rem .25rem; }
+    .sidebar-item { display: flex; align-items: center; gap: .625rem; padding: .375rem .75rem; border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: var(--font-medium); color: hsl(var(--sidebar-foreground)); text-decoration: none; cursor: pointer; border: none; background: none; width: 100%; text-align: left; transition: background var(--duration-150) var(--easing-out); }
+    .sidebar-item:hover { background: hsl(var(--sidebar-accent)); color: hsl(var(--sidebar-accent-foreground)); }
+    .sidebar-item.active { background: hsl(var(--sidebar-primary)); color: hsl(var(--sidebar-primary-foreground)); }
+    .sidebar-item svg { width: 16px; height: 16px; flex-shrink: 0; opacity: .8; }
+    .sidebar-item.active svg { opacity: 1; }
+    .sidebar-separator { height: 1px; background: hsl(var(--sidebar-border)); margin: .25rem .75rem; }
+    .sidebar-footer { padding: .75rem; border-top: 1px solid hsl(var(--sidebar-border)); flex-shrink: 0; }
+    .sidebar-footer-item { display: flex; align-items: center; gap: .625rem; padding: .375rem .75rem; border-radius: var(--radius-md); font-size: var(--text-sm); color: hsl(var(--sidebar-foreground)); text-decoration: none; }
+    .sidebar-footer-item:hover { background: hsl(var(--sidebar-accent)); }
+    .sidebar-footer-item svg { width: 16px; height: 16px; opacity: .7; }
+    .sidebar-toggle { display: none; }
+
+    /* ── Main ────────────────────────────────────────────────── */
+    .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .topbar { height: 56px; flex-shrink: 0; border-bottom: 1px solid hsl(var(--border)); display: flex; align-items: center; padding: 0 2rem; gap: 1rem; position: sticky; top: 0; background: hsl(var(--background) / .9); backdrop-filter: blur(8px); z-index: 20; }
+    .topbar-breadcrumb { display: flex; align-items: center; gap: .5rem; font-size: var(--text-sm); color: hsl(var(--muted-foreground)); }
+    .topbar-breadcrumb span { color: hsl(var(--foreground)); font-weight: var(--font-medium); }
+    .topbar-actions { margin-left: auto; display: flex; align-items: center; gap: .5rem; }
+    .topbar-btn { display: inline-flex; align-items: center; gap: .375rem; font-size: var(--text-sm); padding: .375rem .75rem; border: 1px solid hsl(var(--border)); border-radius: var(--radius-md); background: none; cursor: pointer; color: hsl(var(--foreground)); font-family: var(--font-sans); text-decoration: none; transition: background var(--duration-150) var(--easing-out); }
+    .topbar-btn:hover { background: hsl(var(--muted)); }
+    .topbar-btn svg { width: 14px; height: 14px; }
+    .content { flex: 1; padding: 3rem 2rem; max-width: 800px; }
+
+    /* ── Page structure ──────────────────────────────────────── */
+    .page-header { margin-bottom: 3rem; border-bottom: 1px solid hsl(var(--border)); padding-bottom: 2rem; }
+    .page-header .lbl { display: inline-flex; align-items: center; font-size: var(--text-xs); font-weight: var(--font-medium); color: hsl(var(--muted-foreground)); letter-spacing: var(--tracking-wide); text-transform: uppercase; margin-bottom: .5rem; }
+    .page-header h1 { font-size: var(--text-4xl); font-weight: var(--font-bold); line-height: var(--leading-10); letter-spacing: var(--tracking-tight); margin-bottom: .5rem; }
+    .page-header p { color: hsl(var(--muted-foreground)); max-width: 48rem; font-size: var(--text-lg); line-height: var(--leading-7); }
+    .section { margin-bottom: 3rem; }
+    .section-title { font-size: var(--text-xl); font-weight: var(--font-semibold); margin-bottom: 1rem; padding-bottom: .5rem; border-bottom: 1px solid hsl(var(--border)); }
+    .section-sub { font-size: var(--text-sm); color: hsl(var(--muted-foreground)); margin-bottom: 1.5rem; }
+    .prose p { color: hsl(var(--muted-foreground)); margin-bottom: 1rem; line-height: var(--leading-7); }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose strong { color: hsl(var(--foreground)); font-weight: var(--font-semibold); }
+
+    /* ── Stats grid ──────────────────────────────────────────── */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+    @media (max-width: 640px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    .stat-card { border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg); padding: 1.25rem; }
+    .stat-value { font-size: var(--text-3xl); font-weight: var(--font-bold); letter-spacing: var(--tracking-tight); line-height: 1; margin-bottom: .25rem; }
+    .stat-label { font-size: var(--text-sm); color: hsl(var(--muted-foreground)); }
+
+    /* ── Stack pills ─────────────────────────────────────────── */
+    .stack-grid { display: flex; flex-wrap: wrap; gap: .625rem; margin-bottom: 1.5rem; }
+    .stack-pill { display: inline-flex; align-items: center; gap: .5rem; padding: .375rem .875rem; border: 1px solid hsl(var(--border)); border-radius: var(--radius-full); font-size: var(--text-sm); font-weight: var(--font-medium); background: hsl(var(--background)); }
+    .stack-pill-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── Pipeline diagram ────────────────────────────────────── */
+    .pipeline { display: flex; align-items: center; gap: 0; margin-bottom: 2rem; flex-wrap: wrap; }
+    .pipeline-step { display: flex; flex-direction: column; align-items: center; gap: .375rem; min-width: 90px; }
+    .pipeline-icon { width: 48px; height: 48px; border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg); background: hsl(var(--muted)); display: flex; align-items: center; justify-content: center; }
+    .pipeline-icon svg { width: 22px; height: 22px; color: hsl(var(--muted-foreground)); }
+    .pipeline-label { font-size: var(--text-xs); font-weight: var(--font-medium); text-align: center; line-height: var(--leading-4); }
+    .pipeline-sub { font-size: 10px; color: hsl(var(--muted-foreground)); text-align: center; }
+    .pipeline-arrow { color: hsl(var(--muted-foreground)); padding: 0 .25rem; margin-top: -1.25rem; flex-shrink: 0; }
+
+    /* ── Principle cards ─────────────────────────────────────── */
+    .principles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 640px) { .principles-grid { grid-template-columns: 1fr; } }
+    .principle-card { border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg); padding: 1.25rem; }
+    .principle-icon { width: 32px; height: 32px; border-radius: var(--radius-md); background: hsl(var(--muted)); display: flex; align-items: center; justify-content: center; margin-bottom: .75rem; }
+    .principle-icon svg { width: 16px; height: 16px; color: hsl(var(--foreground)); }
+    .principle-title { font-size: var(--text-sm); font-weight: var(--font-semibold); margin-bottom: .375rem; }
+    .principle-desc { font-size: var(--text-sm); color: hsl(var(--muted-foreground)); line-height: var(--leading-6); }
+
+    /* ── Code block ──────────────────────────────────────────── */
+    .code-block { background: hsl(var(--muted)); border: 1px solid hsl(var(--border)); border-radius: var(--radius-md); padding: 1rem 1.25rem; overflow-x: auto; margin-bottom: 1.5rem; }
+    .code-block pre { font-family: var(--font-mono); font-size: var(--text-sm); line-height: var(--leading-6); white-space: pre; color: hsl(var(--foreground)); }
+    .code-cmt { color: hsl(var(--muted-foreground)); font-style: italic; }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar"></aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-breadcrumb">
+        Getting Started
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span>Introduction</span>
+      </div>
+      <div class="topbar-actions">
+        <a class="topbar-btn" href="https://www.figma.com/design/NN6Wp4Hgsug3OKhiQdL27d/" target="_blank">
+          <svg viewBox="0 0 38 57" fill="none"><path d="M19 28.5A9.5 9.5 0 0 1 28.5 19H19V9.5A9.5 9.5 0 1 0 9.5 19H19v9.5A9.5 9.5 0 1 0 28.5 38H19v-9.5Z" fill="#1ABCFE"/><path d="M28.5 28.5a9.5 9.5 0 1 1 0-19 9.5 9.5 0 0 1 0 19Z" fill="#FF7262"/></svg>
+          Figma
+        </a>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <header class="page-header">
+        <span class="lbl">Getting Started</span>
+        <h1>Introduction</h1>
+        <p>A production-ready component library and token system for building consistent product interfaces. Built on shadcn/ui, grounded in Figma Variables.</p>
+      </header>
+
+      <!-- ── Overview ────────────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">What this is</h2>
+        <div class="prose">
+          <p>This design system bridges the gap between Figma designs and production code. It starts with a Figma file that defines every color, spacing value, radius, and typographic scale as <strong>Figma Variables</strong>. Those variables are exported verbatim into a single <code>design-tokens.css</code> file — no rounding, no approximation, no manual translation.</p>
+          <p>On top of that token foundation sits <strong>shadcn/ui</strong>: a collection of accessible, unstyled component primitives built on Radix UI. Shadcn's built-in CSS variable system slots directly into our token layer, which means every component automatically picks up the right color, radius, and spacing without any extra wiring.</p>
+          <p>The result: a system where a designer can change a Figma Variable and a developer can sync that change to every component in the product with a single file replace.</p>
+        </div>
+      </section>
+
+      <!-- ── Stats ───────────────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">What's included</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value">43</div>
+            <div class="stat-label">Components</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">500<span style="font-size:var(--text-xl)">+</span></div>
+            <div class="stat-label">Design tokens</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">11</div>
+            <div class="stat-label">Token collections</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">AA</div>
+            <div class="stat-label">WCAG minimum</div>
+          </div>
+        </div>
+        <p class="section-sub">Token collections: Shadcn/ui colors, font, border-radius, space, border-width, gap, opacity, stroke-width, height, max-height, max-width.</p>
+      </section>
+
+      <!-- ── Tech stack ──────────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Technology stack</h2>
+        <p class="section-sub">Every layer is independently adoptable — you can use just the tokens, just the components, or the whole system.</p>
+        <div class="stack-grid">
+          <div class="stack-pill"><span class="stack-pill-dot" style="background:#000;"></span>Next.js 14+ (App Router)</div>
+          <div class="stack-pill"><span class="stack-pill-dot" style="background:#171717;"></span>shadcn/ui</div>
+          <div class="stack-pill"><span class="stack-pill-dot" style="background:#6c47ff;"></span>Radix UI</div>
+          <div class="stack-pill"><span class="stack-pill-dot" style="background:#06b6d4;"></span>Tailwind CSS</div>
+          <div class="stack-pill"><span class="stack-pill-dot" style="background:#f24e1e;"></span>Figma Variables</div>
+          <div class="stack-pill"><span class="stack-pill-dot" style="background:#4285f4;"></span>CSS Custom Properties</div>
+          <div class="stack-pill"><span class="stack-pill-dot" style="background:#555;"></span>Inter + Geist Mono</div>
+          <div class="stack-pill"><span class="stack-pill-dot" style="background:#3178c6;"></span>TypeScript</div>
+        </div>
+      </section>
+
+      <!-- ── Token pipeline ──────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">How it works</h2>
+        <p class="section-sub">Design decisions live in Figma. Code consumes them through CSS custom properties. The two never drift apart.</p>
+
+        <div class="pipeline">
+          <div class="pipeline-step">
+            <div class="pipeline-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 12h8M12 8v8"/></svg>
+            </div>
+            <div class="pipeline-label">Figma Variables</div>
+            <div class="pipeline-sub">Design source</div>
+          </div>
+          <div class="pipeline-arrow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="pipeline-step">
+            <div class="pipeline-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+            <div class="pipeline-label">design-tokens.css</div>
+            <div class="pipeline-sub">CSS custom props</div>
+          </div>
+          <div class="pipeline-arrow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="pipeline-step">
+            <div class="pipeline-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            </div>
+            <div class="pipeline-label">shadcn/ui</div>
+            <div class="pipeline-sub">Component layer</div>
+          </div>
+          <div class="pipeline-arrow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="pipeline-step">
+            <div class="pipeline-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+            </div>
+            <div class="pipeline-label">Product UI</div>
+            <div class="pipeline-sub">Your application</div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <pre><span class="code-cmt">/* Figma Variable: Shadcn/ui/primary → neutral/900 → #171717 */</span>
+--primary: 0 0% 9%;                <span class="code-cmt">/* stored as HSL triplet */</span>
+--primary-foreground: 0 0% 98%;
+
+<span class="code-cmt">/* shadcn/ui Button reads these automatically */</span>
+.btn { background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }</pre>
+        </div>
+
+        <div class="prose">
+          <p>Colors are stored as bare HSL triplets — no <code>hsl()</code> wrapper. This is intentional: it lets you compose arbitrary opacity anywhere without creating a separate token. <code>hsl(var(--primary) / 0.5)</code> gives you 50% opacity primary without any extra variable.</p>
+        </div>
+      </section>
+
+      <!-- ── Principles ──────────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Design principles</h2>
+        <div class="principles-grid">
+          <div class="principle-card">
+            <div class="principle-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="principle-title">Zero approximations</div>
+            <div class="principle-desc">Every token value is exported directly from Figma. No rounding, no eyeballing, no manual conversion. If Figma says <code>#0a0a0a</code>, the token says <code>0 0% 3.9%</code> — the exact HSL equivalent.</div>
+          </div>
+          <div class="principle-card">
+            <div class="principle-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+            </div>
+            <div class="principle-title">Semantic naming</div>
+            <div class="principle-desc">Tokens describe purpose, not appearance. <code>--primary</code> not <code>--gray-900</code>. <code>--destructive</code> not <code>--red-600</code>. This means a full rebrand only requires changing token values, not hunting through component code.</div>
+          </div>
+          <div class="principle-card">
+            <div class="principle-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            </div>
+            <div class="principle-title">Accessibility first</div>
+            <div class="principle-desc">All semantic color pairs meet WCAG AA contrast (4.5:1 minimum). Primary text on background is 18.7:1. Destructive meets AA at 4.58:1. Color alone is never the only signal for state.</div>
+          </div>
+          <div class="principle-card">
+            <div class="principle-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+            </div>
+            <div class="principle-title">Component integrity</div>
+            <div class="principle-desc">Shadcn/ui component HTML structure and Radix UI behaviour are never altered. All customisation happens through CSS custom properties only — so every accessibility feature, keyboard interaction, and ARIA attribute stays intact.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Next steps ──────────────────────────────────────── -->
+      <section class="section">
+        <h2 class="section-title">Next steps</h2>
+        <div class="prose">
+          <p>Head to <a href="installation.html" style="color:hsl(var(--foreground));font-weight:var(--font-medium);text-underline-offset:3px;">Installation</a> to set up the design system in a new or existing Next.js project. Then read <a href="theming.html" style="color:hsl(var(--foreground));font-weight:var(--font-medium);text-underline-offset:3px;">Theming</a> to understand how CSS variables and dark mode work before diving into individual components.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="sidebar.js"></script>
+</body>
+</html>
